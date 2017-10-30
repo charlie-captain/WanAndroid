@@ -65,7 +65,7 @@ public class NewsRvAdapter extends BaseRecyclerViewAdapter {
                 @Override
                 public void onClick(View v) {
                     if (mOnIbtnClickListener != null) {
-                        mOnIbtnClickListener.onClick(v, getLayoutPosition());
+                        mOnIbtnClickListener.onIbtnClick(v, getLayoutPosition());
                     }
                 }
             });
@@ -78,7 +78,7 @@ public class NewsRvAdapter extends BaseRecyclerViewAdapter {
     }
 
     public interface IOnIbtnClickListener {
-        void onClick(View v, int position);
+        void onIbtnClick(View v, int position);
     }
 
 }

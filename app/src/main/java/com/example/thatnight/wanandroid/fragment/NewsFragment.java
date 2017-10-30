@@ -1,5 +1,6 @@
 package com.example.thatnight.wanandroid.fragment;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.DefaultItemAnimator;
@@ -13,6 +14,7 @@ import com.example.thatnight.wanandroid.adapter.NewsRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.bean.NewArticle;
+import com.example.thatnight.wanandroid.ui.WebViewActivity;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.example.thatnight.wanandroid.view.SpaceItemDecoration;
@@ -34,7 +36,7 @@ import okhttp3.Call;
  * Created by thatnight on 2017.10.27.
  */
 
-public class NewsFragment extends BaseFragment implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, NewsRvAdapter.IOnIbtnClickListener {
+public class NewsFragment extends BaseFragment implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, NewsRvAdapter.IOnIbtnClickListener, View.OnClickListener {
 
     private List<NewArticle> mArticles;
 
@@ -66,6 +68,7 @@ public class NewsFragment extends BaseFragment implements OnRefreshListener, OnL
         mRefreshLayout.setOnLoadmoreListener(this);
         mAdapter.setOnRecyclerViewListener(this);
         mAdapter.setOnIbtnClickListener(this);
+
     }
 
     @Override
@@ -111,6 +114,7 @@ public class NewsFragment extends BaseFragment implements OnRefreshListener, OnL
                     article.setArtId(artid);
                     article.setAuthor(author);
                     article.setName(title);
+                    article.setUrl(url);
                     article.setTime(time);
                     article.setType(type);
                     article.setTypeUrl(typeUrl);
@@ -147,7 +151,8 @@ public class NewsFragment extends BaseFragment implements OnRefreshListener, OnL
 
     @Override
     public void onItemClick(int pos) {
-
+        Intent intent = WebViewActivity.newIntent(mActivity, mArticles.get(pos).getUrl());
+        startActivity(intent);
     }
 
     @Override
@@ -157,7 +162,15 @@ public class NewsFragment extends BaseFragment implements OnRefreshListener, OnL
 
 
     @Override
-    public void onClick(View v, int position) {
+    public void onIbtnClick(View v, int position) {
+        setSelected(v);
+    }
+
+    @Override
+    public void onClick(View v) {
+    }
+
+    private void setSelected(View v) {
         if (v != null) {
             if (v.isSelected()) {
                 v.setSelected(false);

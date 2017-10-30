@@ -17,10 +17,10 @@ import com.example.thatnight.wanandroid.R;
 
 public abstract class BaseActivity extends AppCompatActivity {
 
-    private Toolbar mToolbar;
-    private TextView mTitle;
-    private ImageButton mIbMenu;
-    private boolean mShowBack;
+    protected Toolbar mToolbar;
+    protected TextView mTitle;
+    protected ImageButton mIbMenu;
+    protected boolean mShowBack;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -32,8 +32,11 @@ public abstract class BaseActivity extends AppCompatActivity {
         mIbMenu = findViewById(R.id.tb_menu);
         init();
         initData();
+        initView();
         initListener();
     }
+
+    protected abstract void initView();
 
     protected abstract void initListener();
 
@@ -65,6 +68,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         if (mToolbar == null) {
             return;
         }
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         mToolbar.setNavigationOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -97,7 +101,7 @@ public abstract class BaseActivity extends AppCompatActivity {
         }
     }
 
-    private <T extends View> T $(int resId) {
+    protected <T extends View> T $(int resId) {
         return (T) super.findViewById(resId);
     }
 }
