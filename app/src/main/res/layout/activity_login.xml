@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+            xmlns:app="http://schemas.android.com/apk/res-auto"
+            xmlns:tools="http://schemas.android.com/tools"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:background="@drawable/iv_login_bg"
+            android:fitsSystemWindows="true"
+    >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <ImageView
+            android:id="@+id/civ_login"
+            android:layout_width="128dp"
+            android:layout_height="128dp"
+            android:layout_alignParentTop="true"
+            android:layout_centerHorizontal="true"
+            android:layout_marginTop="15dp"
+            android:scaleType="fitCenter"
+            android:src="@drawable/ic_logo"/>
+
+        <EditText
+            android:id="@+id/et_login_account"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/civ_login"
+            android:layout_marginEnd="32dp"
+            android:layout_marginStart="32dp"
+            android:maxLines="1"
+            android:layout_marginTop="18dp"
+            android:drawableLeft="@drawable/ic_user_light"
+            android:fontFamily="monospace"
+            android:hint="Account"
+            android:inputType="text"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+
+        <EditText
+            android:id="@+id/et_login_psw"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="true"
+            android:layout_below="@+id/et_login_account"
+            android:layout_marginEnd="32dp"
+            android:maxLines="1"
+            android:layout_marginStart="32dp"
+            android:layout_marginTop="8dp"
+            android:drawableLeft="@drawable/ic_password_light"
+            android:fontFamily="monospace"
+            android:hint="Password"
+            android:inputType="textPassword"
+            android:textColor="@color/white"
+            android:textSize="18sp"/>
+
+        <com.example.animbutton.AnimButton
+            android:id="@+id/btn_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@+id/et_login_psw"
+            android:layout_marginEnd="16dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            app:button_radius="180"
+            app:color_normal="@color/colorAccent"
+            app:color_pressed="@color/colorAccentDark"
+            app:color_progress="@color/colorAccent"
+            app:color_text="@color/white"
+            app:start_text="登 录"
+            >
+
+        </com.example.animbutton.AnimButton>
+
+        <TextView
+            android:id="@+id/tv_register"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/btn_login"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="16dp"
+            android:text="@string/login_register"
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            />
+
+    </RelativeLayout>
+</ScrollView>

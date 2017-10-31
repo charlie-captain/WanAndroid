@@ -1,6 +1,7 @@
 package com.example.thatnight.wanandroid.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,6 +22,7 @@ import com.example.thatnight.wanandroid.bean.NewArticle;
 public class NewsRvAdapter extends BaseRecyclerViewAdapter {
 
     private IOnIbtnClickListener mOnIbtnClickListener;
+    private SparseBooleanArray mSelectArray = new SparseBooleanArray();
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -61,14 +63,22 @@ public class NewsRvAdapter extends BaseRecyclerViewAdapter {
             mAuthor.setText(article.getAuthor());
             mTime.setText(article.getTime());
             mType.setText(article.getType());
+            mIbLike.setTag(getLayoutPosition());
+
             mIbLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
+                    if (v.isSelected()) {
+                        mSelectArray.put(getLayoutPosition(), false);
+                    } else {
+                        mSelectArray.put(getLayoutPosition(), true);
+                    }
                     if (mOnIbtnClickListener != null) {
                         mOnIbtnClickListener.onIbtnClick(v, getLayoutPosition());
                     }
                 }
             });
+            mIbLike.setSelected(mSelectArray.get(getLayoutPosition(),false));
         }
 
     }
