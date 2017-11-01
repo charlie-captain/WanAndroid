@@ -14,7 +14,6 @@
     </group>
 
 
-    <menu>
         <group android:checkableBehavior="single">
             <item
                 android:id="@+id/nv_menu_settings"
@@ -23,6 +22,5 @@
                 android:id="@+id/nv_menu_exit"
                 android:title="退出"/>
         </group>
-    </menu>
 
 </menu>

@@ -8,12 +8,16 @@ import android.view.View;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
+import com.example.thatnight.wanandroid.bean.DataBean;
+import com.example.thatnight.wanandroid.contract.WebContract;
+import com.example.thatnight.wanandroid.model.WebModel;
+import com.example.thatnight.wanandroid.presenter.WebPresenter;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
 
-public class WebViewActivity extends BaseActivity implements View.OnClickListener {
+public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPresenter> implements View.OnClickListener, WebContract.IWebView {
 
     private WebView mWebView;
     private String mUrl;
@@ -32,6 +36,16 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
             mUrl = extraIntent.getStringExtra("url");
         }
 
+    }
+
+    @Override
+    protected WebModel initModel() {
+        return new WebModel();
+    }
+
+    @Override
+    protected WebPresenter getPresenter() {
+        return new WebPresenter();
     }
 
     @Override
@@ -82,5 +96,15 @@ public class WebViewActivity extends BaseActivity implements View.OnClickListene
             default:
                 break;
         }
+    }
+
+    @Override
+    public void isLoading(boolean isLoading) {
+
+    }
+
+    @Override
+    public void isSuccess(boolean isSuccess, DataBean dataBean) {
+
     }
 }

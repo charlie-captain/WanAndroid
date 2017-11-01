@@ -8,6 +8,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.example.thatnight.wanandroid.R;
 
@@ -15,26 +16,35 @@ import com.example.thatnight.wanandroid.R;
  * Created by thatnight on 2017.10.26.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends BasePresenter> extends AppCompatActivity implements BaseContract.IBaseView {
 
     protected Toolbar mToolbar;
     protected TextView mTitle;
     protected ImageButton mIbMenu;
     protected boolean mShowBack;
+    protected P mPresenter;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
-
-        mToolbar = findViewById(R.id.toolbar);
-        mTitle = findViewById(R.id.tb_title);
-        mIbMenu = findViewById(R.id.tb_menu);
+        mPresenter = getPresenter();
+        initPresenter();
         init();
         initData();
         initView();
         initListener();
     }
+
+    private void initPresenter() {
+        if (mPresenter != null) {
+            mPresenter.attachView(initModel(), this);
+        }
+    }
+
+    protected abstract BaseModel initModel();
+
+    protected abstract P getPresenter();
 
     protected abstract void initView();
 
@@ -43,6 +53,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     protected abstract void initData();
 
     private void init() {
+        mToolbar = findViewById(R.id.toolbar);
+        mTitle = findViewById(R.id.tb_title);
+        mIbMenu = findViewById(R.id.tb_menu);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
         }
@@ -80,6 +93,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mPresenter != null) {
+            mPresenter.detachView();
+        }
+
     }
 
 
@@ -102,6 +119,10 @@ public abstract class BaseActivity extends AppCompatActivity {
     }
 
     protected <T extends View> T $(int resId) {
-        return (T) super.findViewById(resId);
+        return (T) findViewById(resId);
+    }
+
+    public void showToast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
     }
 }

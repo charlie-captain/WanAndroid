@@ -1,5 +1,6 @@
 package com.example.thatnight.wanandroid;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -11,6 +12,7 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 
+import com.example.thatnight.wanandroid.bean.DataBean;
 import com.example.thatnight.wanandroid.fragment.MainFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -23,12 +25,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
     private Fragment mLastFragment;
+    private DataBean mAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        initData();
         mFragmentManager = getSupportFragmentManager();
         mDrawerLayout = findViewById(R.id.dv_main);
         mNavigationView = findViewById(R.id.nv_main);
@@ -45,6 +49,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mLastFragment = mMainFragment;
         showFragment(mMainFragment);
         mNavigationView.setCheckedItem(R.id.nv_menu_main);
+    }
+
+    private void initData() {
+        Intent intent = getIntent();
+        mAccount = intent.getParcelableExtra("account");
+        if (mAccount != null) {
+
+        }
     }
 
 
