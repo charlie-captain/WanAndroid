@@ -41,7 +41,6 @@ public class LoginModel extends BaseModel implements LoginContract.ILoginModel {
                 }
                 Msg msg = GsonUtil.gsonToBean(response, Msg.class);
                 iLoginPresenter.getResult(msg);
-
             }
         }, data);
     }

@@ -2,10 +2,17 @@
 <com.scwang.smartrefresh.layout.SmartRefreshLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:id="@+id/srl_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    app:srlEnablePreviewInEditMode="true"
     >
+    <com.scwang.smartrefresh.layout.header.ClassicsHeader
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </com.scwang.smartrefresh.layout.header.ClassicsHeader>
 
     <android.support.v7.widget.RecyclerView
         android:id="@+id/rv_main"

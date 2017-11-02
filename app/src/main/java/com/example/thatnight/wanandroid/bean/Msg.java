@@ -1,20 +1,21 @@
 package com.example.thatnight.wanandroid.bean;
 
 /**
- * Created by thatnight on 2017.11.1.
+ * Created by thatnight on 2017.11.2.
  */
 
 public class Msg {
 
+
     /**
      * errorCode : 0
      * errorMsg : null
-     * data : {"id":624,"username":"thatnight","password":"703692499","icon":null,"type":0,"collectIds":[]}
+     * data : jj
      */
 
     private int errorCode;
     private Object errorMsg;
-    private DataBean data;
+    private Object data;
 
     public int getErrorCode() {
         return errorCode;
@@ -32,13 +33,11 @@ public class Msg {
         this.errorMsg = errorMsg;
     }
 
-    public DataBean getData() {
+    public Object getData() {
         return data;
     }
 
-    public void setData(DataBean data) {
+    public void setData(Object data) {
         this.data = data;
     }
-
-
 }

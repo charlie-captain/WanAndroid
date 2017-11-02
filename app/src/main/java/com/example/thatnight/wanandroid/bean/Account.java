@@ -7,14 +7,16 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by thatnight on 2017.11.1.
+ * Created by thatnight on 2017.11.2.
  */
 
-public class DataBean implements Parcelable {
+public class Account implements Parcelable {
+
+
     /**
      * id : 624
      * username : thatnight
-     * password : 703692499
+     * password : xxxxxxxxx
      * icon : null
      * type : 0
      * collectIds : []
@@ -75,6 +77,7 @@ public class DataBean implements Parcelable {
         this.collectIds = collectIds;
     }
 
+
     @Override
     public int describeContents() {
         return 0;
@@ -90,10 +93,10 @@ public class DataBean implements Parcelable {
         dest.writeList(this.collectIds);
     }
 
-    public DataBean() {
+    public Account() {
     }
 
-    protected DataBean(Parcel in) {
+    protected Account(Parcel in) {
         this.id = in.readInt();
         this.username = in.readString();
         this.password = in.readString();
@@ -103,15 +106,15 @@ public class DataBean implements Parcelable {
         in.readList(this.collectIds, Integer.class.getClassLoader());
     }
 
-    public static final Parcelable.Creator<DataBean> CREATOR = new Parcelable.Creator<DataBean>() {
+    public static final Creator<Account> CREATOR = new Creator<Account>() {
         @Override
-        public DataBean createFromParcel(Parcel source) {
-            return new DataBean(source);
+        public Account createFromParcel(Parcel source) {
+            return new Account(source);
         }
 
         @Override
-        public DataBean[] newArray(int size) {
-            return new DataBean[size];
+        public Account[] newArray(int size) {
+            return new Account[size];
         }
     };
 }

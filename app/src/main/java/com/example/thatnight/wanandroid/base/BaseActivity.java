@@ -8,15 +8,16 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.utils.ToastUtil;
 
 /**
  * Created by thatnight on 2017.10.26.
  */
 
-public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends BasePresenter> extends AppCompatActivity implements BaseContract.IBaseView {
+public abstract class BaseActivity<V extends BaseContract.IBaseView,
+        P extends BasePresenter> extends AppCompatActivity implements BaseContract.IBaseView {
 
     protected Toolbar mToolbar;
     protected TextView mTitle;
@@ -111,10 +112,11 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends B
         return mShowBack;
     }
 
-    private void setTitle(String title) {
+    protected void setTitle(String title) {
         if (mToolbar != null) {
             mTitle.setText(title);
             setSupportActionBar(mToolbar);
+            getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
     }
 
@@ -123,6 +125,6 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends B
     }
 
     public void showToast(String s) {
-        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+        ToastUtil.showToast(this, s);
     }
 }

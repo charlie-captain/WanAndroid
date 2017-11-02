@@ -7,5 +7,8 @@ package com.example.thatnight.wanandroid.constant;
 public class Constant {
     public static final String URL_LOGIN = "/user/login";
     public static final String URL_REGISTER = "/user/register";
+    public static final String URL_COLLECT = "/lg/collect/";
+    public static final String URL_UNCOLLECT = "/lg/uncollect_originId/";
+    public static final String URL_ARTICLE = "/article/list/";
     public static final String URL_BASE = "http://www.wanandroid.com";
 }

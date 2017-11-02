@@ -1,5 +1,6 @@
 package com.example.thatnight.wanandroid.fragment;
 
+
 import android.os.Bundle;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
@@ -9,6 +10,8 @@ import android.support.v7.widget.Toolbar;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.FragmentAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
+import com.example.thatnight.wanandroid.base.BaseModel;
+import com.example.thatnight.wanandroid.base.BasePresenter;
 
 import java.util.Arrays;
 import java.util.List;
@@ -27,6 +30,16 @@ public class MainFragment extends BaseFragment {
     private FragmentAdapter mAdapter;
 
     @Override
+    protected BaseModel initModel() {
+        return null;
+    }
+
+    @Override
+    protected BasePresenter getPresenter() {
+        return null;
+    }
+
+    @Override
     protected int getLayoutId() {
         return R.layout.fragment_main;
     }
@@ -40,11 +53,11 @@ public class MainFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-        mToolbar = $(R.id.tb_main);
+        mToolbar = mRootView.findViewById(R.id.tb_main);
         mToolbar.setTitle("WanAndroid");
-        mTabLayout = $(R.id.tl_main);
-        mAppBarLayout = $(R.id.apl_main);
-        mVpager = $(R.id.vp_main);
+        mTabLayout = mRootView.findViewById(R.id.tl_main);
+        mAppBarLayout = mRootView.findViewById(R.id.apl_main);
+        mVpager = mRootView.findViewById(R.id.vp_main);
         mVpager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mVpager);
 //        mTabLayout.setTabsFromPagerAdapter(mAdapter);
@@ -60,6 +73,11 @@ public class MainFragment extends BaseFragment {
      */
     @Override
     protected void onLazyLoad() {
+
+    }
+
+    @Override
+    public void isLoading(boolean isLoading) {
 
     }
 }

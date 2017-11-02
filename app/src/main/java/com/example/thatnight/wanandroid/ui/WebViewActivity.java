@@ -8,7 +8,7 @@ import android.view.View;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
-import com.example.thatnight.wanandroid.bean.DataBean;
+import com.example.thatnight.wanandroid.bean.Articles;
 import com.example.thatnight.wanandroid.contract.WebContract;
 import com.example.thatnight.wanandroid.model.WebModel;
 import com.example.thatnight.wanandroid.presenter.WebPresenter;
@@ -20,7 +20,7 @@ import com.tencent.smtt.sdk.WebViewClient;
 public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPresenter> implements View.OnClickListener, WebContract.IWebView {
 
     private WebView mWebView;
-    private String mUrl;
+    private Articles mArticle;
     private FloatingActionButton mActionButton;
 
 
@@ -33,7 +33,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
     protected void initData() {
         Intent extraIntent = getIntent();
         if (extraIntent != null) {
-            mUrl = extraIntent.getStringExtra("url");
+            mArticle = extraIntent.getParcelableExtra("article");
         }
 
     }
@@ -52,10 +52,14 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
     protected void initView() {
         mShowBack = true;
         mWebView = $(R.id.wb);
-        if (!TextUtils.isEmpty(mUrl)) {
-            mWebView.loadUrl(mUrl);
+        if (!TextUtils.isEmpty(mArticle.getLink())) {
+            mWebView.loadUrl(mArticle.getLink());
         }
         mActionButton = $(R.id.fabtn_news);
+        if (mArticle != null) {
+            mActionButton.setSelected(mArticle.isCollect());
+            setTitle(mArticle.getTitle());
+        }
     }
 
     @Override
@@ -63,6 +67,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         if (mWebView.canGoBack()) {
             mWebView.goBack();
         } else {
+            setResult(RESULT_OK);
             super.onBackPressed();
         }
     }
@@ -79,9 +84,9 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         mActionButton.setOnClickListener(this);
     }
 
-    public static Intent newIntent(Context context, String url) {
+    public static Intent newIntent(Context context, Articles article) {
         Intent intent = new Intent();
-        intent.putExtra("url", url);
+        intent.putExtra("article", article);
         intent.setClass(context, WebViewActivity.class);
         return intent;
 
@@ -92,6 +97,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         switch (v.getId()) {
             case R.id.fabtn_news:
                 ViewUtil.setSelected(v);
+                mPresenter.get(v.isSelected(), String.valueOf(mArticle.getId()));
                 break;
             default:
                 break;
@@ -104,7 +110,11 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
     }
 
     @Override
-    public void isSuccess(boolean isSuccess, DataBean dataBean) {
-
+    public void isSuccess(boolean isSuccess, String s) {
+        if (!isSuccess) {
+            ViewUtil.setSelected(mActionButton);
+        }
+        showToast(s);
     }
+
 }

@@ -11,33 +11,39 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.widget.ImageView;
+import android.widget.TextView;
 
-import com.example.thatnight.wanandroid.bean.DataBean;
+import com.example.thatnight.wanandroid.bean.Account;
 import com.example.thatnight.wanandroid.fragment.MainFragment;
+import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
+    private ImageView mIcon;
+    private TextView mName;
 
     private MainFragment mMainFragment;
 
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
     private Fragment mLastFragment;
-    private DataBean mAccount;
+    private Account mAccount;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        initData();
         mFragmentManager = getSupportFragmentManager();
         mDrawerLayout = findViewById(R.id.dv_main);
         mNavigationView = findViewById(R.id.nv_main);
+        mNavigationView.setItemIconTintList(null);
+        mName = mNavigationView.getHeaderView(0).findViewById(R.id.tv_nv_header_name);
         mNavigationView.setNavigationItemSelectedListener(this);
-
+        initData();
 
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 //                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
@@ -55,7 +61,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = getIntent();
         mAccount = intent.getParcelableExtra("account");
         if (mAccount != null) {
-
+            SharePreferenceUtil.put(this, "account", mAccount.getUsername());
+            SharePreferenceUtil.put(this, "password", mAccount.getPassword());
+            mName.setText(mAccount.getUsername());
         }
     }
 

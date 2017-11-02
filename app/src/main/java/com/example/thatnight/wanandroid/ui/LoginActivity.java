@@ -1,6 +1,7 @@
 package com.example.thatnight.wanandroid.ui;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -10,7 +11,7 @@ import com.example.thatnight.wanandroid.MainActivity;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
-import com.example.thatnight.wanandroid.bean.DataBean;
+import com.example.thatnight.wanandroid.bean.Account;
 import com.example.thatnight.wanandroid.contract.LoginContract;
 import com.example.thatnight.wanandroid.model.LoginModel;
 import com.example.thatnight.wanandroid.presenter.LoginPresenter;
@@ -46,8 +47,12 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
             @Override
             public void onClick(View v) {
                 ViewUtil.inputSoftWare(false, v);
-                mBtnLogin.startAnimation();
-                mPresenter.login();
+                if (TextUtils.isEmpty(getName()) || TextUtils.isEmpty(getPassword())) {
+                    showToast("账号或密码不能为空");
+                } else {
+                    mBtnLogin.startAnimation();
+                    mPresenter.login();
+                }
             }
         });
         mRegister.setOnClickListener(new View.OnClickListener() {
@@ -85,7 +90,7 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
     }
 
     @Override
-    public void isSuccess(boolean isSuccess, DataBean dataBean) {
+    public void isSuccess(boolean isSuccess, Account dataBean) {
 
         if (isSuccess) {
             Intent intent = new Intent();

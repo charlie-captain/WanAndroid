@@ -1,7 +1,7 @@
 package com.example.thatnight.wanandroid.contract;
 
 import com.example.thatnight.wanandroid.base.BaseContract;
-import com.example.thatnight.wanandroid.bean.DataBean;
+import com.example.thatnight.wanandroid.bean.Account;
 import com.example.thatnight.wanandroid.bean.Msg;
 
 /**
@@ -15,7 +15,7 @@ public class RegisterContract {
 
         String getPassword();
 
-        void isSuccess(boolean isSuccess, DataBean dataBean);
+        void isSuccess(boolean isSuccess, Account dataBean);
     }
 
     public interface IPresenter extends BaseContract.IBasePresenter {

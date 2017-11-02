@@ -1,6 +1,7 @@
 package com.example.thatnight.wanandroid.ui;
 
 import android.content.Intent;
+import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
@@ -9,7 +10,7 @@ import com.example.thatnight.wanandroid.MainActivity;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
-import com.example.thatnight.wanandroid.bean.DataBean;
+import com.example.thatnight.wanandroid.bean.Account;
 import com.example.thatnight.wanandroid.contract.RegisterContract;
 import com.example.thatnight.wanandroid.model.RegisterModel;
 import com.example.thatnight.wanandroid.presenter.RegisterPresenter;
@@ -44,11 +45,16 @@ public class RegisterActivity extends BaseActivity<RegisterContract.IView, Regis
             @Override
             public void onClick(View v) {
                 ViewUtil.inputSoftWare(false, v);
-                if (mPwd.getText().toString().equals(mRePwd.getText().toString())) {
-                    mBtnRegister.startAnimation();
-                    mPresenter.register();
+                if (TextUtils.isEmpty(getName()) || TextUtils.isEmpty(getPassword())
+                        || TextUtils.isEmpty(mPwd.getText().toString().trim())) {
+                    showToast("账号或密码不能为空");
                 } else {
-                    showToast("两次密码输入不相同");
+                    if (mPwd.getText().toString().trim().equals(mRePwd.getText().toString().trim())) {
+                        mBtnRegister.startAnimation();
+                        mPresenter.register();
+                    } else {
+                        showToast("两次密码输入不相同");
+                    }
                 }
             }
         });
@@ -80,7 +86,7 @@ public class RegisterActivity extends BaseActivity<RegisterContract.IView, Regis
     }
 
     @Override
-    public void isSuccess(boolean isSuccess, DataBean dataBean) {
+    public void isSuccess(boolean isSuccess, Account dataBean) {
         if (isSuccess) {
             Intent intent = new Intent();
             intent.setClass(this, MainActivity.class);

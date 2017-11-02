@@ -11,7 +11,7 @@ import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
-import com.example.thatnight.wanandroid.bean.NewArticle;
+import com.example.thatnight.wanandroid.bean.Articles;
 
 ;
 
@@ -58,13 +58,19 @@ public class NewsRvAdapter extends BaseRecyclerViewAdapter {
 
         @Override
         protected void bindView(Object o) {
-            NewArticle article = (NewArticle) o;
-            mTitle.setText(article.getName());
+            Articles article = (Articles) o;
+            mTitle.setText(article.getTitle());
             mAuthor.setText(article.getAuthor());
-            mTime.setText(article.getTime());
-            mType.setText(article.getType());
+            mTime.setText(article.getNiceDate());
+            mType.setText(article.getChapterName());
             mIbLike.setTag(getLayoutPosition());
-
+            if (article.isCollect()) {
+                mIbLike.setSelected(true);
+                mSelectArray.put(getLayoutPosition(), true);
+            } else {
+                mIbLike.setSelected(false);
+                mSelectArray.put(getLayoutPosition(), false);
+            }
             mIbLike.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -78,7 +84,6 @@ public class NewsRvAdapter extends BaseRecyclerViewAdapter {
                     }
                 }
             });
-            mIbLike.setSelected(mSelectArray.get(getLayoutPosition(),false));
         }
 
     }

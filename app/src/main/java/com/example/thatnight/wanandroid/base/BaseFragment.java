@@ -10,21 +10,28 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.thatnight.wanandroid.utils.ToastUtil;
+
 /**
  * Created by thatnight on 2017.10.27.
  */
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment<V extends BaseContract.IBaseView,
+        P extends BasePresenter> extends Fragment implements BaseContract.IBaseView {
 
     protected Activity mActivity;
     protected View mRootView;
     protected boolean mIsPrepare;
     protected boolean mIsVisible;
+    protected P mPresenter;
 
 
     @Nullable
     @Override
-    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+    public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container,
+                             @Nullable Bundle savedInstanceState) {
+        mPresenter = getPresenter();
+        initPresenter();
         if (mRootView == null) {
             mRootView = inflater.inflate(getLayoutId(), container, false);
             initData(getArguments());
@@ -35,6 +42,17 @@ public abstract class BaseFragment extends Fragment {
         }
         return mRootView;
     }
+
+    private void initPresenter() {
+        if (mPresenter != null) {
+            mPresenter.attachView(initModel(), this);
+        }
+    }
+
+    protected abstract BaseModel initModel();
+
+    protected abstract P getPresenter();
+
 
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
@@ -53,12 +71,12 @@ public abstract class BaseFragment extends Fragment {
         }
     }
 
-    protected <T extends View> T $(int resId) {
-        if (mRootView == null) {
-            return null;
-        }
-        return (T) mRootView.findViewById(resId);
-    }
+//    protected <T extends View> T $(int resId) {
+//        if (mRootView == null) {
+//            return null;
+//        }
+//        return mRootView.findViewById(resId);
+//    }
 
     @Override
     public void onAttach(Context context) {
@@ -83,5 +101,13 @@ public abstract class BaseFragment extends Fragment {
         if (mRootView != null) {
             ((ViewGroup) mRootView.getParent()).removeView(mRootView);
         }
+        if (mPresenter != null) {
+            mPresenter.detachView();
+        }
+
+    }
+
+    public void showToast(String s) {
+        ToastUtil.showToast(mActivity, s);
     }
 }
