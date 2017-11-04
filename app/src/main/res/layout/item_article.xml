@@ -37,7 +37,7 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/item_tv_title"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="4dp"
+            android:layout_marginTop="8dp"
             android:layout_toEndOf="@id/item_ib_like"
             android:text="作者:啊速度就说法"
             android:textSize="12sp"

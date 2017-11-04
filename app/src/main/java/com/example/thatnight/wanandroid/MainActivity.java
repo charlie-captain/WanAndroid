@@ -14,8 +14,9 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.example.thatnight.wanandroid.bean.Account;
-import com.example.thatnight.wanandroid.fragment.MainFragment;
+import com.example.thatnight.wanandroid.entity.Account;
+import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
+import com.example.thatnight.wanandroid.view.fragment.MainFragment;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
@@ -26,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private TextView mName;
 
     private MainFragment mMainFragment;
+    private CollectFragment mCollectFragment;
 
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
@@ -85,9 +87,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 showFragment(mMainFragment);
                 break;
-            case R.id.nv_menu_subscribe:
+            case R.id.nv_menu_collect:
+                if (mCollectFragment == null) {
+                    mCollectFragment = new CollectFragment();
+                }
+                showFragment(mCollectFragment);
                 break;
             case R.id.nv_menu_settings:
+
                 break;
             case R.id.nv_menu_exit:
                 finish();

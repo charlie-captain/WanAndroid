@@ -2,19 +2,20 @@
 <android.support.v7.widget.Toolbar
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/toolbar"
+    android:id="@+id/tb"
     android:layout_width="match_parent"
     android:layout_height="?attr/actionBarSize"
     android:background="@color/colorPrimary"
+    app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
     app:layout_scrollFlags="enterAlways|scroll"
     >
 
     <ImageButton
         android:id="@+id/tb_menu"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:background="?attr/selectableItemBackgroundBorderless"
+        android:layout_width="@dimen/width_height_button"
+        android:layout_height="@dimen/width_height_button"
         android:layout_gravity="right"
+        android:background="?attr/selectableItemBackgroundBorderless"
         />
 
     <TextView
@@ -26,5 +27,15 @@
         android:maxEms="12"
         android:maxLines="1"
         android:textColor="@color/white"
+        />
+
+    <ImageButton
+        android:id="@+id/tb_draw"
+        android:layout_width="@dimen/width_height_button"
+        android:layout_height="@dimen/width_height_button"
+        android:layout_gravity="left"
+        android:background="?attr/selectableItemBackgroundBorderless"
+        android:src="@drawable/ic_menu_white"
+        android:visibility="gone"
         />
 </android.support.v7.widget.Toolbar>

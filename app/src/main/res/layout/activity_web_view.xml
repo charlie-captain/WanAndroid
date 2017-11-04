@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     android:orientation="vertical"
     android:fitsSystemWindows="true"
-    tools:context="com.example.thatnight.wanandroid.ui.WebViewActivity"
+    tools:context=".view.activity.WebViewActivity"
     >
 
     <android.support.design.widget.AppBarLayout
@@ -43,7 +43,7 @@
         android:backgroundTint="@color/white"
         android:src="@drawable/selector_like"
         app:borderWidth="0dp"
-        app:layout_behavior="com.example.thatnight.wanandroid.view.FloatingBehavior"
+        app:layout_behavior="com.example.thatnight.wanandroid.view.customview.FloatingBehavior"
         />
 
 

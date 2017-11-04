@@ -11,7 +11,8 @@ import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
-import com.example.thatnight.wanandroid.bean.Articles;
+import com.example.thatnight.wanandroid.entity.Articles;
+import com.example.thatnight.wanandroid.entity.CollectArticle;
 
 ;
 
@@ -58,32 +59,50 @@ public class NewsRvAdapter extends BaseRecyclerViewAdapter {
 
         @Override
         protected void bindView(Object o) {
-            Articles article = (Articles) o;
-            mTitle.setText(article.getTitle());
-            mAuthor.setText(article.getAuthor());
-            mTime.setText(article.getNiceDate());
-            mType.setText(article.getChapterName());
-            mIbLike.setTag(getLayoutPosition());
-            if (article.isCollect()) {
-                mIbLike.setSelected(true);
-                mSelectArray.put(getLayoutPosition(), true);
-            } else {
-                mIbLike.setSelected(false);
-                mSelectArray.put(getLayoutPosition(), false);
-            }
-            mIbLike.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (v.isSelected()) {
-                        mSelectArray.put(getLayoutPosition(), false);
-                    } else {
-                        mSelectArray.put(getLayoutPosition(), true);
-                    }
-                    if (mOnIbtnClickListener != null) {
-                        mOnIbtnClickListener.onIbtnClick(v, getLayoutPosition());
-                    }
+            if (o instanceof Articles) {
+                Articles article = (Articles) o;
+                mTitle.setText(article.getTitle());
+                mAuthor.setText(article.getAuthor());
+                mTime.setText(article.getNiceDate());
+                mType.setText(article.getChapterName());
+                mIbLike.setTag(getLayoutPosition());
+                if (article.isCollect()) {
+                    mIbLike.setSelected(true);
+                    mSelectArray.put(getLayoutPosition(), true);
+                } else {
+                    mIbLike.setSelected(false);
+                    mSelectArray.put(getLayoutPosition(), false);
                 }
-            });
+                mIbLike.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (v.isSelected()) {
+                            mSelectArray.put(getLayoutPosition(), false);
+                        } else {
+                            mSelectArray.put(getLayoutPosition(), true);
+                        }
+                        if (mOnIbtnClickListener != null) {
+                            mOnIbtnClickListener.onIbtnClick(v, getLayoutPosition());
+                        }
+                    }
+                });
+            } else if (o instanceof CollectArticle) {
+                CollectArticle article = (CollectArticle) o;
+                mTitle.setText(article.getTitle());
+                mAuthor.setText(article.getAuthor());
+                mTime.setText(article.getNiceDate());
+                mType.setText(article.getChapterName());
+                mIbLike.setTag(getLayoutPosition());
+                mIbLike.setSelected(true);
+                mIbLike.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mOnIbtnClickListener != null) {
+                            mOnIbtnClickListener.onIbtnClick(v, getLayoutPosition());
+                        }
+                    }
+                });
+            }
         }
 
     }

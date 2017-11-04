@@ -17,16 +17,16 @@
         android:theme="@style/AppTheme">
         <activity android:name=".MainActivity">
         </activity>
-        <activity android:name=".ui.WebViewActivity">
+        <activity android:name=".view.activity.WebViewActivity">
         </activity>
         <activity
-            android:name=".ui.LoginActivity"
+            android:name=".view.activity.LoginActivity"
             android:theme="@style/TranCurrent">
         </activity>
-        <activity android:name=".ui.UserActivity">
+        <activity android:name=".view.activity.UserActivity">
         </activity>
         <activity
-            android:name=".ui.SplashActivity"
+            android:name=".view.activity.SplashActivity"
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -34,7 +34,7 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
-        <activity android:name=".ui.RegisterActivity">
+        <activity android:name=".view.activity.RegisterActivity">
         </activity>
     </application>
 

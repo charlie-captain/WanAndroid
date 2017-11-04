@@ -54,9 +54,9 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
     protected abstract void initData();
 
     private void init() {
-        mToolbar = findViewById(R.id.toolbar);
-        mTitle = findViewById(R.id.tb_title);
-        mIbMenu = findViewById(R.id.tb_menu);
+        mToolbar = (Toolbar) findViewById(R.id.tb);
+        mTitle = (TextView) findViewById(R.id.tb_title);
+        mIbMenu = (ImageButton) findViewById(R.id.tb_menu);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
         }

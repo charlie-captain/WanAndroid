@@ -5,11 +5,14 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 
+import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
 
 /**
@@ -23,6 +26,10 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
     protected View mRootView;
     protected boolean mIsPrepare;
     protected boolean mIsVisible;
+    protected Toolbar mToolbar;
+    protected ImageButton mIbtnMenu;
+    protected ImageButton mIbtnDraw;
+
     protected P mPresenter;
 
 
@@ -63,6 +70,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         } else {
             mIsVisible = false;
         }
+        Log.d("onlazy", getContext() + "   " + isVisibleToUser);
     }
 
     private void onVisibleToUser() {
@@ -84,9 +92,19 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         mActivity = getActivity();
     }
 
+    protected void setDraw(boolean isShow) {
+        if (isShow) {
+            mIbtnDraw = mRootView.findViewById(R.id.tb_draw);
+            if (mIbtnDraw != null) {
+                mIbtnDraw.setVisibility(View.VISIBLE);
+            }
+        }
+    }
+
     protected abstract int getLayoutId();
 
     protected abstract void initView();
+
 
     protected abstract void initData(Bundle arguments);
 

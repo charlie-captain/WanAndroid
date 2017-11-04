@@ -1,8 +1,10 @@
 
 - frame
-    
-    - greendao 
-    - mvp
+    - MVP
+    - [SwipeBacklayout](https://github.com/ikew0ng/SwipeBackLayout) --右滑返回
+    - [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) --recyclerview下拉刷新上拉加载
+    - [AnimButton](https://github.com/thatnight/AnimButton) --登陆按钮
+    - Gson --解析Json
     - 
 
 - api
@@ -88,3 +90,34 @@
                 "data": null
                }
         ```
+        
+    - collect articles
+    
+        ```
+        url :  http://www.wanandroid.com/lg/collect/list/0/json
+    
+        http: POST
+    
+        return:{
+                "errorCode": 0,
+                "errorMsg": null,
+                "data": null
+               }
+        ```   
+        
+        - uncollect 
+        
+            ```
+            url :  http://www.wanandroid.com/lg/uncollect/407/json
+                
+            http: POST
+            
+            params: originId=399
+                
+            return:{
+                    "errorCode": 0,
+                    "errorMsg": null,
+                    "data": null
+                   }
+            ```
+            
