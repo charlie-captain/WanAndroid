@@ -53,9 +53,9 @@ public class MainFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-        mToolbar = mRootView.findViewById(R.id.tb_main);
-        mToolbar.setTitle("WanAndroid");
-
+        mToolbar = mRootView.findViewById(R.id.tb);
+        mToolbar.setTitle("");
+        setTitle("WanAndroid");
         mTabLayout = mRootView.findViewById(R.id.tl_main);
         mAppBarLayout = mRootView.findViewById(R.id.apl_main);
         mVpager = mRootView.findViewById(R.id.vp_main);

@@ -53,45 +53,48 @@
                 }
                }
         ```
-    - article
+    - new articles(最新)
     
         ```
         url: http://www.wanandroid.com/article/list/0/json
         
-        return:{"errorCode":0,"errorMsg":null,"data":{"datas":[{"id":1485,"title":"Android中图片压缩分析（上）","chapterId":86,"chapterName":"图片处理","envelopePic":null,"link":"https://mp.weixin.qq.com/s/QZ-XTsO7WnNvpnbr3DWQmg","author":"QQ音乐技术团队","origin":null,"publishTime":1509611122000,"zan":0,"desc":null,"visible":0,"niceDate":"2小时前","courseId":13,"collect":false}
+        return:{
+        "errorCode":0,
+        "errorMsg":null,
+        "data":{"datas":[{"id":1485,"title":"Android中图片压缩分析（上）","chapterId":86,"chapterName":"图片处理","envelopePic":null,"link":"https://mp.weixin.qq.com/s/QZ-XTsO7WnNvpnbr3DWQmg","author":"QQ音乐技术团队","origin":null,"publishTime":1509611122000,"zan":0,"desc":null,"visible":0,"niceDate":"2小时前","courseId":13,"collect":false}
         ],"offset":0,"size":20,"total":771,"over":false}}
        
         ```
         
-    - collect
-    
-        ```
-        url : http://www.wanandroid.com/lg/collect/1484/json
-    
-        http: POST
-    
-        return:{
-                "errorCode": 0,
-                "errorMsg": null,
-                "data": null
-               }
-        ```
+        - collect
         
-    - uncollect
-    
-        ```
-        url :  http://www.wanandroid.com/lg/uncollect_originId/1485/json
-    
-        http: POST
-    
-        return:{
-                "errorCode": 0,
-                "errorMsg": null,
-                "data": null
-               }
-        ```
+            ```
+            url : http://www.wanandroid.com/lg/collect/1484/json
         
-    - collect articles
+            http: POST
+        
+            return:{
+                    "errorCode": 0,
+                    "errorMsg": null,
+                    "data": null
+                   }
+            ```
+            
+        - uncollect
+        
+            ```
+            url :  http://www.wanandroid.com/lg/uncollect_originId/1485/json
+        
+            http: POST
+        
+            return:{
+                    "errorCode": 0,
+                    "errorMsg": null,
+                    "data": null
+                   }
+            ```
+        
+    - collect articles(收藏)
     
         ```
         url :  http://www.wanandroid.com/lg/collect/list/0/json
@@ -121,3 +124,14 @@
                    }
             ```
             
+    - tree article(知识体系)
+    
+        ```
+        url :  http://www.wanandroid.com/article/list/0/json?cid=60
+    
+        http: GET
+    
+        return:{
+                 = new articel
+               }
+        ```           

@@ -7,7 +7,7 @@
     android:layout_height="?attr/actionBarSize"
     android:background="@color/colorPrimary"
     app:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-    app:layout_scrollFlags="enterAlways|scroll"
+    app:layout_scrollFlags="scroll|enterAlways|snap"
     >
 
     <ImageButton
@@ -24,6 +24,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:gravity="center"
         android:maxEms="12"
         android:maxLines="1"
         android:textColor="@color/white"

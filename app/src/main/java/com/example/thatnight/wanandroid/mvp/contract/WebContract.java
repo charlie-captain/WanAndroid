@@ -16,10 +16,14 @@ public class WebContract {
     public interface IWebPresenter extends BaseContract.IBasePresenter {
         void get(boolean isCollect, String id);
 
+        void get(String id, String originId);
+
         void getResult(boolean isCollect, Msg msg);
     }
 
     public interface IWebModel extends BaseContract.IBaseModel {
         void getUrl(boolean isCollect, String id, IWebPresenter iPresenter);
+
+        void getUrl(String id, String originId, IWebPresenter iPresenter);
     }
 }

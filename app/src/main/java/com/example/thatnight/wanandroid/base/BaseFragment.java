@@ -11,6 +11,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
@@ -27,6 +28,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
     protected boolean mIsPrepare;
     protected boolean mIsVisible;
     protected Toolbar mToolbar;
+    protected TextView mTitle;
     protected ImageButton mIbtnMenu;
     protected ImageButton mIbtnDraw;
 
@@ -98,6 +100,13 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
             if (mIbtnDraw != null) {
                 mIbtnDraw.setVisibility(View.VISIBLE);
             }
+        }
+    }
+
+    protected void setTitle(String title) {
+        mTitle = mRootView.findViewById(R.id.tb_title);
+        if (mTitle != null) {
+            mTitle.setText(title);
         }
     }
 

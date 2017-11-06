@@ -19,8 +19,8 @@ import com.example.thatnight.wanandroid.mvp.contract.CollectContract;
 import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
 import com.example.thatnight.wanandroid.mvp.model.CollectModel;
 import com.example.thatnight.wanandroid.mvp.presenter.CollectPresenter;
-import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -57,8 +57,9 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     @Override
     protected void initView() {
         mToolbar = mRootView.findViewById(R.id.tb);
-        mToolbar.setTitle("收藏");
+        mToolbar.setTitle("");
         mToolbar.setVisibility(View.VISIBLE);
+        setTitle("收藏");
         mRv = mRootView.findViewById(R.id.rv_main);
         mRefreshLayout = mRootView.findViewById(R.id.srl_main);
         mAdapter = new NewsRvAdapter();
@@ -116,7 +117,13 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
     @Override
     public void onItemClick(int pos) {
-        Intent intent = WebViewActivity.newIntent(mActivity, mArticles.get(pos));
+        CollectArticle article = mArticles.get(pos);
+        Intent intent = WebViewActivity.newIntent(mActivity,
+                article.getId(),
+                article.getOriginId(),
+                article.getTitle(),
+                article.getLink(),
+                true);
         startActivityForResult(intent, 1);
     }
 

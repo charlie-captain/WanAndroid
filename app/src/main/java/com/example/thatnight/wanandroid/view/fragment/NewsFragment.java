@@ -14,12 +14,12 @@ import com.example.thatnight.wanandroid.adapter.NewsRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
-import com.example.thatnight.wanandroid.entity.Articles;
+import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
 import com.example.thatnight.wanandroid.mvp.model.NewsModel;
 import com.example.thatnight.wanandroid.mvp.presenter.NewsPresenter;
-import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -39,7 +39,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
         NewsRvAdapter.IOnIbtnClickListener,
         View.OnClickListener, NewsContract.IView {
 
-    private List<Articles> mArticles;
+    private List<Article> mArticles;
 
     private RecyclerView mRv;
     private RefreshLayout mRefreshLayout;
@@ -166,7 +166,13 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
 
     @Override
     public void onItemClick(int pos) {
-        Intent intent = WebViewActivity.newIntent(mActivity, mArticles.get(pos));
+        Article article = mArticles.get(pos);
+        Intent intent = WebViewActivity.newIntent(mActivity,
+                article.getId(),
+                article.getOriginId(),
+                article.getTitle(),
+                article.getLink(),
+                article.isCollect());
         startActivityForResult(intent, 1);
     }
 
@@ -199,14 +205,14 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
 
 
     @Override
-    public void refreshHtml(List<Articles> articles) {
+    public void refreshHtml(List<Article> articles) {
         mArticles.clear();
         mArticles.addAll(articles);
         mAdapter.updateData(mArticles);
     }
 
     @Override
-    public void loadMoreHtml(List<Articles> articles) {
+    public void loadMoreHtml(List<Article> articles) {
         mRefreshLayout.finishLoadmore();
         mArticles.addAll(articles);
         mAdapter.appendData(articles);
@@ -226,7 +232,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
-                mPresenter.getArticle(true,0);
+                mPresenter.getArticle(true, 0);
 //                mRefreshLayout.autoRefresh();
             }
         }

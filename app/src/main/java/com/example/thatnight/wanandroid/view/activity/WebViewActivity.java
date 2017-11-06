@@ -8,8 +8,6 @@ import android.view.View;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.SwipeBackActivity;
-import com.example.thatnight.wanandroid.entity.Articles;
-import com.example.thatnight.wanandroid.entity.CollectArticle;
 import com.example.thatnight.wanandroid.mvp.contract.WebContract;
 import com.example.thatnight.wanandroid.mvp.model.WebModel;
 import com.example.thatnight.wanandroid.mvp.presenter.WebPresenter;
@@ -21,7 +19,9 @@ import com.tencent.smtt.sdk.WebViewClient;
 public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, WebPresenter> implements View.OnClickListener, WebContract.IWebView {
 
     private WebView mWebView;
-    private Articles mArticle;
+    private String mTitle, mLink;
+    private int mId, mOriginId;
+    private boolean isCollect;
     private FloatingActionButton mActionButton;
 
 
@@ -34,9 +34,12 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
     protected void initData() {
         Intent extraIntent = getIntent();
         if (extraIntent != null) {
-            mArticle = extraIntent.getParcelableExtra("article");
+            mId = extraIntent.getIntExtra("id", 0);
+            mOriginId = extraIntent.getIntExtra("originId", 0);
+            mTitle = extraIntent.getStringExtra("title");
+            mLink = extraIntent.getStringExtra("url");
+            isCollect = extraIntent.getBooleanExtra("isCollect", false);
         }
-
     }
 
     @Override
@@ -53,14 +56,18 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
     protected void initView() {
         mShowBack = true;
         mWebView = $(R.id.wb);
-        if (!TextUtils.isEmpty(mArticle.getLink())) {
-            mWebView.loadUrl(mArticle.getLink());
-        }
         mActionButton = $(R.id.fabtn_news);
-        if (mArticle != null) {
-            mActionButton.setSelected(mArticle.isCollect());
-            setTitle(mArticle.getTitle());
+
+        setViewData();
+    }
+
+    private void setViewData() {
+
+        if (!TextUtils.isEmpty(mLink)) {
+            mWebView.loadUrl(mLink);
         }
+        mActionButton.setSelected(isCollect);
+        setTitle(mTitle);
     }
 
     @Override
@@ -85,16 +92,15 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
         mActionButton.setOnClickListener(this);
     }
 
-    public static Intent newIntent(Context context, Articles article) {
+    public static Intent newIntent(Context context,
+                                   int id, int originId,
+                                   String title, String url, boolean isCollect) {
         Intent intent = new Intent();
-        intent.putExtra("article", article);
-        intent.setClass(context, WebViewActivity.class);
-        return intent;
-    }
-
-    public static Intent newIntent(Context context, CollectArticle article) {
-        Intent intent = new Intent();
-        intent.putExtra("article", article);
+        intent.putExtra("title", title);
+        intent.putExtra("id", id);
+        intent.putExtra("originId", originId);
+        intent.putExtra("url", url);
+        intent.putExtra("isCollect", isCollect);
         intent.setClass(context, WebViewActivity.class);
         return intent;
     }
@@ -104,7 +110,11 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
         switch (v.getId()) {
             case R.id.fabtn_news:
                 ViewUtil.setSelected(v);
-                mPresenter.get(v.isSelected(), String.valueOf(mArticle.getId()));
+                if (mOriginId == 0) {
+                    mPresenter.get(v.isSelected(), String.valueOf(mId));
+                } else {
+                    mPresenter.get(String.valueOf(mId), String.valueOf(mOriginId));
+                }
                 break;
             default:
                 break;

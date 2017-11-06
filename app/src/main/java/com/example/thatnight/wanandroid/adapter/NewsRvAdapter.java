@@ -11,8 +11,8 @@ import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
-import com.example.thatnight.wanandroid.entity.Articles;
 import com.example.thatnight.wanandroid.entity.CollectArticle;
+import com.example.thatnight.wanandroid.entity.Article;
 
 ;
 
@@ -59,8 +59,8 @@ public class NewsRvAdapter extends BaseRecyclerViewAdapter {
 
         @Override
         protected void bindView(Object o) {
-            if (o instanceof Articles) {
-                Articles article = (Articles) o;
+            if (o instanceof Article) {
+                Article article = (Article) o;
                 mTitle.setText(article.getTitle());
                 mAuthor.setText(article.getAuthor());
                 mTime.setText(article.getNiceDate());

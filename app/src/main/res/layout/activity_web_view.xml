@@ -16,7 +16,8 @@
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
         >
 
-        <include layout="@layout/include_toolbar"/>
+        <include layout="@layout/include_toolbar"
+                 />
 
     </android.support.design.widget.AppBarLayout>
 

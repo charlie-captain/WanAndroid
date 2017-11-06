@@ -1,7 +1,7 @@
 package com.example.thatnight.wanandroid.mvp.contract;
 
 import com.example.thatnight.wanandroid.base.BaseContract;
-import com.example.thatnight.wanandroid.entity.Articles;
+import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.entity.Msg;
 
 import java.util.List;
@@ -13,9 +13,9 @@ import java.util.List;
 public class NewsContract {
     public interface IView extends BaseContract.IBaseView {
 
-        void refreshHtml(List<Articles> articles);
+        void refreshHtml(List<Article> articles);
 
-        void loadMoreHtml(List<Articles> articles);
+        void loadMoreHtml(List<Article> articles);
 
         void isCollectSuccess(boolean isSuccess, String s);
     }

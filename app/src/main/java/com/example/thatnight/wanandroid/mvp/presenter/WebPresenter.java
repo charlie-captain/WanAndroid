@@ -20,6 +20,12 @@ public class WebPresenter extends BasePresenter<WebModel, WebViewActivity> imple
     }
 
     @Override
+    public void get(String id, String originId) {
+        view.isLoading(true);
+        model.getUrl(id,originId,this);
+    }
+
+    @Override
     public void getResult(boolean isCollect, Msg msg) {
         if (msg == null) {
 

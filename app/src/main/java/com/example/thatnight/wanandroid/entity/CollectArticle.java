@@ -4,7 +4,7 @@ import android.os.Parcel;
 import android.os.Parcelable;
 
 /**
- * Created by thatnight on 2017.11.3.
+ * Created by thatnight on 2017.11.2.
  */
 
 public class CollectArticle implements Parcelable {
@@ -28,8 +28,8 @@ public class CollectArticle implements Parcelable {
      * userId : 624
      */
 
-    private int id;
     private int originId;
+    private int id;
     private String title;
     private int chapterId;
     private String chapterName;
@@ -45,20 +45,20 @@ public class CollectArticle implements Parcelable {
     private int courseId;
     private int userId;
 
-    public int getId() {
-        return id;
-    }
-
-    public void setId(int id) {
-        this.id = id;
-    }
-
     public int getOriginId() {
         return originId;
     }
 
     public void setOriginId(int originId) {
         this.originId = originId;
+    }
+
+    public int getId() {
+        return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public String getTitle() {
@@ -180,8 +180,8 @@ public class CollectArticle implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(this.id);
         dest.writeInt(this.originId);
+        dest.writeInt(this.id);
         dest.writeString(this.title);
         dest.writeInt(this.chapterId);
         dest.writeString(this.chapterName);
@@ -202,8 +202,8 @@ public class CollectArticle implements Parcelable {
     }
 
     protected CollectArticle(Parcel in) {
-        this.id = in.readInt();
         this.originId = in.readInt();
+        this.id = in.readInt();
         this.title = in.readString();
         this.chapterId = in.readInt();
         this.chapterName = in.readString();
@@ -220,7 +220,7 @@ public class CollectArticle implements Parcelable {
         this.userId = in.readInt();
     }
 
-    public static final Parcelable.Creator<CollectArticle> CREATOR = new Parcelable.Creator<CollectArticle>() {
+    public static final Creator<CollectArticle> CREATOR = new Creator<CollectArticle>() {
         @Override
         public CollectArticle createFromParcel(Parcel source) {
             return new CollectArticle(source);

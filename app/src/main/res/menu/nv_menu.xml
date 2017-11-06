@@ -19,7 +19,7 @@
 
     <group
         android:id="@+id/nv_menu_group_more"
-        android:checkableBehavior="single">
+        android:checkableBehavior="none">
         <item
             android:id="@+id/nv_menu_settings"
             android:icon="@drawable/ic_settings"

@@ -21,7 +21,7 @@ public class ArticleData {
     private int size;
     private int total;
     private boolean over;
-    private List<Articles> datas;
+    private List<Article> datas;
 
     public int getOffset() {
         return offset;
@@ -55,11 +55,11 @@ public class ArticleData {
         this.over = over;
     }
 
-    public List<Articles> getDatas() {
+    public List<Article> getDatas() {
         return datas;
     }
 
-    public void setDatas(List<Articles> datas) {
+    public void setDatas(List<Article> datas) {
         this.datas = datas;
     }
 

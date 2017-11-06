@@ -15,9 +15,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.entity.Account;
+import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
+import com.example.thatnight.wanandroid.view.activity.SettingsActivity;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
-import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
+import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
@@ -28,6 +30,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MainFragment mMainFragment;
     private CollectFragment mCollectFragment;
+    private SettingsFragment mSettingsFragment;
 
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
@@ -54,7 +57,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 //        toggle.syncState();
 
         mMainFragment = new MainFragment();
-        mLastFragment = mMainFragment;
         showFragment(mMainFragment);
         mNavigationView.setCheckedItem(R.id.nv_menu_main);
     }
@@ -94,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showFragment(mCollectFragment);
                 break;
             case R.id.nv_menu_settings:
-
+                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
             case R.id.nv_menu_exit:
                 finish();
@@ -105,11 +107,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void showFragment(Fragment fragment) {
-        mTransaction = mFragmentManager.beginTransaction();
-        if (!fragment.isAdded()) {
-            mTransaction.hide(mLastFragment).add(R.id.fl_content, fragment);
+        if (fragment == mLastFragment) {
+            return;
         }
-        mTransaction.hide(mLastFragment).show(fragment).commit();
+        mTransaction = mFragmentManager.beginTransaction();
+        mTransaction.setCustomAnimations(R.anim.anim_fade_in, R.anim.anim_fade_out);
+        if (!fragment.isAdded()) {
+            if (mLastFragment == null) {
+                mTransaction.add(R.id.fl_content, fragment);
+            } else {
+                mTransaction.hide(mLastFragment).add(R.id.fl_content, fragment);
+            }
+        }
+        if (mLastFragment == null) {
+            mTransaction.show(fragment).commit();
+        } else {
+            mTransaction.hide(mLastFragment).show(fragment).commit();
+        }
         mLastFragment = fragment;
     }
 
