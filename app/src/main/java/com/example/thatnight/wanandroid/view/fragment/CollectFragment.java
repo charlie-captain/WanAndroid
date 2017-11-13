@@ -7,6 +7,7 @@ import android.os.Handler;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.example.thatnight.wanandroid.R;
@@ -19,6 +20,7 @@ import com.example.thatnight.wanandroid.mvp.contract.CollectContract;
 import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
 import com.example.thatnight.wanandroid.mvp.model.CollectModel;
 import com.example.thatnight.wanandroid.mvp.presenter.CollectPresenter;
+import com.example.thatnight.wanandroid.utils.HelperCallback;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
@@ -48,8 +50,10 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     private int mPage;
     private View mIbtnCollect;
     private Handler mHandler = new Handler();
+    private ItemTouchHelper mTouchHelper;
 
     @Override
+
     protected void initData(Bundle arguments) {
         mArticles = new ArrayList<>();
     }
@@ -66,6 +70,8 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         mRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelSize(R.dimen.recyclerview_decoration)));
+        mTouchHelper = new ItemTouchHelper(new HelperCallback(mAdapter));
+        mTouchHelper.attachToRecyclerView(mRv);
         mRv.setAdapter(mAdapter);
     }
 

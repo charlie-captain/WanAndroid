@@ -1,12 +1,60 @@
 <?xml version="1.0" encoding="utf-8"?>
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
-    <SwitchPreference
-        android:key="day_light"
-        android:title="夜间模式"
-        />
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:tools="http://schemas.android.com/tools">
+    <PreferenceCategory
+        android:title="基本设置">
 
-    <PreferenceScreen
-        android:key="about"
+        <SwitchPreference
+            android:key="day_light"
+            android:title="夜间模式"
+            />
+
+        <PreferenceScreen
+            android:key="notification"
+            android:title="消息通知"
+            />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="账号设置">
+
+        <EditTextPreference
+            android:key="user_name"
+            android:singleLine="true"
+            android:summary="修改用户名"
+            android:title="用户名"/>
+        <EditTextPreference
+            android:inputType="textPassword"
+            android:key="user_password"
+            android:password="true"
+            android:singleLine="true"
+            android:summary="修改密码"
+            android:title="密码"/>
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory
         android:title="关于"
-        />
+        >
+        <PreferenceScreen
+            android:key="help"
+            android:title="帮助与反馈"
+            />
+        <PreferenceScreen
+            android:key="help"
+            android:title="帮助"
+            />
+        <PreferenceScreen
+            android:key="help"
+            android:title="帮助"
+            />
+        <PreferenceScreen
+            android:key="help"
+            android:title="帮助"
+            />
+    </PreferenceCategory>
+
+
 </PreferenceScreen>

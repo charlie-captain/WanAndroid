@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter {
@@ -39,6 +40,24 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter {
      */
     public void setOnRecyclerViewListener(OnClickRecyclerViewListener onRecyclerViewListener) {
         mOnRecyclerViewListener = onRecyclerViewListener;
+    }
+
+    /**
+     * 拖拽移动
+     * @param fromPosition
+     * @param toPosition
+     */
+    public void swapData(int fromPosition, int toPosition) {
+        if (fromPosition > toPosition) {
+            for (int i = fromPosition; i < toPosition; i++) {
+                Collections.swap(mDataList, i, i + 1);
+            }
+        } else {
+            for (int i = fromPosition; i > toPosition; i--) {
+                Collections.swap(mDataList, i, i - 1);
+            }
+        }
+        notifyItemMoved(fromPosition, toPosition);
     }
 
     public abstract class BaseRvHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
