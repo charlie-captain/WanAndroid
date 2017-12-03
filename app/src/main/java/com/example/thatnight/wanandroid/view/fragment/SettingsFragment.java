@@ -44,11 +44,12 @@ public class SettingsFragment extends PreferenceFragment {
         String userName = SharePreferenceUtil.get(getActivity(), "account", "").toString();
         String userPassword = SharePreferenceUtil.get(getActivity(), "password", "").toString();
         mEtpUserName.setTitle(userName);
+        mEtpUserName.setText(userName);
         String length = "";
         for (int i=0; i < userPassword.length(); i++) {
             length+="*";
         }
-        mEtpUserPwd.setText(length);
+        mEtpUserPwd.setTitle(length);
     }
 
     @Override

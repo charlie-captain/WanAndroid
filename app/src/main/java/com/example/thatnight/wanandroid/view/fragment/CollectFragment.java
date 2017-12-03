@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -49,6 +50,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     private NewsRvAdapter mAdapter;
     private int mPage;
     private View mIbtnCollect;
+    private int mSelectPosition;
     private Handler mHandler = new Handler();
     private ItemTouchHelper mTouchHelper;
 
@@ -63,6 +65,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         mToolbar = mRootView.findViewById(R.id.tb);
         mToolbar.setTitle("");
         mToolbar.setVisibility(View.VISIBLE);
+        setDraw(true);
         setTitle("收藏");
         mRv = mRootView.findViewById(R.id.rv_main);
         mRefreshLayout = mRootView.findViewById(R.id.srl_main);
@@ -142,6 +145,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     @Override
     public void onIbtnClick(View v, int position) {
         mIbtnCollect = v;
+        mSelectPosition = position;
         ViewUtil.setSelected(v);
         mPresenter.collect(String.valueOf(mArticles.get(position).getId()),
                 String.valueOf(mArticles.get(position).getOriginId()));
@@ -178,7 +182,18 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
     @Override
     public void isCollectSuccess(boolean isSuccess, String s) {
-        showToast(s);
+//        showToast(s);
+        Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT)
+                .setAction("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mIbtnCollect != null) {
+                            ViewUtil.setSelected(mIbtnCollect);
+                        }
+                        mPresenter.collect(String.valueOf(mArticles.get(mSelectPosition).getId()),
+                                String.valueOf(mArticles.get(mSelectPosition).getOriginId()));
+                    }
+                }).show();
         if (!isSuccess) {
             if (mIbtnCollect != null) {
                 ViewUtil.setSelected(mIbtnCollect);

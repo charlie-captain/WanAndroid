@@ -26,16 +26,13 @@ public class RegisterPresenter extends BasePresenter<RegisterModel, RegisterActi
         view.isLoading(false);
         msg.getErrorCode();
         if (msg == null) {
-            view.isSuccess(false, null);
-            view.showToast("注册失败 , 网络出现错误");
+            view.isSuccess(false, null, "注册失败 , 网络出现错误");
         }
         if (0 == msg.getErrorCode()) {
-            Account account= GsonUtil.gsonToBean(msg.getData().toString(),Account.class);
-
-            view.isSuccess(true,account);
+            Account account = GsonUtil.gsonToBean(msg.getData().toString(), Account.class);
+            view.isSuccess(true, account, null);
         } else {
-            view.isSuccess(false, null);
-            view.showToast(msg.getErrorMsg().toString());
+            view.isSuccess(false, null, msg.getErrorMsg().toString());
         }
     }
 }

@@ -29,7 +29,7 @@ public class RegisterModel extends BaseModel implements RegisterContract.IModel 
         OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_REGISTER, new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
-
+                iPresenter.getResult(null);
             }
 
             @Override

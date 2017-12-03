@@ -5,12 +5,22 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent"
               android:fitsSystemWindows="true"
+              android:id="@+id/ll_news"
               android:orientation="vertical">
 
     <include
         layout="@layout/include_toolbar"
         android:visibility="gone"/>
 
+    <com.example.expandpopview.view.ExpandPopView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/epv_classify"
+        app:tab_togglebtn_bg_color="@color/colorAccent"
+        app:tab_togglebtn_text_color="@color/white"
+        android:visibility="gone">
+    </com.example.expandpopview.view.ExpandPopView>
+    
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/srl_main"
         android:layout_width="match_parent"

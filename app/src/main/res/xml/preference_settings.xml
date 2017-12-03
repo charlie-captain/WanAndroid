@@ -42,18 +42,6 @@
             android:key="help"
             android:title="帮助与反馈"
             />
-        <PreferenceScreen
-            android:key="help"
-            android:title="帮助"
-            />
-        <PreferenceScreen
-            android:key="help"
-            android:title="帮助"
-            />
-        <PreferenceScreen
-            android:key="help"
-            android:title="帮助"
-            />
     </PreferenceCategory>
 
 

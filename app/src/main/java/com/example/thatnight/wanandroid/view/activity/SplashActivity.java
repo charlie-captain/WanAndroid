@@ -7,7 +7,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.example.thatnight.wanandroid.MainActivity;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.model.LoginModel;

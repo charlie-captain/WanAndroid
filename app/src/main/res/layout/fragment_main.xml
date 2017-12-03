@@ -8,7 +8,7 @@
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context="com.example.thatnight.wanandroid.MainActivity">
+    tools:context="com.example.thatnight.wanandroid.view.activity.MainActivity">
 
     <android.support.design.widget.AppBarLayout
         android:id="@+id/apl_main"

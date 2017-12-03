@@ -13,6 +13,7 @@ import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BasePresenter;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -46,8 +47,10 @@ public class MainFragment extends BaseFragment {
 
     @Override
     protected void initData(Bundle arguments) {
-        List<String> title = Arrays.asList("最新", "分类", "常用");
-        mFragments = Arrays.asList(new NewsFragment(), new ClassifyFragment(), new ClassifyFragment());
+        List<String> title = Arrays.asList("最新", "分类");
+        mFragments=new ArrayList<>();
+        mFragments.add(new NewsFragment());
+        mFragments.add(new ClassifyFragment());
         mAdapter = new FragmentAdapter(getChildFragmentManager(), mFragments, title);
     }
 
@@ -55,6 +58,7 @@ public class MainFragment extends BaseFragment {
     protected void initView() {
         mToolbar = mRootView.findViewById(R.id.tb);
         mToolbar.setTitle("");
+        setDraw(true);
         setTitle("WanAndroid");
         mTabLayout = mRootView.findViewById(R.id.tl_main);
         mAppBarLayout = mRootView.findViewById(R.id.apl_main);
@@ -82,4 +86,5 @@ public class MainFragment extends BaseFragment {
     public void isLoading(boolean isLoading) {
 
     }
+
 }

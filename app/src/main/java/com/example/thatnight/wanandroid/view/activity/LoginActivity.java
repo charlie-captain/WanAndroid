@@ -1,13 +1,13 @@
 package com.example.thatnight.wanandroid.view.activity;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.animbutton.AnimButton;
-import com.example.thatnight.wanandroid.MainActivity;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
@@ -48,7 +48,7 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
             public void onClick(View v) {
                 ViewUtil.inputSoftWare(false, v);
                 if (TextUtils.isEmpty(getName()) || TextUtils.isEmpty(getPassword())) {
-                    showToast("账号或密码不能为空");
+                    Snackbar.make(mBtnLogin, "账号或密码不能为空", Snackbar.LENGTH_SHORT).show();
                 } else {
                     mBtnLogin.startAnimation();
                     mPresenter.login();
@@ -90,8 +90,7 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
     }
 
     @Override
-    public void isSuccess(boolean isSuccess, Account dataBean) {
-
+    public void isSuccess(boolean isSuccess, Account dataBean, String s) {
         if (isSuccess) {
             Intent intent = new Intent();
             intent.setClass(this, MainActivity.class);
@@ -100,6 +99,8 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
             finish();
         } else {
             mBtnLogin.errorAnimation();
+            Snackbar.make(mBtnLogin, s, Snackbar.LENGTH_SHORT).show();
         }
     }
+
 }

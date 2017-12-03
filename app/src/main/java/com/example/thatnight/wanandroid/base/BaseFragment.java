@@ -5,6 +5,7 @@ import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.widget.DrawerLayout;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -14,7 +15,9 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
+import com.example.thatnight.wanandroid.view.activity.MainActivity;
 
 /**
  * Created by thatnight on 2017.10.27.
@@ -31,7 +34,8 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
     protected TextView mTitle;
     protected ImageButton mIbtnMenu;
     protected ImageButton mIbtnDraw;
-
+    protected DrawerLayout mDrawerLayout;
+    protected OnDrawBtnClickCallback mDrawBtnClickCallback;
     protected P mPresenter;
 
 
@@ -92,6 +96,9 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = getActivity();
+        if (getActivity() instanceof MainActivity) {
+            mDrawBtnClickCallback = (OnDrawBtnClickCallback) getActivity();
+        }
     }
 
     protected void setDraw(boolean isShow) {
@@ -99,8 +106,20 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
             mIbtnDraw = mRootView.findViewById(R.id.tb_draw);
             if (mIbtnDraw != null) {
                 mIbtnDraw.setVisibility(View.VISIBLE);
+                mIbtnDraw.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mDrawBtnClickCallback != null) {
+                            mDrawBtnClickCallback.onDrawBtnClick();
+                        }
+                    }
+                });
             }
         }
+    }
+
+    public void setDrawBtnClickCallback(OnDrawBtnClickCallback callback) {
+        mDrawBtnClickCallback = callback;
     }
 
     protected void setTitle(String title) {

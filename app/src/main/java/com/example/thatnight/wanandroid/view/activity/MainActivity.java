@@ -1,27 +1,31 @@
-package com.example.thatnight.wanandroid;
+package com.example.thatnight.wanandroid.view.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
-import com.example.thatnight.wanandroid.view.activity.SettingsActivity;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDrawBtnClickCallback {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -95,15 +99,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 showFragment(mCollectFragment);
                 break;
+            case R.id.nv_menu_user:
+                Snackbar.make(mDrawerLayout, "未完待续...", Snackbar.LENGTH_SHORT).show();
+                break;
             case R.id.nv_menu_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 break;
             case R.id.nv_menu_exit:
-                finish();
+                new AlertDialog.Builder(this).
+                        setTitle("提示").
+                        setMessage("是否注销?").
+                        setNegativeButton("是", new DialogInterface.OnClickListener() {
+                            @Override
+                            public void onClick(DialogInterface dialog, int which) {
+                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                finish();
+                            }
+                        }).setPositiveButton("否", null).show();
                 break;
             default:
                 break;
         }
+
     }
 
     private void showFragment(Fragment fragment) {
@@ -134,5 +151,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             super.onBackPressed();
         }
+    }
+
+    @Override
+    public void onDrawBtnClick() {
+        mDrawerLayout.openDrawer(GravityCompat.START);
     }
 }

@@ -1,11 +1,10 @@
 package com.example.thatnight.wanandroid.mvp.model;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.example.thatnight.wanandroid.base.BaseModel;
-import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.constant.Constant;
+import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.LoginContract;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
@@ -26,11 +25,10 @@ public class LoginModel extends BaseModel implements LoginContract.ILoginModel {
         Map<String, String> data = new HashMap<>();
         data.put("username", name);
         data.put("password", pwd);
-        Log.d("login", "login: " + name + "   " + pwd);
         OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_LOGIN, new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
-
+                iLoginPresenter.getResult(null);
             }
 
             @Override

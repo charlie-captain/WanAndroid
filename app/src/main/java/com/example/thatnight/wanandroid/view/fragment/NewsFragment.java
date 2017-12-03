@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -46,6 +47,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     private NewsRvAdapter mAdapter;
     private int mPage;
     private View mIbtnCollect;
+    private int mSelectPosition;
     private Handler mHandler = new Handler();
 
     @Override
@@ -185,6 +187,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     @Override
     public void onIbtnClick(View v, int position) {
         mIbtnCollect = v;
+        mSelectPosition = position;
         ViewUtil.setSelected(v);
         mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
     }
@@ -220,7 +223,17 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
 
     @Override
     public void isCollectSuccess(boolean isSuccess, String s) {
-        showToast(s);
+//        showToast(s);
+        Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT)
+                .setAction("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mIbtnCollect != null) {
+                            ViewUtil.setSelected(mIbtnCollect);
+                        }
+                        mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
+                    }
+                }).show();
         if (!isSuccess) {
             if (mIbtnCollect != null) {
                 ViewUtil.setSelected(mIbtnCollect);

@@ -127,6 +127,13 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
         }
     }
 
+    protected void setIbMenu(int res) {
+        if (mIbMenu != null) {
+            mIbMenu.setImageResource(res);
+            mIbMenu.setVisibility(View.VISIBLE);
+        }
+    }
+
     protected <T extends View> T $(int resId) {
         return (T) findViewById(resId);
     }
@@ -134,4 +141,5 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
     public void showToast(String s) {
         ToastUtil.showToast(this, s);
     }
+
 }

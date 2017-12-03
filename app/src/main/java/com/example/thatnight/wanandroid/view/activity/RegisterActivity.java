@@ -1,12 +1,12 @@
 package com.example.thatnight.wanandroid.view.activity;
 
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
 
 import com.example.animbutton.AnimButton;
-import com.example.thatnight.wanandroid.MainActivity;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.SwipeBackActivity;
@@ -47,13 +47,13 @@ public class RegisterActivity extends SwipeBackActivity<RegisterContract.IView, 
                 ViewUtil.inputSoftWare(false, v);
                 if (TextUtils.isEmpty(getName()) || TextUtils.isEmpty(getPassword())
                         || TextUtils.isEmpty(mPwd.getText().toString().trim())) {
-                    showToast("账号或密码不能为空");
+                    Snackbar.make(mBtnRegister, "账号或密码不能为空", Snackbar.LENGTH_SHORT).show();
                 } else {
                     if (mPwd.getText().toString().trim().equals(mRePwd.getText().toString().trim())) {
                         mBtnRegister.startAnimation();
                         mPresenter.register();
                     } else {
-                        showToast("两次密码输入不相同");
+                        Snackbar.make(mBtnRegister, "两次密码输入不相同", Snackbar.LENGTH_SHORT).show();
                     }
                 }
             }
@@ -86,7 +86,7 @@ public class RegisterActivity extends SwipeBackActivity<RegisterContract.IView, 
     }
 
     @Override
-    public void isSuccess(boolean isSuccess, Account dataBean) {
+    public void isSuccess(boolean isSuccess, Account dataBean, String s) {
         if (isSuccess) {
             Intent intent = new Intent();
             intent.setClass(this, MainActivity.class);
@@ -95,6 +95,8 @@ public class RegisterActivity extends SwipeBackActivity<RegisterContract.IView, 
             finish();
         } else {
             mBtnRegister.errorAnimation();
+            Snackbar.make(mBtnRegister, s, Snackbar.LENGTH_SHORT).show();
         }
     }
+
 }

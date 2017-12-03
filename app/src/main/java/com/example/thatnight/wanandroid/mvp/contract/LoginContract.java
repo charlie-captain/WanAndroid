@@ -14,7 +14,7 @@ public class LoginContract {
 
         String getPassword();
 
-        void isSuccess(boolean isSuccess, Account dataBean);
+        void isSuccess(boolean isSuccess, Account dataBean,String s);
     }
 
     public interface ILoginPresenter extends BaseContract.IBasePresenter {

@@ -10,18 +10,18 @@
 
     <application
         android:allowBackup="true"
-        android:icon="@mipmap/ic_launcher"
+        android:icon="@mipmap/ic_launcher_round"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".MainActivity">
+        <activity android:name=".view.activity.MainActivity">
         </activity>
         <activity android:name=".view.activity.WebViewActivity">
         </activity>
         <activity
             android:name=".view.activity.LoginActivity"
-            android:theme="@style/TranCurrent">
+            >
         </activity>
         <activity android:name=".view.activity.UserActivity">
         </activity>

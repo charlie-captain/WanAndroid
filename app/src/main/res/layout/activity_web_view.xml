@@ -3,10 +3,11 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_web_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
     android:fitsSystemWindows="true"
+    android:orientation="vertical"
     tools:context=".view.activity.WebViewActivity"
     >
 
@@ -17,7 +18,7 @@
         >
 
         <include layout="@layout/include_toolbar"
-                 />
+            />
 
     </android.support.design.widget.AppBarLayout>
 
@@ -46,6 +47,5 @@
         app:borderWidth="0dp"
         app:layout_behavior="com.example.thatnight.wanandroid.view.customview.FloatingBehavior"
         />
-
 
 </android.support.design.widget.CoordinatorLayout>
