@@ -49,16 +49,13 @@ public class ClassifyModel extends BaseModel implements ClassifyContract.IModel 
                 List<List<KeyValue>> parentChildrenList = new ArrayList<>();
 
                 for (Element element : list) {
-                    Log.d("jsoup", "onResponse: " + element.toString());
                     Elements li = element.select("li");
-                    Log.d("jsoup", "onResponse: " + li.toString());
                     if (i == 1) {
                         childList = new ArrayList<>();
                     }
                     for (Element e : li) {
                         String key = e.getElementsByTag("a").text();
                         String value = e.getElementsByTag("a").attr("href");
-                        Log.d("jsoup", "onResponse: " + key + " " + value);
                         KeyValue keyValue = new KeyValue(key, value);
                         if (i == 0) {
                             parentList.add(keyValue);

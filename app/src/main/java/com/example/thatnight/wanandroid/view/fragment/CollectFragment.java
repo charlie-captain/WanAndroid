@@ -53,9 +53,9 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     private int mSelectPosition;
     private Handler mHandler = new Handler();
     private ItemTouchHelper mTouchHelper;
+    private CollectArticle mUnCollectArticle;
 
     @Override
-
     protected void initData(Bundle arguments) {
         mArticles = new ArrayList<>();
     }
@@ -133,7 +133,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
                 article.getTitle(),
                 article.getLink(),
                 true);
-        startActivityForResult(intent, 1);
+        startActivityForresultAnim(intent, 1);
     }
 
     @Override
@@ -147,8 +147,9 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         mIbtnCollect = v;
         mSelectPosition = position;
         ViewUtil.setSelected(v);
-        mPresenter.collect(String.valueOf(mArticles.get(position).getId()),
+        mPresenter.collect(false, String.valueOf(mArticles.get(position).getId()),
                 String.valueOf(mArticles.get(position).getOriginId()));
+        mUnCollectArticle = mArticles.get(position);
     }
 
     @Override
@@ -190,8 +191,12 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
                         if (mIbtnCollect != null) {
                             ViewUtil.setSelected(mIbtnCollect);
                         }
-                        mPresenter.collect(String.valueOf(mArticles.get(mSelectPosition).getId()),
-                                String.valueOf(mArticles.get(mSelectPosition).getOriginId()));
+                        if (mUnCollectArticle != null) {
+                            mPresenter.collect(true, String.valueOf(mUnCollectArticle.getId()),
+                                    String.valueOf(mUnCollectArticle.getOriginId()));
+                        } else {
+                            Snackbar.make(mRootView, "好像什么东西丢了,我忘了.", Snackbar.LENGTH_SHORT);
+                        }
                     }
                 }).show();
         if (!isSuccess) {
@@ -208,7 +213,6 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
                 mPresenter.getArticle(true, 0);
-//                mRefreshLayout.autoRefresh();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

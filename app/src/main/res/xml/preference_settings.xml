@@ -1,18 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-                  xmlns:tools="http://schemas.android.com/tools">
+                  xmlns:tools="http://schemas.android.com/tools"
+                  xmlns:app="http://schemas.android.com/apk/res-auto">
     <PreferenceCategory
         android:title="基本设置">
+
+        <ListPreference
+            android:key="theme"
+            android:title="主题肤色"
+            android:entries="@array/list_color_name"
+            android:entryValues="@array/list_color_value"
+            android:dialogTitle="选择颜色"
+            android:defaultValue="@string/pref_default_value"
+            android:summary="@string/pref_default_value"
+            />
 
         <SwitchPreference
             android:key="day_light"
             android:title="夜间模式"
             />
 
-        <PreferenceScreen
-            android:key="notification"
-            android:title="消息通知"
-            />
 
 
     </PreferenceCategory>
@@ -23,12 +30,16 @@
             android:key="user_name"
             android:singleLine="true"
             android:summary="修改用户名"
+            android:textColor="@color/textColorPrimary"
+            android:textColorHint="@color/textColorSecondary"
             android:title="用户名"/>
         <EditTextPreference
             android:inputType="textPassword"
             android:key="user_password"
             android:password="true"
             android:singleLine="true"
+            android:textColor="@color/textColorPrimary"
+            android:textColorHint="@color/textColorSecondary"
             android:summary="修改密码"
             android:title="密码"/>
 

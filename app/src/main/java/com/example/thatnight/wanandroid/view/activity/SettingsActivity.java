@@ -16,11 +16,6 @@ public class SettingsActivity extends SwipeBackActivity {
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
 
     @Override
     protected BaseModel initModel() {

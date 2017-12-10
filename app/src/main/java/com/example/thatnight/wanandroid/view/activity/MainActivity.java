@@ -1,7 +1,10 @@
 package com.example.thatnight.wanandroid.view.activity;
 
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Color;
+import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -12,8 +15,10 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.view.MenuItem;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -25,7 +30,9 @@ import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDrawBtnClickCallback {
+import skin.support.app.SkinCompatActivity;
+
+public class MainActivity extends SkinCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDrawBtnClickCallback {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -34,7 +41,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MainFragment mMainFragment;
     private CollectFragment mCollectFragment;
-    private SettingsFragment mSettingsFragment;
 
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
@@ -45,15 +51,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-
         mFragmentManager = getSupportFragmentManager();
-        mDrawerLayout = findViewById(R.id.dv_main);
-        mNavigationView = findViewById(R.id.nv_main);
-        mNavigationView.setItemIconTintList(null);
+        mDrawerLayout = (DrawerLayout) findViewById(R.id.dv_main);
+        mNavigationView = (NavigationView) findViewById(R.id.nv_main);
         mName = mNavigationView.getHeaderView(0).findViewById(R.id.tv_nv_header_name);
         mNavigationView.setNavigationItemSelectedListener(this);
         initData();
-
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 //                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
 //        );
@@ -69,8 +72,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         Intent intent = getIntent();
         mAccount = intent.getParcelableExtra("account");
         if (mAccount != null) {
-            SharePreferenceUtil.put(this, "account", mAccount.getUsername());
-            SharePreferenceUtil.put(this, "password", mAccount.getPassword());
+            SharePreferenceUtil.put(getApplicationContext(), "account", mAccount.getUsername());
+            SharePreferenceUtil.put(getApplicationContext(), "password", mAccount.getPassword());
             mName.setText(mAccount.getUsername());
         }
     }
@@ -104,6 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nv_menu_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
+                overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
                 break;
             case R.id.nv_menu_exit:
                 new AlertDialog.Builder(this).
@@ -113,6 +117,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
                                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
+                                overridePendingTransition(R.anim.anim_right_in,R.anim.anim_right_out);
                                 finish();
                             }
                         }).setPositiveButton("否", null).show();
@@ -150,6 +155,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mDrawerLayout.closeDrawer(GravityCompat.START);
         } else {
             super.onBackPressed();
+            overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
         }
     }
 
@@ -157,4 +163,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onDrawBtnClick() {
         mDrawerLayout.openDrawer(GravityCompat.START);
     }
+
+
 }

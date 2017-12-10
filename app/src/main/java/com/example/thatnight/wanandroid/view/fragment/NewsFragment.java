@@ -175,7 +175,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
                 article.getTitle(),
                 article.getLink(),
                 article.isCollect());
-        startActivityForResult(intent, 1);
+        startActivityForresultAnim(intent, 1);
     }
 
     @Override

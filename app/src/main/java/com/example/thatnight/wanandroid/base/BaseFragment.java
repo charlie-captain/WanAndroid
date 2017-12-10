@@ -2,6 +2,7 @@ package com.example.thatnight.wanandroid.base;
 
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -156,4 +157,16 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
     public void showToast(String s) {
         ToastUtil.showToast(mActivity, s);
     }
+
+    public void startActivityAnim( Class activity){
+        startActivity(new Intent(mActivity,activity));
+        mActivity.overridePendingTransition(R.anim.anim_left_in,R.anim.anim_left_out);
+    }
+
+    public void startActivityForresultAnim( Intent intent ,int code){
+        startActivityForResult(intent,code);
+        mActivity.overridePendingTransition(R.anim.anim_left_in,R.anim.anim_left_out);
+    }
+
+
 }

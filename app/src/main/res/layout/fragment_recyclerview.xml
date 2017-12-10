@@ -2,10 +2,10 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
               xmlns:app="http://schemas.android.com/apk/res-auto"
               xmlns:tools="http://schemas.android.com/tools"
+              android:id="@+id/ll_news"
               android:layout_width="match_parent"
               android:layout_height="match_parent"
-              android:fitsSystemWindows="true"
-              android:id="@+id/ll_news"
+              android:background="@color/background"
               android:orientation="vertical">
 
     <include
@@ -13,14 +13,15 @@
         android:visibility="gone"/>
 
     <com.example.expandpopview.view.ExpandPopView
+        android:id="@+id/epv_classify"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/epv_classify"
-        app:tab_togglebtn_bg_color="@color/colorAccent"
+        android:visibility="gone"
+        app:tab_togglebtn_bg_color="@color/toggleBtnColor"
         app:tab_togglebtn_text_color="@color/white"
-        android:visibility="gone">
+        >
     </com.example.expandpopview.view.ExpandPopView>
-    
+
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/srl_main"
         android:layout_width="match_parent"
@@ -38,7 +39,6 @@
             android:id="@+id/rv_main"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/background"
             />
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 </LinearLayout>

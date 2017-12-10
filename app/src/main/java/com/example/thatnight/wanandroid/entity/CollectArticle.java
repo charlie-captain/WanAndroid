@@ -231,4 +231,5 @@ public class CollectArticle implements Parcelable {
             return new CollectArticle[size];
         }
     };
+
 }

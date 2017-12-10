@@ -29,10 +29,15 @@ public class ProgressDialogUtil {
         if (sProgressDialog.isShowing()) {
             return;
         }
-        sProgressDialog.setMessage(msg);
-        sProgressDialog.setCancelable(true);
-        sProgressDialog.show();
-        isShow = true;
+        try {
+            sProgressDialog.setMessage(msg);
+            sProgressDialog.setCancelable(true);
+            sProgressDialog.show();
+            isShow = true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            sProgressDialog=null;
+        }
     }
 
     private static void init(Context context) {

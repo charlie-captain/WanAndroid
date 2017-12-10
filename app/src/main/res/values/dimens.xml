@@ -8,5 +8,6 @@
     <dimen name="recyclerview_decoration">6dp</dimen>
 
     <dimen name="width_height_button">24dp</dimen>
+    <dimen name="status_bar_height">24dp</dimen>
 
 </resources>

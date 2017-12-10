@@ -42,26 +42,46 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
     }
 
     @Override
-    public void collect(String id, String originId, final CollectContract.IPresenter iPresenter) {
-        Map<String, String> map = new HashMap<>();
-        map.put("originId", originId);
-        OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
-            @Override
-            public void onError(Call call, Exception e) {
+    public void collect(final boolean isCollect, String id, String originId, final CollectContract.IPresenter iPresenter) {
+        if (isCollect) {
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + originId+ "/json", new OkHttpResultCallback() {
+                @Override
+                public void onError(Call call, Exception e) {
 
-            }
-
-            @Override
-            public void onResponse(byte[] bytes) {
-                String response = new String(bytes);
-                if (TextUtils.isEmpty(response)) {
-                    iPresenter.collectResult(null);
                 }
-                Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                iPresenter.collectResult(msg);
-            }
 
-        }, map);
+                @Override
+                public void onResponse(byte[] bytes) {
+                    String response = new String(bytes);
+                    if (TextUtils.isEmpty(response)) {
+                        iPresenter.collectResult(isCollect,null);
+                    }
+                    Msg msg = GsonUtil.gsonToBean(response, Msg.class);
+                    iPresenter.collectResult(isCollect,msg);
+                }
 
+            }, null);
+        } else {
+            Map<String, String> map = new HashMap<>();
+            map.put("originId", originId);
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
+                @Override
+                public void onError(Call call, Exception e) {
+
+                }
+
+                @Override
+                public void onResponse(byte[] bytes) {
+                    String response = new String(bytes);
+                    if (TextUtils.isEmpty(response)) {
+                        iPresenter.collectResult(isCollect, null);
+                    }
+                    Msg msg = GsonUtil.gsonToBean(response, Msg.class);
+                    iPresenter.collectResult(isCollect, msg);
+                }
+
+            }, map);
+        }
     }
+
 }

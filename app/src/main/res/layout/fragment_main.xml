@@ -10,21 +10,33 @@
     android:orientation="vertical"
     tools:context="com.example.thatnight.wanandroid.view.activity.MainActivity">
 
+
     <android.support.design.widget.AppBarLayout
         android:id="@+id/apl_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
         android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar">
 
         <include layout="@layout/include_toolbar"/>
 
-        <android.support.design.widget.TabLayout
-            android:id="@+id/tl_main"
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-
+            android:background="@color/colorPrimary"
+            android:orientation="vertical"
             >
-        </android.support.design.widget.TabLayout>
+
+            <android.support.design.widget.TabLayout
+                android:id="@+id/tl_main"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:tabTextColor="@color/white"
+                >
+            </android.support.design.widget.TabLayout>
+        </LinearLayout>
+
 
     </android.support.design.widget.AppBarLayout>
 

@@ -131,7 +131,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
                 article.getTitle(),
                 article.getLink(),
                 article.isCollect());
-        startActivityForResult(intent, 1);
+        startActivityForresultAnim(intent, 1);
     }
 
     @Override
@@ -163,7 +163,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
             if (parentList == null || parentChildrenList == null || parentList.size() <= 0 || parentChildrenList.size() <= 0) {
                 return;
             }
-            mExpandPopView.addItemToExpandTab(parentList.get(0).getKey(), parentList, parentChildrenList, new OnTwoListCallback() {
+            mExpandPopView.addItemToExpandTab(parentChildrenList.get(0).get(0).getKey(), parentList, parentChildrenList, new OnTwoListCallback() {
                 @Override
                 public void returnParentKeyValue(int pos, com.example.expandpopview.entity.KeyValue keyValue) {
                     mParentPosition = pos;
@@ -176,7 +176,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
                     mPresenter.getArticle(true, mPage, keyValue.getValue());
                 }
             });
-            mNormalKeyValue=parentChildrenList.get(0).get(0);
+            mNormalKeyValue = parentChildrenList.get(0).get(0);
             mPresenter.getArticle(true, 0, parentChildrenList.get(0).get(0).getValue());
             isLoad = true;
         }

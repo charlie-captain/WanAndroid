@@ -7,12 +7,14 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.util.Log;
 
+import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.model.LoginModel;
 import com.example.thatnight.wanandroid.mvp.presenter.LoginPresenter;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
+import com.example.thatnight.wanandroid.utils.ToastUtil;
 
 public class SplashActivity extends AppCompatActivity {
 
@@ -24,11 +26,11 @@ public class SplashActivity extends AppCompatActivity {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                String name = (String) SharePreferenceUtil.get(SplashActivity.this, "account", "");
-                String password = (String) SharePreferenceUtil.get(SplashActivity.this, "password", "");
+                String name = (String) SharePreferenceUtil.get(getApplicationContext(), "account", "");
+                String password = (String) SharePreferenceUtil.get(getApplicationContext(), "password", "");
 
                 if (TextUtils.isEmpty(name) && TextUtils.isEmpty(password)) {
-                    startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                    startActivityAnim(new Intent(SplashActivity.this, LoginActivity.class));
                     finish();
                 } else {
                     final boolean isLogin = false;
@@ -36,6 +38,7 @@ public class SplashActivity extends AppCompatActivity {
                         @Override
                         public void getResult(Msg msg) {
                             if (msg == null) {
+                                ToastUtil.showToast(getApplicationContext(),"网络出了点问题");
                                 startActivity(new Intent(SplashActivity.this, LoginActivity.class));
                                 finish();
                                 return;
@@ -47,10 +50,10 @@ public class SplashActivity extends AppCompatActivity {
                                 Intent intent = new Intent();
                                 intent.setClass(SplashActivity.this, MainActivity.class);
                                 intent.putExtra("account", account);
-                                startActivity(intent);
+                                startActivityAnim(intent);
                                 finish();
                             } else {
-                                startActivity(new Intent(SplashActivity.this, LoginActivity.class));
+                                startActivityAnim(new Intent(SplashActivity.this, LoginActivity.class));
                                 finish();
                             }
                         }
@@ -60,5 +63,10 @@ public class SplashActivity extends AppCompatActivity {
 
             }
         }, 1000);
+    }
+
+    public void startActivityAnim(Intent intent){
+        startActivity(intent);
+        overridePendingTransition(R.anim.anim_left_in,R.anim.anim_left_out);
     }
 }

@@ -20,4 +20,7 @@
     <string name="pref_user_name">user_name</string>
     <string name="pref_user_password">user_password</string>
     <string name="pref_help">help</string>
+    <string name="pref_theme">theme</string>
+
+    <string name="pref_default_value">安卓蓝</string>
 </resources>

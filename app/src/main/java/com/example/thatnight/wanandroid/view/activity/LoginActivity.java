@@ -15,6 +15,7 @@ import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.mvp.contract.LoginContract;
 import com.example.thatnight.wanandroid.mvp.model.LoginModel;
 import com.example.thatnight.wanandroid.mvp.presenter.LoginPresenter;
+import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
 
 public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginPresenter> implements LoginContract.ILoginView {
@@ -39,6 +40,16 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
         mPwd = $(R.id.et_login_psw);
         mRegister = $(R.id.tv_register);
         mBtnLogin = $(R.id.btn_login);
+
+        String userName = SharePreferenceUtil.get(getApplicationContext(), "account", "").toString();
+        String password = SharePreferenceUtil.get(getApplicationContext(), "password", "").toString();
+        if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password)) {
+            mName.setText(userName);
+            mName.setSelection(userName.length());
+            mPwd.setText(password);
+            mPwd.setSelection(password.length());
+            ViewUtil.inputSoftWare(false, mPwd);
+        }
     }
 
     @Override

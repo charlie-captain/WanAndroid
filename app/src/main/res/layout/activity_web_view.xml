@@ -1,39 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
-<android.support.design.widget.CoordinatorLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<android.support.design.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_web_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/webviewBackgroundColor"
     android:fitsSystemWindows="true"
     android:orientation="vertical"
-    tools:context=".view.activity.WebViewActivity"
-    >
+    tools:context=".view.activity.WebViewActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:theme="@style/ThemeOverlay.AppCompat.Dark.ActionBar"
-        >
+        android:layout_height="wrap_content">
 
-        <include layout="@layout/include_toolbar"
-            />
+        <include layout="@layout/include_toolbar" />
 
     </android.support.design.widget.AppBarLayout>
+
+    <!--<View-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--android:background="@color/webviewBackgroundColor"-->
+    <!--/>-->
+
 
     <android.support.v4.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="@color/webviewBackgroundColor"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <com.tencent.smtt.sdk.WebView
-            android:id="@+id/wb"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            >
+        <!--<com.tencent.smtt.sdk.WebView-->
+        <!--android:id="@+id/wb"-->
+        <!--android:layout_width="match_parent"-->
+        <!--android:layout_height="match_parent"-->
+        <!--&gt;-->
+        <!--</com.tencent.smtt.sdk.WebView>-->
 
-        </com.tencent.smtt.sdk.WebView>
+
+        <FrameLayout
+            android:id="@+id/fl_web"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+        </FrameLayout>
+
+
     </android.support.v4.widget.NestedScrollView>
 
     <android.support.design.widget.FloatingActionButton
@@ -45,7 +57,6 @@
         android:backgroundTint="@color/white"
         android:src="@drawable/selector_like"
         app:borderWidth="0dp"
-        app:layout_behavior="com.example.thatnight.wanandroid.view.customview.FloatingBehavior"
-        />
+        app:layout_behavior="com.example.thatnight.wanandroid.view.customview.FloatingBehavior" />
 
 </android.support.design.widget.CoordinatorLayout>

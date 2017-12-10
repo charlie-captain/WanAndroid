@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/white"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/itemBackgroundColor"
     >
 
     <RelativeLayout
@@ -23,11 +24,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_toEndOf="@id/item_ib_like"
-            android:fontFamily="serif"
+            android:fontFamily="sans-serif"
             android:paddingEnd="8dp"
             android:paddingStart="8dp"
             android:textAllCaps="false"
-            android:textColor="@android:color/black"
+            android:textColor="@color/textColorPrimary"
             android:textSize="14sp"
             tools:text="ssssssjjjjjjjjjjjjjjjjjjjjssssssssssssssssssssssssssssssssssssssjjjjjjjjjjssss"/>
 
@@ -38,6 +39,7 @@
             android:layout_below="@id/item_tv_title"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
+            android:textColor="@color/textColorSecondary"
             android:layout_toEndOf="@id/item_ib_like"
             android:text="作者:啊速度就说法"
             android:textSize="12sp"
@@ -48,7 +50,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/item_tv_author"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
+            android:textColor="@color/textColorSecondary"
             android:layout_toEndOf="@id/item_tv_author"
             android:text="分类"
             android:textSize="12sp"
@@ -59,8 +62,9 @@
             android:id="@+id/item_tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:textColor="@color/textColorSecondary"
             android:layout_alignBaseline="@id/item_tv_author"
-            android:layout_marginStart="8dp"
+            android:layout_marginStart="16dp"
             android:layout_toEndOf="@id/item_tv_type"
             android:text="时间: 2017-02-12"
             android:textSize="12sp"
@@ -73,7 +77,7 @@
             android:layout_alignParentLeft="true"
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackgroundBorderless"
-            android:src="@drawable/selector_like"
+            app:srcCompat="@drawable/selector_like"
             />
     </RelativeLayout>
 

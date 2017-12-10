@@ -32,7 +32,7 @@ public class FloatingBehavior extends CoordinatorLayout.Behavior<View> {
                                        int axes,
                                        int type) {
         return axes == ViewCompat.SCROLL_AXIS_VERTICAL ||
-                super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, axes, type);
+                super.onStartNestedScroll(coordinatorLayout, child, directTargetChild, target, axes);
     }
 
 

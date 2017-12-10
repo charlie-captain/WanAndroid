@@ -1,10 +1,61 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <color name="colorPrimary">#3F51B5</color>
-    <color name="colorPrimaryDark">#303F9F</color>
+    <color name="colorPrimaryDark">#3F51B5</color>
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
     <color name="colorAccent">#FF4081</color>
+    <color name="status_bar_color">#303F9F</color>
+    <color name="toggleBtnColor">#FF4081</color>
     <color name="white">#ffffff</color>
     <color name="gray">#808080</color>
     <color name="background">#e7e7e7</color>
+    <color name="nvItemColor">@color/textColorPrimary</color>
+    <color name="colorIbtnLike">@color/textColorSecondary</color>
+    <color name="itemBackgroundColor">#ffffff</color>
+    <color name="drawlayoutColor">#ffffff</color>
+    <color name="textColorPrimary">#161616</color>
+    <color name="textColorSecondary">#7b7b7b</color>
+    <color name="webviewBackgroundColor">#00000000</color>
+
+    <!--night-->
+    <color name="colorPrimary_night">#ff2e2e2e</color>
+    <color name="colorPrimaryDark_night">#ff2e2e2e</color>
+    <color name="colorAccent_night">#dfffffff</color>
+    <color name="status_bar_color_night">#1d1d1d</color>
+    <color name="white_night">#ffffff</color>
+    <color name="gray_night">#808080</color>
+    <color name="toggleBtnColor_night">#6b6b6b</color>
+    <color name="textColorPrimary_night">#dcdcdc</color>
+    <color name="textColorSecondary_night">#bebebe</color>
+    <color name="background_night">#1a1a1a</color>
+    <color name="nvItemColor_night">@color/textColorPrimary_night</color>
+    <color name="colorIbtnLike_night">@color/textColorSecondary_night</color>
+    <color name="itemBackgroundColor_night">@color/colorPrimary_night</color>
+    <color name="drawlayoutColor_night">@color/colorPrimary_night</color>
+    <color name="webviewBackgroundColor_night">#32000000</color>
+
+    <!--green-->
+    <color name="colorPrimary_green">#4caf50</color>
+    <color name="colorPrimaryDark_green">@color/colorPrimary_green</color>
+    <color name="colorAccent_green">#69f0ae</color>
+    <color name="status_bar_color_green">@color/colorPrimary_green</color>
+    <color name="toggleBtnColor_green">@color/colorAccent_green</color>
+
+
+    <!--blue-->
+    <color name="colorPrimary_blue">#2196f3</color>
+    <color name="colorPrimaryDark_blue">#2196f3</color>
+    <color name="colorAccent_blue">#448aff</color>
+    <color name="status_bar_color_blue">#2196f3</color>
+    <color name="toggleBtnColor_blue">#2196f3</color>
+
+    <!--white-->
+    <color name="colorPrimary_white">#f4f4f4</color>
+    <color name="colorPrimaryDark_white">#f4f4f4</color>
+    <color name="colorAccent_white">#448aff</color>
+    <color name="status_bar_color_white">#2196f3</color>
+    <color name="toggleBtnColor_white">#2196f3</color>
+
+
 
 </resources>
