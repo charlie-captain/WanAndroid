@@ -7,11 +7,10 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-
 import com.bumptech.glide.Glide;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
-import com.github.chrisbanes.photoview.PhotoView;
+import com.wingsofts.dragphotoview.DragPhotoView;
 
 import java.util.List;
 
@@ -24,10 +23,13 @@ public class PhotoPagerAdapter<T> extends PagerAdapter {
     private LayoutInflater mInflater;
     private Context mContext;
 
-    public PhotoPagerAdapter(Context context, List<T> list) {
+    private ImageOnLongClickListener mOnLongClickListener;
+
+    public PhotoPagerAdapter(Context context, List<T> list, ImageOnLongClickListener onLongClickListener) {
         mList = list;
         mInflater = LayoutInflater.from(context);
         mContext = context;
+        mOnLongClickListener = onLongClickListener;
     }
 
     @Override
@@ -41,14 +43,29 @@ public class PhotoPagerAdapter<T> extends PagerAdapter {
     }
 
     @Override
-    public Object instantiateItem(ViewGroup container, int position) {
+    public Object instantiateItem(ViewGroup container, final int position) {
         View view = mInflater.inflate(R.layout.viewpager_details_photo, null);
-        PhotoView photoView = (PhotoView) view.findViewById(R.id.pv_details_photo);
+        final DragPhotoView photoView = (DragPhotoView) view.findViewById(R.id.pv_details_photo);
         // TODO: 2017.5.22 变形问题解决: 不使用动画特效
         Glide.with(mContext).load(mList.get(position)).into(photoView);
-        photoView.setOnClickListener(new View.OnClickListener() {
+        photoView.setOnLongClickListener(new View.OnLongClickListener() {
             @Override
-            public void onClick(View v) {
+            public boolean onLongClick(View v) {
+                if (mOnLongClickListener != null) {
+                    mOnLongClickListener.longClick(v, position);
+                }
+                return true;
+            }
+        });
+//        photoView.setOnTapListener(new DragPhotoView.OnTapListener() {
+//            @Override
+//            public void onTap(DragPhotoView dragPhotoView) {
+//                ((BaseActivity) mContext).finish();
+//            }
+//        });
+        photoView.setOnExitListener(new DragPhotoView.OnExitListener() {
+            @Override
+            public void onExit(DragPhotoView dragPhotoView, float v, float v1, float v2, float v3) {
                 ((BaseActivity) mContext).finish();
             }
         });
@@ -60,4 +77,13 @@ public class PhotoPagerAdapter<T> extends PagerAdapter {
     public void destroyItem(ViewGroup container, int position, Object object) {
         container.removeView((View) object);
     }
+
+    public void setOnLongClickListener(ImageOnLongClickListener onLongClickListener) {
+        mOnLongClickListener = onLongClickListener;
+    }
+
+    public interface ImageOnLongClickListener {
+        void longClick(View view, int position);
+    }
+
 }

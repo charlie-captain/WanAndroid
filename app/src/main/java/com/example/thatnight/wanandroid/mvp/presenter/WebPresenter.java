@@ -15,28 +15,35 @@ public class WebPresenter extends BasePresenter<WebModel, WebViewActivity> imple
 
     @Override
     public void get(boolean isCollect, String id) {
-        view.isLoading(true);
-        model.getUrl(isCollect, id, this);
+        if (view != null) {
+            view.isLoading(true);
+            model.getUrl(isCollect, id, this);
+        }
     }
 
     @Override
     public void get(String id, String originId) {
-        view.isLoading(true);
-        model.getUrl(id,originId,this);
+        if (view != null) {
+            view.isLoading(true);
+            model.getUrl(id, originId, this);
+        }
     }
 
     @Override
     public void getResult(boolean isCollect, Msg msg) {
-        if (msg == null) {
-
+        if (view == null) {
+            return;
         }
-        if(isCollect){
+        if (msg == null) {
+            return;
+        }
+        if (isCollect) {
             if (0 == msg.getErrorCode()) {
                 view.isSuccess(true, "收藏成功");
             } else {
                 view.isSuccess(false, "收藏失败");
             }
-        }else{
+        } else {
             if (0 == msg.getErrorCode()) {
                 view.isSuccess(true, "取消收藏成功");
             } else {
@@ -44,8 +51,6 @@ public class WebPresenter extends BasePresenter<WebModel, WebViewActivity> imple
             }
         }
     }
-
-
 
 
 }

@@ -12,7 +12,7 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
 import com.example.thatnight.wanandroid.R;
-import com.example.thatnight.wanandroid.adapter.NewsRvAdapter;
+import com.example.thatnight.wanandroid.adapter.ArticleRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
@@ -22,12 +22,17 @@ import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
 import com.example.thatnight.wanandroid.mvp.model.CollectModel;
 import com.example.thatnight.wanandroid.mvp.presenter.CollectPresenter;
 import com.example.thatnight.wanandroid.utils.HelperCallback;
+import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,14 +45,14 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         implements OnRefreshListener,
         OnLoadmoreListener,
         BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
-        NewsRvAdapter.IOnIbtnClickListener,
+        ArticleRvAdapter.IOnIbtnClickListener,
         View.OnClickListener, CollectContract.IView {
 
     private List<CollectArticle> mArticles;
 
     private RecyclerView mRv;
     private RefreshLayout mRefreshLayout;
-    private NewsRvAdapter mAdapter;
+    private ArticleRvAdapter mAdapter;
     private int mPage;
     private View mIbtnCollect;
     private int mSelectPosition;
@@ -57,6 +62,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
     @Override
     protected void initData(Bundle arguments) {
+        EventBus.getDefault().register(this);
         mArticles = new ArrayList<>();
     }
 
@@ -69,12 +75,12 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         setTitle("收藏");
         mRv = mRootView.findViewById(R.id.rv_main);
         mRefreshLayout = mRootView.findViewById(R.id.srl_main);
-        mAdapter = new NewsRvAdapter();
+        mAdapter = new ArticleRvAdapter();
         mRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelSize(R.dimen.recyclerview_decoration)));
-        mTouchHelper = new ItemTouchHelper(new HelperCallback(mAdapter));
-        mTouchHelper.attachToRecyclerView(mRv);
+//        mTouchHelper = new ItemTouchHelper(new HelperCallback(mAdapter));
+//        mTouchHelper.attachToRecyclerView(mRv);
         mRv.setAdapter(mAdapter);
     }
 
@@ -92,7 +98,9 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         if (mArticles != null && mArticles.size() > 0) {
             return;
         }
-        mPresenter.getArticle(true, mPage);
+        if (LoginContextUtil.getInstance().getUserState().collect(mActivity)) {
+            mPresenter.getArticle(true, mPage);
+        }
     }
 
 
@@ -114,7 +122,8 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        mPresenter.getArticle(true, 0);
+        mPage = 0;
+        mPresenter.getArticle(true, mPage);
     }
 
     @Override
@@ -216,5 +225,18 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshLayout(String requestCode) {
+        if ("refresh".equals(requestCode)) {
+            mRefreshLayout.autoRefresh();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

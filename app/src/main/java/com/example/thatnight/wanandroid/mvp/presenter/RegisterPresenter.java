@@ -23,10 +23,13 @@ public class RegisterPresenter extends BasePresenter<RegisterModel, RegisterActi
 
     @Override
     public void getResult(Msg msg) {
+        if(view==null){
+            return;
+        }
         view.isLoading(false);
-        msg.getErrorCode();
         if (msg == null) {
-            view.isSuccess(false, null, "注册失败 , 网络出现错误");
+            view.isSuccess(false, null, "注册失败 , 服务器开小差了");
+            return;
         }
         if (0 == msg.getErrorCode()) {
             Account account = GsonUtil.gsonToBean(msg.getData().toString(), Account.class);

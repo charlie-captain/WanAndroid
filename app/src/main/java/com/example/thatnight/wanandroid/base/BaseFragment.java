@@ -5,8 +5,10 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
+import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,8 @@ import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.example.thatnight.wanandroid.view.activity.MainActivity;
+
+import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by thatnight on 2017.10.27.
@@ -33,7 +37,6 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
     protected boolean mIsVisible;
     protected Toolbar mToolbar;
     protected TextView mTitle;
-    protected ImageButton mIbtnMenu;
     protected ImageButton mIbtnDraw;
     protected DrawerLayout mDrawerLayout;
     protected OnDrawBtnClickCallback mDrawBtnClickCallback;
@@ -86,12 +89,12 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         }
     }
 
-//    protected <T extends View> T $(int resId) {
-//        if (mRootView == null) {
-//            return null;
-//        }
-//        return mRootView.findViewById(resId);
-//    }
+    protected <T extends View> T $(int resId) {
+        if (mRootView == null) {
+            return null;
+        }
+        return mRootView.findViewById(resId);
+    }
 
     @Override
     public void onAttach(Context context) {
@@ -143,7 +146,6 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
 
     @Override
     public void onDestroyView() {
-        Log.d("onlazy", "onDestroyView: ");
         super.onDestroyView();
         if (mRootView != null) {
             ((ViewGroup) mRootView.getParent()).removeView(mRootView);
@@ -151,21 +153,26 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         if (mPresenter != null) {
             mPresenter.detachView();
         }
-
     }
 
     public void showToast(String s) {
         ToastUtil.showToast(mActivity, s);
     }
 
-    public void startActivityAnim( Class activity){
-        startActivity(new Intent(mActivity,activity));
-        mActivity.overridePendingTransition(R.anim.anim_left_in,R.anim.anim_left_out);
+    public void showSnackBar(String s) {
+        if (mRootView != null) {
+            Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT);
+        }
     }
 
-    public void startActivityForresultAnim( Intent intent ,int code){
-        startActivityForResult(intent,code);
-        mActivity.overridePendingTransition(R.anim.anim_left_in,R.anim.anim_left_out);
+    public void startActivityAnim(Class activity) {
+        startActivity(new Intent(mActivity, activity));
+        mActivity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
+    }
+
+    public void startActivityForresultAnim(Intent intent, int code) {
+        startActivityForResult(intent, code);
+        mActivity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 
 

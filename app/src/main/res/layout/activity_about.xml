@@ -32,6 +32,7 @@
         android:layout_height="wrap_content"
         android:layout_above="@+id/tv_rights"
         android:layout_centerHorizontal="true"
+        android:textColor="@color/textColorSecondary"
         android:text="\@2017- https://github.com/thatnight" />
 
 
@@ -42,5 +43,6 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="48dp"
+        android:textColor="@color/textColorSecondary"
         android:text="All rights reserved." />
 </RelativeLayout>

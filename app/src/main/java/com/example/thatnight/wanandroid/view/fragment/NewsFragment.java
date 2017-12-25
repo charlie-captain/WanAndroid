@@ -11,7 +11,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
 import com.example.thatnight.wanandroid.R;
-import com.example.thatnight.wanandroid.adapter.NewsRvAdapter;
+import com.example.thatnight.wanandroid.adapter.ArticleRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
@@ -19,12 +19,18 @@ import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
 import com.example.thatnight.wanandroid.mvp.model.NewsModel;
 import com.example.thatnight.wanandroid.mvp.presenter.NewsPresenter;
+import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,14 +43,14 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
         implements OnRefreshListener,
         OnLoadmoreListener,
         BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
-        NewsRvAdapter.IOnIbtnClickListener,
+        ArticleRvAdapter.IOnIbtnClickListener,
         View.OnClickListener, NewsContract.IView {
 
     private List<Article> mArticles;
 
     private RecyclerView mRv;
     private RefreshLayout mRefreshLayout;
-    private NewsRvAdapter mAdapter;
+    private ArticleRvAdapter mAdapter;
     private int mPage;
     private View mIbtnCollect;
     private int mSelectPosition;
@@ -52,6 +58,8 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
 
     @Override
     protected void initData(Bundle arguments) {
+        EventBus.getDefault().register(this);
+
         mArticles = new ArrayList<>();
     }
 
@@ -59,7 +67,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     protected void initView() {
         mRv = mRootView.findViewById(R.id.rv_main);
         mRefreshLayout = mRootView.findViewById(R.id.srl_main);
-        mAdapter = new NewsRvAdapter();
+        mAdapter = new ArticleRvAdapter();
         mRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelSize(R.dimen.recyclerview_decoration)));
@@ -81,60 +89,6 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
             return;
         }
         mPresenter.getArticle(true, mPage);
-//        Log.d("onlazy", "onLazyLoad: ");
-//        OkHttpUtil.getInstance().getAsync("http://www.wanandroid.com", new OkHttpResultCallback() {
-//            @Override
-//            public void onError(Call call, Exception e) {
-//                Log.d("jsoup", e.toString());
-//            }
-//
-//            @Override
-//            public void onResponse(byte[] bytes) {
-//                String response = new String(bytes);
-//
-//                Document document = Jsoup.parse(response);
-//
-//                Elements list = document.select("ul.list_article");
-//                Document listdoc = Jsoup.parse(list.toString());
-//
-//                Elements name = listdoc.getElementsByTag("li");
-//
-//                for (Element e : name) {
-//                    Elements info_art = e.select("div.info_art");
-//
-//                    String title = info_art.get(0).getElementsByTag("a").text();
-//                    String url = info_art.get(0).select("a").attr("href");
-//
-//                    Elements info = info_art.get(0).select("span");
-//                    String author = info.get(0).text();
-//                    String type = info.get(1).getElementsByTag("a").text();
-//                    String typeUrl = info.get(1).select("a").attr("href");
-//                    String time = info.get(2).text();
-//
-//
-//                    Elements info_opt = e.select("div.info_opt");
-//                    String artid = info_opt.get(0).select("span").attr("artid");
-//
-//                    NewArticle article = new NewArticle();
-//                    article.setArtId(artid);
-//                    article.setAuthor(author);
-//                    article.setName(title);
-//                    article.setUrl(url);
-//                    article.setTime(time);
-//                    article.setType(type);
-//                    article.setTypeUrl(typeUrl);
-//                    mArticles.add(article);
-//                    Log.d("jsoup", title + "  " + url + " " + author + " " + type + " " + typeUrl + " " + time + " " + artid);
-//                }
-//
-//                mHandler.post(new Runnable() {
-//                    @Override
-//                    public void run() {
-//                        mAdapter.updateData(mArticles);
-//                    }
-//                });
-//            }
-//        });
     }
 
 
@@ -156,7 +110,8 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        mPresenter.getArticle(true, 0);
+        mPage = 0;
+        mPresenter.getArticle(true, mPage);
     }
 
     @Override
@@ -186,10 +141,12 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
 
     @Override
     public void onIbtnClick(View v, int position) {
-        mIbtnCollect = v;
-        mSelectPosition = position;
-        ViewUtil.setSelected(v);
-        mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
+        if (LoginContextUtil.getInstance().getUserState().collect(mActivity)) {
+            mIbtnCollect = v;
+            mSelectPosition = position;
+            ViewUtil.setSelected(v);
+            mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
+        }
     }
 
     @Override
@@ -250,5 +207,19 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshLayout(String requestCode) {
+        if ("refresh".equals(requestCode)) {
+            mRefreshLayout.autoRefresh();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

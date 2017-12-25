@@ -1,10 +1,7 @@
 package com.example.thatnight.wanandroid.view.activity;
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
@@ -15,24 +12,32 @@ import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
+import android.support.v7.app.AppCompatActivity;
+import android.text.TextUtils;
+import android.view.KeyEvent;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.Window;
-import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
+import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Account;
+import com.example.thatnight.wanandroid.utils.ExitUtil;
+import com.example.thatnight.wanandroid.utils.LoginContextUtil;
+import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
+import com.example.thatnight.wanandroid.utils.MyStatusBarUtil;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
-import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
+import com.jaeger.library.StatusBarUtil;
 
-import skin.support.app.SkinCompatActivity;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
-public class MainActivity extends SkinCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDrawBtnClickCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        OnDrawBtnClickCallback {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -51,12 +56,14 @@ public class MainActivity extends SkinCompatActivity implements NavigationView.O
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+//        StatusBarUtil.setTransparent(this);
         mFragmentManager = getSupportFragmentManager();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dv_main);
         mNavigationView = (NavigationView) findViewById(R.id.nv_main);
         mName = mNavigationView.getHeaderView(0).findViewById(R.id.tv_nv_header_name);
         mNavigationView.setNavigationItemSelectedListener(this);
         initData();
+
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
 //                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
 //        );
@@ -69,12 +76,35 @@ public class MainActivity extends SkinCompatActivity implements NavigationView.O
     }
 
     private void initData() {
-        Intent intent = getIntent();
+        mAccount = getIntent().getParcelableExtra("account");
+        if (mAccount != null) {
+            SharePreferenceUtil.put(getApplicationContext(), "account", mAccount.getUsername());
+            SharePreferenceUtil.put(getApplicationContext(), "password", mAccount.getPassword());
+            mName.setText(mAccount.getUsername());
+        } else {
+            boolean isVisitor = (boolean) SharePreferenceUtil.get(getApplicationContext(), "visitor", false);
+            if (isVisitor) {
+                mName.setText("Visitor");
+            } else {
+                String userName = (String) SharePreferenceUtil.get(getApplicationContext(), "account", "");
+                if (!TextUtils.isEmpty(userName)) {
+                    mName.setText(userName);
+                } else {
+                    mName.setText("error");
+                }
+            }
+        }
+    }
+
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
         mAccount = intent.getParcelableExtra("account");
         if (mAccount != null) {
             SharePreferenceUtil.put(getApplicationContext(), "account", mAccount.getUsername());
             SharePreferenceUtil.put(getApplicationContext(), "password", mAccount.getPassword());
             mName.setText(mAccount.getUsername());
+            EventBus.getDefault().post("refresh");
         }
     }
 
@@ -113,14 +143,15 @@ public class MainActivity extends SkinCompatActivity implements NavigationView.O
                 new AlertDialog.Builder(this).
                         setTitle("提示").
                         setMessage("是否注销?").
-                        setNegativeButton("是", new DialogInterface.OnClickListener() {
+                        setPositiveButton("是", new DialogInterface.OnClickListener() {
                             @Override
                             public void onClick(DialogInterface dialog, int which) {
+                                LoginContextUtil.getInstance().setUserState(new LogoutState());
+                                OkHttpCookieJar.resetCookies();
                                 startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                                overridePendingTransition(R.anim.anim_right_in,R.anim.anim_right_out);
-                                finish();
+                                onBackPressed();
                             }
-                        }).setPositiveButton("否", null).show();
+                        }).setNegativeButton("否", null).show();
                 break;
             default:
                 break;
@@ -164,5 +195,29 @@ public class MainActivity extends SkinCompatActivity implements NavigationView.O
         mDrawerLayout.openDrawer(GravityCompat.START);
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (Constant.REQUEST_LOGIN == requestCode) {
+            if (RESULT_OK == resultCode) {
+                if (data != null) {
+                    mAccount = data.getParcelableExtra("account");
+                    if (mAccount != null) {
+                        SharePreferenceUtil.put(getApplicationContext(), "account", mAccount.getUsername());
+                        SharePreferenceUtil.put(getApplicationContext(), "password", mAccount.getPassword());
+                        mName.setText(mAccount.getUsername());
+                    }
+                }
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+    }
 
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
+            ExitUtil.exitCheck(this, mNavigationView);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
+    }
 }

@@ -6,15 +6,24 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/webviewBackgroundColor"
-    android:fitsSystemWindows="true"
     android:orientation="vertical"
     tools:context=".view.activity.WebViewActivity">
 
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        >
 
-        <include layout="@layout/include_toolbar" />
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|enterAlways|snap"
+            android:fitsSystemWindows="true">
+
+            <include layout="@layout/include_toolbar" />
+
+        </LinearLayout>
 
     </android.support.design.widget.AppBarLayout>
 
@@ -26,6 +35,7 @@
 
 
     <android.support.v4.widget.NestedScrollView
+        android:id="@+id/nsv_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/webviewBackgroundColor"
@@ -42,8 +52,7 @@
         <FrameLayout
             android:id="@+id/fl_web"
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-        </FrameLayout>
+            android:layout_height="match_parent"></FrameLayout>
 
 
     </android.support.v4.widget.NestedScrollView>

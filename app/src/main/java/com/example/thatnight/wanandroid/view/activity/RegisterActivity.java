@@ -10,16 +10,27 @@ import com.example.animbutton.AnimButton;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.SwipeBackActivity;
+import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.mvp.contract.RegisterContract;
 import com.example.thatnight.wanandroid.mvp.model.RegisterModel;
 import com.example.thatnight.wanandroid.mvp.presenter.RegisterPresenter;
+import com.example.thatnight.wanandroid.utils.LoginContextUtil;
+import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
+import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
+
+import org.greenrobot.eventbus.EventBus;
 
 public class RegisterActivity extends SwipeBackActivity<RegisterContract.IView, RegisterPresenter> implements RegisterContract.IView {
 
     private EditText mName, mPwd, mRePwd;
     private AnimButton mBtnRegister;
+
+    @Override
+    protected Boolean isSetStatusBar() {
+        return true;
+    }
 
     @Override
     protected BaseModel initModel() {
@@ -88,10 +99,14 @@ public class RegisterActivity extends SwipeBackActivity<RegisterContract.IView, 
     @Override
     public void isSuccess(boolean isSuccess, Account dataBean, String s) {
         if (isSuccess) {
+            SharePreferenceUtil.put(getApplicationContext(), "visitor", false);
+            LoginContextUtil.getInstance().setUserState(new LoginState());
+            OkHttpCookieJar.saveCookies(getApplicationContext());
             Intent intent = new Intent();
             intent.setClass(this, MainActivity.class);
             intent.putExtra("account", dataBean);
-            startActivity(intent);
+            EventBus.getDefault().post("registerSuccess");
+            startActivityAnim(intent);
             finish();
         } else {
             mBtnRegister.errorAnimation();

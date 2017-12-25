@@ -12,12 +12,14 @@ import android.preference.PreferenceScreen;
 import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.text.TextUtils;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.view.activity.AboutActivity;
 
 import skin.support.SkinCompatManager;
+import skin.support.content.res.SkinCompatResources;
 import skin.support.widget.SkinCompatHelper;
 
 /**
@@ -41,30 +43,34 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
     private void init() {
         mSpDayLight = (SwitchPreference) findPreference(getString(R.string.pref_day_light));
-        mEtpUserName = (EditTextPreference) findPreference(getString(R.string.pref_user_name));
-        mEtpUserPwd = (EditTextPreference) findPreference(getString(R.string.pref_user_password));
+//        mEtpUserName = (EditTextPreference) findPreference(getString(R.string.pref_user_name));
+//        mEtpUserPwd = (EditTextPreference) findPreference(getString(R.string.pref_user_password));
         mPsHelp = (PreferenceScreen) findPreference(getString(R.string.pref_help));
         mTheme = (ListPreference) findPreference(getString(R.string.pref_theme));
 
         mPsHelp.setOnPreferenceClickListener(this);
         mTheme.setOnPreferenceChangeListener(this);
         mSpDayLight.setOnPreferenceClickListener(this);
-        mTheme.setSummary(mTheme.getEntry());
-        mTheme.setValue(mTheme.getValue());
+        String skin = (String) SharePreferenceUtil.get(getActivity().getApplicationContext(), "skin_cn", "");
+        if (!TextUtils.isEmpty(skin)) {
+            mTheme.setSummary(skin);
+            mTheme.setValue(skin);
+        }
+//        mTheme.setValue(mTheme.getValue());
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        String userName = SharePreferenceUtil.get(getActivity().getApplicationContext(), "account", "").toString();
-        String userPassword = SharePreferenceUtil.get(getActivity().getApplicationContext(), "password", "").toString();
-        mEtpUserName.setTitle(userName);
-        mEtpUserName.setText(userName);
-        String length = "";
-        for (int i = 0; i < userPassword.length(); i++) {
-            length += "*";
-        }
-        mEtpUserPwd.setTitle(length);
+//        String userName = SharePreferenceUtil.get(getActivity().getApplicationContext(), "account", "").toString();
+//        String userPassword = SharePreferenceUtil.get(getActivity().getApplicationContext(), "password", "").toString();
+//        mEtpUserName.setTitle(userName);
+//        mEtpUserName.setText(userName);
+//        String length = "";
+//        for (int i = 0; i < userPassword.length(); i++) {
+//            length += "*";
+//        }
+//        mEtpUserPwd.setTitle(length);
     }
 
     @Override
@@ -73,13 +79,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             if (mSpDayLight.isChecked()) {
                 SkinCompatManager.getInstance().loadSkin("night", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
             } else {
-                SkinCompatManager.getInstance().restoreDefaultTheme();
+                String skinName = (String) SharePreferenceUtil.get(getActivity().getApplicationContext(), "skin", "");
+                if (!TextUtils.isEmpty(skinName)) {
+                    SkinCompatManager.getInstance().loadSkin(skinName, SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
+                } else {
+                    SkinCompatManager.getInstance().restoreDefaultTheme();
+                }
             }
         }
 
         if (mPsHelp == preference) {
             startActivity(new Intent(getActivity(), AboutActivity.class));
-            getActivity().  overridePendingTransition(R.anim.anim_left_in,R.anim.anim_left_out);
+            getActivity().overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
         }
         return false;
 
@@ -98,12 +109,18 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
             switch (selectedId) {
                 case 0:
                     SkinCompatManager.getInstance().restoreDefaultTheme();
+                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin", "");
+                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin_cn", "安卓蓝");
                     break;
                 case 1:
                     SkinCompatManager.getInstance().loadSkin("green", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
+                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin", "green");
+                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin_cn", "酷安绿");
                     break;
                 case 2:
                     SkinCompatManager.getInstance().loadSkin("blue", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
+                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin", "blue");
+                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin_cn", "知乎蓝");
                     break;
                 default:
                     break;

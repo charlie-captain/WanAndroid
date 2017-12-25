@@ -3,7 +3,8 @@
               android:layout_width="match_parent"
               android:layout_height="match_parent">
 
-    <com.github.chrisbanes.photoview.PhotoView
+
+    <com.wingsofts.dragphotoview.DragPhotoView
         android:id="@+id/pv_details_photo"
         android:layout_width="match_parent"
         android:layout_height="match_parent"

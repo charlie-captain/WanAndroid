@@ -9,6 +9,7 @@ import com.example.thatnight.wanandroid.mvp.contract.WebContract;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -28,7 +29,8 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
             OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + id + "/json", new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
-
+                    iPresenter.getResult(false, null);
+                    CrashReport.postCatchedException(e);
                 }
 
                 @Override
@@ -36,6 +38,7 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
                     String response = new String(bytes);
                     if (TextUtils.isEmpty(response)) {
                         iPresenter.getResult(isCollect, null);
+                        return;
                     }
                     Msg msg = GsonUtil.gsonToBean(response, Msg.class);
                     iPresenter.getResult(isCollect, msg);
@@ -46,7 +49,7 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
             OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
-
+                    iPresenter.getResult(false, null);
                 }
 
                 @Override
@@ -54,6 +57,7 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
                     String response = new String(bytes);
                     if (TextUtils.isEmpty(response)) {
                         iPresenter.getResult(isCollect, null);
+                        return;
                     }
                     Msg msg = GsonUtil.gsonToBean(response, Msg.class);
                     iPresenter.getResult(isCollect, msg);
@@ -70,7 +74,7 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
         OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
-
+                iPresenter.getResult(false, null);
             }
 
             @Override
@@ -78,6 +82,7 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
                 String response = new String(bytes);
                 if (TextUtils.isEmpty(response)) {
                     iPresenter.getResult(false, null);
+                    return;
                 }
                 Msg msg = GsonUtil.gsonToBean(response, Msg.class);
                 iPresenter.getResult(false, msg);

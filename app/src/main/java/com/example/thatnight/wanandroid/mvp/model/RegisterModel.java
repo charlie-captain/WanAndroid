@@ -9,6 +9,7 @@ import com.example.thatnight.wanandroid.mvp.contract.RegisterContract;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -30,6 +31,8 @@ public class RegisterModel extends BaseModel implements RegisterContract.IModel 
             @Override
             public void onError(Call call, Exception e) {
                 iPresenter.getResult(null);
+                CrashReport.postCatchedException(e);
+
             }
 
             @Override
@@ -37,6 +40,7 @@ public class RegisterModel extends BaseModel implements RegisterContract.IModel 
                 String response = new String(bytes);
                 if (TextUtils.isEmpty(response)) {
                     iPresenter.getResult(null);
+                    return;
                 }
                 Msg msg = GsonUtil.gsonToBean(response, Msg.class);
                 iPresenter.getResult(msg);

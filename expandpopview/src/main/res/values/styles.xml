@@ -1,0 +1,8 @@
+<resources>
+
+    <style name="PopWindowAnimation">
+        <item name="android:windowEnterAnimation">@anim/popview_show_anim</item>
+        <item name="android:windowExitAnimation">@anim/popview_hide_anim</item>
+    </style>
+
+</resources>

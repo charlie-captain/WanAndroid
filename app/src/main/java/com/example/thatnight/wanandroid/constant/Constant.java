@@ -5,15 +5,31 @@ package com.example.thatnight.wanandroid.constant;
  */
 
 public class Constant {
-    public static final String URL_LOGIN = "/user/login";
-    public static final String URL_REGISTER = "/user/register";
+
+    public static final String URL_BASE = "http://www.wanandroid.com";
+
+
     public static final String URL_COLLECT = "/lg/collect/";
     public static final String URL_UNCOLLECT = "/lg/uncollect_originId/";
     public static final String URL_ARTICLE = "/article/list/";
-    public static final String URL_BASE = "http://www.wanandroid.com";
 
 
     public static final String URL_ARTICLE_COLLECT = "/lg/collect/list/";
     public static final String URL_COLLECT_UNCOLLECT = "/lg/uncollect/";
 
+    public static final String URL_TREE = "/tree/json";
+
+    public static final String URL_HOT_SEARCH = "/hotkey/json";
+
+    /*
+        post
+     */
+    public static final String URL_SEARCH = "/article/query/";   //   /0/json?k=?  post
+    public static final String URL_LOGIN = "/user/login";
+    public static final String URL_REGISTER = "/user/register/";
+
+    /*
+        activity requestcode
+     */
+    public static final int REQUEST_LOGIN = 19;
 }

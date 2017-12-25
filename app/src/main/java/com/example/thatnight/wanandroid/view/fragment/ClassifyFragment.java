@@ -13,7 +13,7 @@ import com.example.expandpopview.callback.OnTwoListCallback;
 import com.example.expandpopview.entity.KeyValue;
 import com.example.expandpopview.view.ExpandPopView;
 import com.example.thatnight.wanandroid.R;
-import com.example.thatnight.wanandroid.adapter.NewsRvAdapter;
+import com.example.thatnight.wanandroid.adapter.ArticleRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
@@ -21,12 +21,17 @@ import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.mvp.contract.ClassifyContract;
 import com.example.thatnight.wanandroid.mvp.model.ClassifyModel;
 import com.example.thatnight.wanandroid.mvp.presenter.ClassifyPresenter;
+import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -40,7 +45,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
         implements OnRefreshListener,
         OnLoadmoreListener,
         BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
-        NewsRvAdapter.IOnIbtnClickListener,
+        ArticleRvAdapter.IOnIbtnClickListener,
         ClassifyContract.IView {
 
     private List<Article> mArticles;
@@ -49,7 +54,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     private int mPage;
     private View mIbtnCollect;
     private int mSelectPosition;
-    private NewsRvAdapter mAdapter;
+    private ArticleRvAdapter mAdapter;
     private List<KeyValue> mParentList;
     private List<KeyValue> mChildList;
     private List<List<KeyValue>> mParentChildList;
@@ -64,7 +69,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
         mRefreshLayout = mRootView.findViewById(R.id.srl_main);
         mExpandPopView = mRootView.findViewById(R.id.epv_classify);
         mExpandPopView.setVisibility(View.VISIBLE);
-        mAdapter = new NewsRvAdapter();
+        mAdapter = new ArticleRvAdapter();
         mRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelSize(R.dimen.recyclerview_decoration)));
@@ -73,6 +78,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
 
     @Override
     protected void initData(Bundle arguments) {
+        EventBus.getDefault().register(this);
         mNormalKeyValue = new KeyValue();
         mArticles = new ArrayList<>();
         mParentChildList = new ArrayList<>();
@@ -112,7 +118,8 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
-        mPresenter.getArticle(true, 0, mNormalKeyValue.getValue());
+        mPage = 0;
+        mPresenter.getArticle(true, mPage, mNormalKeyValue.getValue());
     }
 
     @Override
@@ -142,10 +149,12 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
 
     @Override
     public void onIbtnClick(View v, int position) {
-        mIbtnCollect = v;
-        mSelectPosition = position;
-        ViewUtil.setSelected(v);
-        mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
+        if (LoginContextUtil.getInstance().getUserState().collect(mActivity)) {
+            mIbtnCollect = v;
+            mSelectPosition = position;
+            ViewUtil.setSelected(v);
+            mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
+        }
     }
 
     @Override
@@ -163,11 +172,17 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
             if (parentList == null || parentChildrenList == null || parentList.size() <= 0 || parentChildrenList.size() <= 0) {
                 return;
             }
+            mParentList = parentList;
+            mParentChildList = parentChildrenList;
             mExpandPopView.addItemToExpandTab(parentChildrenList.get(0).get(0).getKey(), parentList, parentChildrenList, new OnTwoListCallback() {
                 @Override
                 public void returnParentKeyValue(int pos, com.example.expandpopview.entity.KeyValue keyValue) {
                     mParentPosition = pos;
-                    mPresenter.getChildren(keyValue.getValue());
+                    if (mParentChildList.get(pos) == null) {
+//                        mPresenter.getChildren(keyValue.getValue());
+                    } else {
+
+                    }
                 }
 
                 @Override
@@ -231,5 +246,18 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void refreshLayout(String requestCode) {
+        if ("refresh".equals(requestCode)) {
+            mRefreshLayout.autoRefresh();
+        }
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        EventBus.getDefault().unregister(this);
     }
 }

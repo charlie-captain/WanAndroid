@@ -27,6 +27,9 @@ public class ClassifyPresenter extends BasePresenter<ClassifyModel, ClassifyFrag
 
     @Override
     public void setParentChildren(List<KeyValue> parentList, List<List<KeyValue>> parentChildren) {
+        if (view == null) {
+            return;
+        }
         view.setExpandPopView(parentList, parentChildren);
     }
 
@@ -37,6 +40,9 @@ public class ClassifyPresenter extends BasePresenter<ClassifyModel, ClassifyFrag
 
     @Override
     public void getChildrenResult(List<KeyValue> childList) {
+        if (view == null) {
+            return;
+        }
         view.refreshExpandPopView(childList);
     }
 
@@ -52,12 +58,16 @@ public class ClassifyPresenter extends BasePresenter<ClassifyModel, ClassifyFrag
 
     @Override
     public void getResult(boolean isRefresh, Msg msg) {
-        view.isLoading(false);
-        if (msg == null) {
-
+        if (view == null) {
+            return;
         }
+        if (msg == null) {
+            view.showSnackBar("网络开小差了");
+            return;
+        }
+        view.isLoading(false);
         if (0 == msg.getErrorCode()) {
-            Log.d("news", "getResult: " + msg.getData());
+//            Log.d("news", "getResult: " + msg.getData());
             String json = GsonUtil.gsonToJson(msg.getData());
             ArticleData data = GsonUtil.gsonToBean(json, ArticleData.class);
             if (isRefresh) {
@@ -66,15 +76,18 @@ public class ClassifyPresenter extends BasePresenter<ClassifyModel, ClassifyFrag
                 view.loadMoreHtml(data.getDatas());
             }
         } else {
-            view.showToast("网络开小差了");
+            view.showSnackBar("网络开小差了,"+msg.getErrorMsg());
         }
     }
 
 
     @Override
     public void collectResult(boolean isCollect, Msg msg) {
+        if (view == null) {
+            return;
+        }
         if (msg == null) {
-
+            return;
         }
 
         if (isCollect) {

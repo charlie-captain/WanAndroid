@@ -28,9 +28,12 @@ public class CollectPresenter extends BasePresenter<CollectModel, CollectFragmen
 
     @Override
     public void getResult(boolean isRefresh, Msg msg) {
+        if (view == null) {
+            return;
+        }
         view.isLoading(false);
         if (msg == null) {
-
+            return;
         }
         if (0 == msg.getErrorCode()) {
             String json = GsonUtil.gsonToJson(msg.getData());
@@ -41,7 +44,7 @@ public class CollectPresenter extends BasePresenter<CollectModel, CollectFragmen
                 view.loadMoreHtml(data.getDatas());
             }
         } else {
-            view.showToast("网络开小差了");
+            view.showToast("网络开小差了,"+msg.getErrorMsg());
         }
     }
 

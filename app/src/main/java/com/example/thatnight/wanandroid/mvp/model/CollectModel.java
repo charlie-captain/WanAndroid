@@ -9,6 +9,7 @@ import com.example.thatnight.wanandroid.mvp.contract.CollectContract;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +27,7 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
         OkHttpUtil.getInstance().getAsync(Constant.URL_BASE + Constant.URL_ARTICLE_COLLECT + page + "/json", new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
-
+                CrashReport.postCatchedException(e);
             }
 
             @Override
@@ -34,6 +35,7 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
                 String response = new String(bytes);
                 if (TextUtils.isEmpty(response)) {
                     iPresenter.getResult(isRefresh, null);
+                    return;
                 }
                 Msg msg = GsonUtil.gsonToBean(response, Msg.class);
                 iPresenter.getResult(isRefresh, msg);
@@ -44,9 +46,10 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
     @Override
     public void collect(final boolean isCollect, String id, String originId, final CollectContract.IPresenter iPresenter) {
         if (isCollect) {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + originId+ "/json", new OkHttpResultCallback() {
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + originId + "/json", new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
+                    CrashReport.postCatchedException(e);
 
                 }
 
@@ -54,10 +57,11 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
                 public void onResponse(byte[] bytes) {
                     String response = new String(bytes);
                     if (TextUtils.isEmpty(response)) {
-                        iPresenter.collectResult(isCollect,null);
+                        iPresenter.collectResult(isCollect, null);
+                        return;
                     }
                     Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                    iPresenter.collectResult(isCollect,msg);
+                    iPresenter.collectResult(isCollect, msg);
                 }
 
             }, null);
@@ -67,6 +71,7 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
             OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
+                    CrashReport.postCatchedException(e);
 
                 }
 
@@ -75,6 +80,7 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
                     String response = new String(bytes);
                     if (TextUtils.isEmpty(response)) {
                         iPresenter.collectResult(isCollect, null);
+                        return;
                     }
                     Msg msg = GsonUtil.gsonToBean(response, Msg.class);
                     iPresenter.collectResult(isCollect, msg);

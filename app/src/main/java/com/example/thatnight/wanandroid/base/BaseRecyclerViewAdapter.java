@@ -44,6 +44,7 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter {
 
     /**
      * 拖拽移动
+     *
      * @param fromPosition
      * @param toPosition
      */
@@ -58,6 +59,16 @@ public abstract class BaseRecyclerViewAdapter<T> extends RecyclerView.Adapter {
             }
         }
         notifyItemMoved(fromPosition, toPosition);
+    }
+
+    /**
+     * 左滑删除
+     */
+    public void swipedDelete(int postion) {
+        if (postion < mDataList.size()) {
+            mDataList.remove(postion);
+            notifyItemRemoved(postion);
+        }
     }
 
     public abstract class BaseRvHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {

@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="color_selected_parent">#f4f4f4</color>
+    <color name="color_selected_child">#dedede</color>
+
+    <color name="white">#ffff</color>
+
+    <color name="popview_color_selected">#4ce684</color>
+
+</resources>

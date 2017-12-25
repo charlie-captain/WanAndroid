@@ -14,6 +14,15 @@ public class SharePreferenceUtil {
 
     public static final String FILE_NAME = "wanandroid";
 
+    public static SharePreferenceUtil getInstance() {
+        return InstanceHolder.sInstance;
+    }
+
+
+
+    static class InstanceHolder {
+        private static final SharePreferenceUtil sInstance = new SharePreferenceUtil();
+    }
 
     public static void put(Context context, String key, Object o) {
         put(context, FILE_NAME, key, o);

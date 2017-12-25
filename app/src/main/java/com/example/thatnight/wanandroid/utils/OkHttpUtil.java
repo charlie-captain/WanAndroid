@@ -1,6 +1,7 @@
 package com.example.thatnight.wanandroid.utils;
 
 
+import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
@@ -32,6 +33,7 @@ public class OkHttpUtil {
     private OkHttpClient.Builder mOkHttpClientBuilder;
     private OkHttpClient mOkHttpClient;
     private Handler mHandler;
+    private static Context mContext;
 
     public static final int CONNECT_TIMEOUT = 6;
     public static final int READ_TIMEOUT = 8;
@@ -39,13 +41,17 @@ public class OkHttpUtil {
 
     private OkHttpUtil() {
         mOkHttpClientBuilder = new OkHttpClient.Builder();
-        mOkHttpClientBuilder.cookieJar(new OkHttpCookieJar())
+        mOkHttpClientBuilder.cookieJar(new OkHttpCookieJar(mContext))
                 .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
                 .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
                 .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS);
         mOkHttpClient = mOkHttpClientBuilder.build();
         mHandler = new Handler(Looper.getMainLooper());
 
+    }
+
+    public static void init(Context applicationContext) {
+        mContext = applicationContext;
     }
 
     public static OkHttpUtil getInstance() {
@@ -159,6 +165,7 @@ public class OkHttpUtil {
                 .build();
     }
 
+
     /**
      * 构建post请求参数, 无文件传输
      */
@@ -217,7 +224,6 @@ public class OkHttpUtil {
         });
     }
 
-
     /**
      * 调用请求失败对应的回调方法，利用handler.post使得回调方法在UI线程中执行
      */
@@ -252,5 +258,4 @@ public class OkHttpUtil {
     public void cancelAllRequest() {
         mOkHttpClient.dispatcher().cancelAll();
     }
-
 }

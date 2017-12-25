@@ -1,10 +1,24 @@
 package com.example.thatnight.wanandroid.view.activity;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.media.Image;
+import android.net.Uri;
+import android.os.Build;
+import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.Gravity;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.Window;
+import android.view.WindowManager;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
@@ -12,11 +26,19 @@ import com.example.thatnight.wanandroid.adapter.PhotoPagerAdapter;
 import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BasePresenter;
+import com.example.thatnight.wanandroid.utils.ImageUtil;
+import com.example.thatnight.wanandroid.utils.OkHttpUtil;
+import com.jaeger.library.StatusBarUtil;
+import com.wingsofts.dragphotoview.DragPhotoView;
+import com.yanzhenjie.permission.AndPermission;
+import com.yanzhenjie.permission.Permission;
+import com.yanzhenjie.permission.PermissionListener;
+import com.yanzhenjie.permission.PermissionNo;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhotoActivity<T> extends BaseActivity {
+public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.ImageOnLongClickListener, View.OnClickListener {
     ViewPager mVpDetailsPhoto;
     TextView mTvDetailsPhotoCount;
     private PhotoPagerAdapter mPagerAdapter;
@@ -24,10 +46,11 @@ public class PhotoActivity<T> extends BaseActivity {
     private String mImgUrl;
     private int mIndex = 0;
     private int mSize = 0;
-
+    private View mImageView;
     private static final String PHOTO_LIST = "photo_list";
     private static final String PHOTO_INDEX = "photo_index";
 
+    private Dialog mCameraDialog;
 
     public static <T> Intent newIntent(Context context, int index, ArrayList<T> list) {
         Intent intent = new Intent(context, PhotoActivity.class);
@@ -48,6 +71,13 @@ public class PhotoActivity<T> extends BaseActivity {
     @SuppressWarnings("unchecked")
     @Override
     protected void initData() {
+        if (Build.VERSION.SDK_INT >= 19) {
+            View decorView = getWindow().getDecorView();
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
+                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
+                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            decorView.setSystemUiVisibility(option);
+        }
         mIndex = getIntent().getIntExtra(PHOTO_INDEX, 0);
 
         mPhotoList = (List<T>) getIntent().getExtras().getSerializable(PHOTO_LIST);
@@ -57,7 +87,7 @@ public class PhotoActivity<T> extends BaseActivity {
             mPhotoList.add((T) mImgUrl);
         }
         mSize = mPhotoList.size();
-        mPagerAdapter = new PhotoPagerAdapter(this, mPhotoList);
+        mPagerAdapter = new PhotoPagerAdapter(this, mPhotoList, this);
 
 
     }
@@ -66,6 +96,11 @@ public class PhotoActivity<T> extends BaseActivity {
     public int getLayoutId() {
         return R.layout.activity_photo;
 
+    }
+
+    @Override
+    protected Boolean isSetStatusBar() {
+        return true;
     }
 
     @Override
@@ -112,5 +147,99 @@ public class PhotoActivity<T> extends BaseActivity {
     @Override
     public void isLoading(boolean isLoading) {
 
+    }
+
+    @Override
+    public void longClick(View view, int position) {
+        mImageView = view;
+        if (mCameraDialog == null) {
+            mCameraDialog = new Dialog(this, R.style.DialogShareTheme);
+            LinearLayout root = (LinearLayout) LayoutInflater.from(this).inflate(
+                    R.layout.dialog_photo_longclick, null);
+            //初始化视图
+            root.findViewById(R.id.btn_dialog_save).setOnClickListener(this);
+            root.findViewById(R.id.btn_dialog_share).setOnClickListener(this);
+            root.findViewById(R.id.btn_dialog_cancel).setOnClickListener(this);
+            mCameraDialog.setContentView(root);
+            Window dialogWindow = mCameraDialog.getWindow();
+            dialogWindow.setGravity(Gravity.BOTTOM);
+//        dialogWindow.setWindowAnimations(R.style.dialogstyle); // 添加动画
+            WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+            lp.x = 0; // 新位置X坐标
+            lp.y = 0; // 新位置Y坐标
+            lp.width = (int) getResources().getDisplayMetrics().widthPixels; // 宽度
+            root.measure(0, 0);
+            lp.height = root.getMeasuredHeight();
+
+            lp.alpha = 9f; // 透明度
+            dialogWindow.setAttributes(lp);
+        }
+
+        if (mCameraDialog.isShowing()) {
+            mCameraDialog.dismiss();
+        }
+        mCameraDialog.show();
+    }
+
+    @Override
+    public void onClick(View v) {
+        if (R.id.btn_dialog_cancel != v.getId()) {
+            AndPermission.with(this)
+                    .requestCode(100)
+                    .permission(Permission.STORAGE)
+                    .callback(mPermissionListener)
+                    .start();
+        }
+        switch (v.getId()) {
+            case R.id.btn_dialog_share:
+                //由文件得到uri
+                if (ImageUtil.sharePhoto(mImageView) != null) {
+                    Uri imageUri = Uri.fromFile(ImageUtil.sharePhoto(mImageView));
+                    Intent shareIntent = new Intent();
+                    shareIntent.setAction(Intent.ACTION_SEND);
+                    shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
+                    shareIntent.setType("image/*");
+                    startActivity(Intent.createChooser(shareIntent, "分享图片"));
+                }
+                break;
+            case R.id.btn_dialog_save:
+                //保存图片后发送广播通知更新数据库
+                if (ImageUtil.saveFile(mImageView) != null) {
+                    Uri uri = Uri.fromFile(ImageUtil.saveFile(mImageView));
+                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
+                    showToast("图片保存成功");
+                }
+                break;
+            case R.id.btn_dialog_cancel:
+                if (mCameraDialog.isShowing()) {
+                    mCameraDialog.dismiss();
+                }
+                break;
+            default:
+                break;
+        }
+        if (mCameraDialog.isShowing()) {
+            mCameraDialog.dismiss();
+        }
+    }
+
+    private PermissionListener mPermissionListener = new PermissionListener() {
+        @Override
+        public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
+
+        }
+
+        @Override
+        public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
+
+        }
+    };
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        if (mCameraDialog != null) {
+            mCameraDialog.dismiss();
+        }
     }
 }

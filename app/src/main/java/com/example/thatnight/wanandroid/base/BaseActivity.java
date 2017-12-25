@@ -3,21 +3,16 @@ package com.example.thatnight.wanandroid.base;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Color;
-import android.os.Build;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
-import android.support.design.widget.CollapsingToolbarLayout;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.utils.MyStatusBarUtil;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
+import com.jaeger.library.StatusBarUtil;
 
 import skin.support.app.SkinCompatActivity;
 
@@ -25,12 +20,13 @@ import skin.support.app.SkinCompatActivity;
  * Created by thatnight on 2017.10.26.
  */
 
+
 public abstract class BaseActivity<V extends BaseContract.IBaseView,
         P extends BasePresenter> extends SkinCompatActivity implements BaseContract.IBaseView {
 
     protected Toolbar mToolbar;
     protected TextView mTitle;
-    protected ImageButton mIbMenu;
+    //    protected ImageButton mIbMenu;
     protected boolean mShowBack;
     protected P mPresenter;
 
@@ -38,9 +34,7 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
-        View contentViewGroup = ((ViewGroup) findViewById(android.R.id.content)).getChildAt(0);
-        contentViewGroup.setFitsSystemWindows(true);
-
+//        setStatusBar(isSetStatusBar());
         mPresenter = getPresenter();
         initPresenter();
         init();
@@ -49,9 +43,17 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
         initListener();
     }
 
+    protected abstract Boolean isSetStatusBar();
+
     private void initPresenter() {
         if (mPresenter != null) {
             mPresenter.attachView(initModel(), this);
+        }
+    }
+
+    protected void setStatusBar(Boolean isSet) {
+        if (isSet) {
+            StatusBarUtil.setTransparent(this);
         }
     }
 
@@ -68,16 +70,16 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
     private void init() {
         mToolbar = (Toolbar) findViewById(R.id.tb);
         mTitle = (TextView) findViewById(R.id.tb_title);
-        mIbMenu = (ImageButton) findViewById(R.id.tb_menu);
+//        mIbMenu = (ImageButton) findViewById(R.id.tb_menu);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
         }
         if (mTitle != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-        if (mIbMenu != null) {
-            mIbMenu.setVisibility(View.GONE);
-        }
+//        if (mIbMenu != null) {
+//            mIbMenu.setVisibility(View.GONE);
+//        }
         mShowBack = false;
     }
 
@@ -133,10 +135,10 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
     }
 
     protected void setIbMenu(int res) {
-        if (mIbMenu != null) {
-            mIbMenu.setImageResource(res);
-            mIbMenu.setVisibility(View.VISIBLE);
-        }
+//        if (mIbMenu != null) {
+//            mIbMenu.setImageResource(res);
+//            mIbMenu.setVisibility(View.VISIBLE);
+//        }
     }
 
     protected <T extends View> T $(int resId) {
@@ -147,19 +149,24 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
         ToastUtil.showToast(this, s);
     }
 
-    public void startActivityAnim(Context context,Class activity){
-        startActivity(new Intent(context,activity));
-        overridePendingTransition(R.anim.anim_left_in,R.anim.anim_left_out);
+    public void startActivityAnim(Context context, Class activity) {
+        startActivity(new Intent(context, activity));
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 
-    public void startActivityAnim(Intent intent){
+    public void startActivityAnim(Intent intent) {
         startActivity(intent);
-        overridePendingTransition(R.anim.anim_left_in,R.anim.anim_left_out);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
+    }
+
+    public void startActivityForresultAnim(Intent intent, int code) {
+        startActivityForResult(intent, code);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 
     @Override
     public void onBackPressed() {
         super.onBackPressed();
-        overridePendingTransition(R.anim.anim_right_in,R.anim.anim_right_out);
+        overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
     }
 }

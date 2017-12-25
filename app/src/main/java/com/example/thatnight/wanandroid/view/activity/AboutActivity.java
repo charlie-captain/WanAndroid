@@ -12,6 +12,11 @@ public class AboutActivity extends SwipeBackActivity {
 
 
     @Override
+    protected Boolean isSetStatusBar() {
+        return true;
+    }
+
+    @Override
     protected BaseModel initModel() {
         return null;
     }

@@ -11,22 +11,35 @@ import com.example.animbutton.AnimButton;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
+import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.mvp.contract.LoginContract;
 import com.example.thatnight.wanandroid.mvp.model.LoginModel;
 import com.example.thatnight.wanandroid.mvp.presenter.LoginPresenter;
+import com.example.thatnight.wanandroid.utils.GsonUtil;
+import com.example.thatnight.wanandroid.utils.LoginContextUtil;
+import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.google.gson.Gson;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginPresenter> implements LoginContract.ILoginView {
 
     private EditText mName, mPwd;
     private AnimButton mBtnLogin;
-    private Button mRegister;
+    private Button mRegister, mVisitor;
 
     @Override
     protected LoginPresenter getPresenter() {
         return new LoginPresenter();
+    }
+
+    @Override
+    protected Boolean isSetStatusBar() {
+        return true;
     }
 
     @Override
@@ -40,6 +53,7 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
         mPwd = $(R.id.et_login_psw);
         mRegister = $(R.id.tv_register);
         mBtnLogin = $(R.id.btn_login);
+        mVisitor = $(R.id.tv_visitor);
 
         String userName = SharePreferenceUtil.get(getApplicationContext(), "account", "").toString();
         String password = SharePreferenceUtil.get(getApplicationContext(), "password", "").toString();
@@ -69,14 +83,22 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivity(new Intent(LoginActivity.this, RegisterActivity.class));
+                startActivityAnim(new Intent(LoginActivity.this, RegisterActivity.class));
+            }
+        });
+        mVisitor.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                SharePreferenceUtil.put(getApplicationContext(), "visitor", true);
+                startActivityAnim(new Intent(LoginActivity.this, MainActivity.class));
+                finish();
             }
         });
     }
 
     @Override
     protected void initData() {
-
+        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -103,10 +125,13 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
     @Override
     public void isSuccess(boolean isSuccess, Account dataBean, String s) {
         if (isSuccess) {
+            SharePreferenceUtil.put(getApplicationContext(), "visitor", false);
+            OkHttpCookieJar.saveCookies(getApplicationContext());
+            LoginContextUtil.getInstance().setUserState(new LoginState());
             Intent intent = new Intent();
             intent.setClass(this, MainActivity.class);
             intent.putExtra("account", dataBean);
-            startActivity(intent);
+            startActivityAnim(intent);
             finish();
         } else {
             mBtnLogin.errorAnimation();
@@ -114,4 +139,21 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+    }
+
+    @Subscribe
+    public void finishWhenRegister(String result) {
+        if ("registerSuccess".equals(result)) {
+            finish();
+        }
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
+    }
 }

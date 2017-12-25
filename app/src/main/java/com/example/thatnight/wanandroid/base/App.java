@@ -2,6 +2,7 @@ package com.example.thatnight.wanandroid.base;
 
 import android.app.Application;
 
+import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.tencent.bugly.Bugly;
 import com.tencent.smtt.sdk.QbSdk;
 
@@ -19,32 +20,27 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-        new Thread(new Runnable() {
+
+        SkinCompatManager.withoutActivity(App.this)
+                .addInflater(new SkinMaterialViewInflater())
+                .addInflater(new SkinConstraintViewInflater())
+                .loadSkin();
+
+        QbSdk.initX5Environment(App.this, new QbSdk.PreInitCallback() {
             @Override
-            public void run() {
-                SkinCompatManager.withoutActivity(App.this)
-                        .addInflater(new SkinMaterialViewInflater())
-                        .addInflater(new SkinConstraintViewInflater())
-                        .loadSkin();
-                QbSdk.initX5Environment(App.this, new QbSdk.PreInitCallback() {
-                    @Override
-                    public void onCoreInitFinished() {
-
-                    }
-
-                    @Override
-                    public void onViewInitFinished(boolean b) {
-
-                    }
-                });
-
-                //Bugly
-                Bugly.init(getApplicationContext(), "9bc290a7b0", false);
-
+            public void onCoreInitFinished() {
 
             }
-        }).start();
 
+            @Override
+            public void onViewInitFinished(boolean b) {
 
+            }
+        });
+
+        //Bugly
+        Bugly.init(getApplicationContext(), "9bc290a7b0", false);
+
+        OkHttpUtil.init(getApplicationContext());
     }
 }

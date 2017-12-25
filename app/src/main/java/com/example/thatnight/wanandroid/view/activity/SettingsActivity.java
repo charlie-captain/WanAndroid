@@ -9,6 +9,7 @@ import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BasePresenter;
 import com.example.thatnight.wanandroid.base.SwipeBackActivity;
 import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
+import com.jaeger.library.StatusBarUtil;
 
 public class SettingsActivity extends SwipeBackActivity {
 
@@ -16,6 +17,11 @@ public class SettingsActivity extends SwipeBackActivity {
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
 
+
+    @Override
+    protected Boolean isSetStatusBar() {
+        return true;
+    }
 
     @Override
     protected BaseModel initModel() {

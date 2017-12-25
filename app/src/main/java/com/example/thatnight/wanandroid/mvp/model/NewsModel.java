@@ -31,6 +31,7 @@ public class NewsModel extends BaseModel implements NewsContract.IModel {
                 String response = new String(bytes);
                 if (TextUtils.isEmpty(response)) {
                     iPresenter.getResult(isRefresh,null);
+                    return;
                 }
                 Msg msg = GsonUtil.gsonToBean(response, Msg.class);
                 iPresenter.getResult(isRefresh,msg);
@@ -52,6 +53,7 @@ public class NewsModel extends BaseModel implements NewsContract.IModel {
                     String response = new String(bytes);
                     if (TextUtils.isEmpty(response)) {
                         iPresenter.collectResult(isCollect,null);
+                        return;
                     }
                     Msg msg = GsonUtil.gsonToBean(response, Msg.class);
                     iPresenter.collectResult(isCollect,msg);
@@ -70,6 +72,7 @@ public class NewsModel extends BaseModel implements NewsContract.IModel {
                     String response = new String(bytes);
                     if (TextUtils.isEmpty(response)) {
                         iPresenter.collectResult(isCollect,null);
+                        return;
                     }
                     Msg msg = GsonUtil.gsonToBean(response, Msg.class);
 

@@ -9,6 +9,7 @@ import com.example.thatnight.wanandroid.mvp.contract.LoginContract;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
+import com.tencent.bugly.crashreport.CrashReport;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -29,6 +30,7 @@ public class LoginModel extends BaseModel implements LoginContract.ILoginModel {
             @Override
             public void onError(Call call, Exception e) {
                 iLoginPresenter.getResult(null);
+                CrashReport.postCatchedException(e);
             }
 
             @Override
@@ -36,6 +38,8 @@ public class LoginModel extends BaseModel implements LoginContract.ILoginModel {
                 String response = new String(bytes);
                 if (TextUtils.isEmpty(response)) {
                     iLoginPresenter.getResult(null);
+                    return;
+
                 }
                 Msg msg = GsonUtil.gsonToBean(response, Msg.class);
                 iLoginPresenter.getResult(msg);

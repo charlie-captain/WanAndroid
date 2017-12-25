@@ -27,28 +27,34 @@ public class NewsPresenter extends BasePresenter<NewsModel, NewsFragment> implem
 
     @Override
     public void getResult(boolean isRefresh, Msg msg) {
+        if (view == null) {
+            return;
+        }
         view.isLoading(false);
         if (msg == null) {
-
+            return;
         }
         if (0 == msg.getErrorCode()) {
             String json = GsonUtil.gsonToJson(msg.getData());
             ArticleData data = GsonUtil.gsonToBean(json, ArticleData.class);
             if (isRefresh) {
-                view.refreshHtml( data.getDatas());
+                view.refreshHtml(data.getDatas());
             } else {
-                view.loadMoreHtml( data.getDatas());
+                view.loadMoreHtml(data.getDatas());
             }
         } else {
-            view.showToast("网络开小差了");
+            view.showToast("网络开小差了,"+msg.getErrorMsg());
         }
     }
 
 
     @Override
     public void collectResult(boolean isCollect, Msg msg) {
+        if (view == null) {
+            return;
+        }
         if (msg == null) {
-
+            return;
         }
 
         if (isCollect) {
