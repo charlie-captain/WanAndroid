@@ -99,7 +99,8 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
             return;
         }
         if (LoginContextUtil.getInstance().getUserState().collect(mActivity)) {
-            mPresenter.getArticle(true, mPage);
+//            mPresenter.getArticle(true, mPage);
+            mRefreshLayout.autoRefresh();
         }
     }
 

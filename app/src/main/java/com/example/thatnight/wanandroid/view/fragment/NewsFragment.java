@@ -88,7 +88,8 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
         if (mArticles != null && mArticles.size() > 0) {
             return;
         }
-        mPresenter.getArticle(true, mPage);
+//        mPresenter.getArticle(true, mPage);
+        mRefreshLayout.autoRefresh();
     }
 
 

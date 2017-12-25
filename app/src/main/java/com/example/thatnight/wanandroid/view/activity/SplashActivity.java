@@ -33,7 +33,6 @@ public class SplashActivity extends AppCompatActivity {
         if (TextUtils.isEmpty(name) && TextUtils.isEmpty(password)) {
             SharePreferenceUtil.put(getApplicationContext(), "visitor", true);
             startActivityAnim(new Intent(SplashActivity.this, MainActivity.class));
-            finish();
         } else {
 //            new LoginModel().login(name, password, new LoginPresenter() {
 //                @Override
@@ -61,12 +60,12 @@ public class SplashActivity extends AppCompatActivity {
 //                    } else {
 //                        ToastUtil.showToast(getApplicationContext(), "服务器开小差了,登录失败");
             startActivityAnim(new Intent(SplashActivity.this, MainActivity.class));
-//                        finish();
 //                    }
 //                }
 //            });
 //                    startActivity(new Intent(SplashActivity.this, MainActivity.class));
         }
+        finish();
 
 
     }
