@@ -1,137 +1,66 @@
+### WanAndroid
 
-- frame
-    - MVP
-    - [SwipeBacklayout](https://github.com/ikew0ng/SwipeBackLayout) --右滑返回
-    - [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) --recyclerview下拉刷新上拉加载
-    - [AnimButton](https://github.com/thatnight/AnimButton) --登陆按钮
-    - Gson --解析Json
-    - 
+### 前言
+  
+  玩安卓是鸿洋大神写的学习网站，但是有时候需要手机学习，所以我打算做一个客户端的版本。
+  
+  接口地址:  [http://www.wanandroid.com/blog/2](http://www.wanandroid.com/blog/2)
+  
+--- 
 
-- api
-    - login
+### 截图
+
+![image](http://image.coolapk.com/apk_image/2017/1225/db0f01e54a628744866dbccfb8dc6486-169842-o_1c26p2fgontm1b9knog11521p5bq-uid-1231724@1080x1920.png.t.jpg)![首页](http://image.coolapk.com/apk_image/2017/1225/0bbb7e42af0d3d9efdc2547298bb7ca9-169842-o_1c26p2ruhigisk1hf71tjd1k3016-uid-1231724@1080x1920.png.t.jpg)![image](http://image.coolapk.com/apk_image/2017/1225/a2c1735b44298b43e5ffdcb8e556e095-169842-o_1c26p2ti1135lrrgaut12hb1sho1c-uid-1231724@1080x1920.png.t.jpg)![image](http://image.coolapk.com/apk_image/2017/1225/776431e70adf41dd4c70013e8354cd2d-169842-o_1c26p2vak1mbk6ga1u4r1nrjd7n1i-uid-1231724@1080x1920.png.t.jpg)![image](http://image.coolapk.com/apk_image/2017/1225/1af87bd3e986c0cc0743936d7690bf4f-169842-o_1c26p2hepdlartdhls1soi1ur610-uid-1231724@1080x1920.png.t.jpg)
+
+
+
+---
+
+### 下载地址 - 酷安市场
+[Wanandroid 1.2.1](https://www.coolapk.com/apk/169842)
+
+ 
+### 项目框架
+1. okhttp3
+2. jsoup
+3. material design
+4. MVP
+5. [SwipeBacklayout](https://github.com/ikew0ng/SwipeBackLayout) --右滑返回
+6. [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) --recyclerview下拉刷新上拉加载
+7. [AnimButton](https://github.com/thatnight/AnimButton) --登陆按钮
+8. Gson
+
+### 项目进度
+- [x] 完成登录注册以及游客登陆
+- [x] 收藏
+- [x] 搜索、搜索历史
+- [x] 分享文章
+- [x] 离线保存用户账号信息，cookies
+- [x] 最新文章，知识体系
+- [ ] 搜索热词
+- [ ] 常用网站
+- [x] 换肤，夜间模式
+- [ ] 反馈与帮助
+- [ ] 修复bug与提高流畅性
+
+--- 
+
+### 更新版本
+
+- #### 1.2 / 1.2.1
+    - 搜索功能
+    - 图片保存和分享(待优化)
+    - 新增游客登录,无需注册账号
+    - 持久化cookie初始化麻烦大家注销重新登录下
+    - 修复若干bug
     
-        ```
-        url : http://www.wanandroid.com/user/login
-    
-        http: POST
-    
-        data: username=thatnight&password=xxxxxxxx
-    
-        return:{
-                "errorCode": 0,
-                "errorMsg": null,
-                "data": {
-                    "id": 624,
-                    "username": "thatnight",
-                    "password": "xxxxxxxxx",
-                    "icon": null,
-                    "type": 0,
-                    "collectIds": []
-                }
-               }
-        ```
-        
-    - register
-    
-        ```
-        url : http://www.wanandroid.com/user/register
-    
-        http: POST
-    
-        data: username=thatnight1&password=xxxxxxx&repassword=xxxxxx
-    
-        return:{
-                "errorCode": 0,
-                "errorMsg": null,
-                "data": {
-                    "id": 624,
-                    "username": "thatnight",
-                    "password": "xxxxxxxxx",
-                    "icon": null,
-                    "type": 0,
-                    "collectIds": []
-                }
-               }
-        ```
-    - new articles(最新)
-    
-        ```
-        url: http://www.wanandroid.com/article/list/0/json
-        
-        return:{
-        "errorCode":0,
-        "errorMsg":null,
-        "data":{"datas":[{"id":1485,"title":"Android中图片压缩分析（上）","chapterId":86,"chapterName":"图片处理","envelopePic":null,"link":"https://mp.weixin.qq.com/s/QZ-XTsO7WnNvpnbr3DWQmg","author":"QQ音乐技术团队","origin":null,"publishTime":1509611122000,"zan":0,"desc":null,"visible":0,"niceDate":"2小时前","courseId":13,"collect":false}
-        ],"offset":0,"size":20,"total":771,"over":false}}
-       
-        ```
-        
-        - collect
-        
-            ```
-            url : http://www.wanandroid.com/lg/collect/1484/json
-        
-            http: POST
-        
-            return:{
-                    "errorCode": 0,
-                    "errorMsg": null,
-                    "data": null
-                   }
-            ```
-            
-        - uncollect
-        
-            ```
-            url :  http://www.wanandroid.com/lg/uncollect_originId/1485/json
-        
-            http: POST
-        
-            return:{
-                    "errorCode": 0,
-                    "errorMsg": null,
-                    "data": null
-                   }
-            ```
-        
-    - collect articles(收藏)
-    
-        ```
-        url :  http://www.wanandroid.com/lg/collect/list/0/json
-    
-        http: POST
-    
-        return:{
-                "errorCode": 0,
-                "errorMsg": null,
-                "data": null
-               }
-        ```   
-        
-        - uncollect 
-        
-            ```
-            url :  http://www.wanandroid.com/lg/uncollect/407/json
-                
-            http: POST
-            
-            params: originId=399
-                
-            return:{
-                    "errorCode": 0,
-                    "errorMsg": null,
-                    "data": null
-                   }
-            ```
-            
-    - tree article(知识体系)
-    
-        ```
-        url :  http://www.wanandroid.com/article/list/0/json?cid=60
-    
-        http: GET
-    
-        return:{
-                 = new articel
-               }
-        ```           
+    - one more thing
+    最近就要考试了  我就没什么时间花在这个东西  , 有什么问题或者意见可以投    箱thatnight.chen@foxmail.com  寒假见了各位。
+- #### 1.1
+    - 换肤，夜间模式
+    - 加入bugly检测和应用升级
+
+- #### 1.0
+    - 初步功能实现，登录注册
+    - 最新文章，知识体系
+    - 收藏
