@@ -2,8 +2,9 @@
 
 ### 前言
   
-  玩安卓是鸿洋大神写的学习网站，但是有时候需要手机学习，所以我打算做一个客户端的版本。
-  
+  一款含有有丰富Android开发文章的App,内容每天都会更新。
+  原网站 http://www.wanandroid.com ，数据内容源至hongyang大神的网址，我只是将网址转化为App方便大家学习，侵删。
+
   接口地址:  [http://www.wanandroid.com/blog/2](http://www.wanandroid.com/blog/2)
   
 --- 
@@ -28,7 +29,12 @@
 5. [SwipeBacklayout](https://github.com/ikew0ng/SwipeBackLayout) --右滑返回
 6. [SmartRefreshLayout](https://github.com/scwang90/SmartRefreshLayout) --recyclerview下拉刷新上拉加载
 7. [AnimButton](https://github.com/thatnight/AnimButton) --登陆按钮
-8. Gson
+8. Gson     --json解析
+9. Glide    --图片加载
+10. Bugly   --应用升级和bug检测
+11. [Android-skin-support](https://github.com/ximsfei/Android-skin-support)  --换肤框架
+12. [ExpandPopView](https://github.com/thatnight/ExpandPopViewDemo) --二级下拉列表
+13. EventBus  --组件间通信
 
 ### 项目进度
 - [x] 完成登录注册以及游客登陆
