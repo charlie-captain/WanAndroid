@@ -184,12 +184,26 @@ public class ExpandPopView extends LinearLayout implements PopupWindow.OnDismiss
         mViews.add(popContainerView);
     }
 
+    /**
+     * setItemData for onelist
+     *
+     * @param tabPosition
+     * @param oneList
+     */
     public void setItemData(int tabPosition, List<KeyValue> oneList) {
         if (TYPE_ONE == mTypeList.get(tabPosition)) {
             mOneListMap.get(tabPosition).setData(oneList);
         }
     }
 
+    /**
+     * setItemData for twolist
+     *
+     * @param tabPosition
+     * @param parentList
+     * @param childList
+     * @param parentChildren
+     */
     public void setItemData(int tabPosition, List<KeyValue> parentList,
                             List<KeyValue> childList,
                             List<List<KeyValue>> parentChildren) {
@@ -202,6 +216,20 @@ public class ExpandPopView extends LinearLayout implements PopupWindow.OnDismiss
                                         List<KeyValue> childList) {
         if (TYPE_TWO == mTypeList.get(tabPosition)) {
             mTwoListMap.get(tabPosition).setData(null, childList, null);
+        }
+    }
+
+    /**
+     * performClick
+     *
+     * @param tabPosition
+     * @param parentPosition
+     * @param childrenPosition
+     */
+    public void performClick(int tabPosition, int parentPosition, int childrenPosition) {
+        if (TYPE_TWO == mTypeList.get(tabPosition)) {
+            mTwoListMap.get(tabPosition).clickParent(null, parentPosition);
+            mTwoListMap.get(tabPosition).clickChild(null, childrenPosition);
         }
     }
 

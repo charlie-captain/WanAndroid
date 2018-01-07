@@ -1,6 +1,7 @@
 package com.example.thatnight.wanandroid.view.activity;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -17,9 +18,8 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
-import com.example.thatnight.wanandroid.adapter.ArticleRvAdapter;
+import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
 import com.example.thatnight.wanandroid.adapter.SearchAdapter;
-import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.base.SwipeBackActivity;
@@ -40,10 +40,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SearchActivity extends SwipeBackActivity<SearchContract.IView, SearchPresenter>
-        implements SearchContract.IView, View.OnClickListener, OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, ArticleRvAdapter.IOnIbtnClickListener {
+        implements SearchContract.IView, View.OnClickListener, OnRefreshListener, OnLoadmoreListener,
+        BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
+        NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
-    private ArticleRvAdapter mAdapter;
+    private NewArticleRvAdapter mAdapter;
     private SearchAdapter mSearchAdatper;
     private RecyclerView mRv;
     private EditText mSearchView;
@@ -55,6 +57,7 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
     private List<String> mSearchHistory;
     private ItemTouchHelper.Callback mItemCallback;
     private boolean isEditting = false;
+    private String mKey;
 
     @Override
     protected Boolean isSetStatusBar() {
@@ -71,8 +74,15 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
         return new SearchPresenter();
     }
 
+    public static Intent newIntent(Context context, String key) {
+        Intent intent = new Intent(context, SearchActivity.class);
+        intent.putExtra("key", key);
+        return intent;
+    }
+
     @Override
     protected void initData() {
+        mKey = getIntent().getStringExtra("key");
         mArticles = new ArrayList<>();
         String history = (String) SharePreferenceUtil.get(getApplicationContext(), "search_list", "");
         if (!TextUtils.isEmpty(history)) {
@@ -88,7 +98,7 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
         mRefreshLayout = $(R.id.srl_search);
         mRv = $(R.id.rv_search);
         mIbtnClear = $(R.id.tb_search_clear);
-        mAdapter = new ArticleRvAdapter();
+        mAdapter = new NewArticleRvAdapter();
 
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.setLayoutManager(new LinearLayoutManager(this));
@@ -99,6 +109,12 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
         touchHelper.attachToRecyclerView(mRv);
 
         mSearchView = $(R.id.tb_searchview);
+        //外部调用
+        if (!TextUtils.isEmpty(mKey)) {
+            mSearchView.setText(mKey);
+            mSearchView.setSelection(mKey.length());
+            mPresenter.search(false, mKey, String.valueOf(mPage));
+        }
     }
 
     @Override
@@ -254,6 +270,11 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
         mSelectPosition = position;
         ViewUtil.setSelected(v);
 //        mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
+    }
+
+    @Override
+    public void onTypeClick(View v, int position) {
+
     }
 
     @Override

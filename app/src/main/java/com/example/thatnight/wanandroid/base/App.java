@@ -20,27 +20,32 @@ public class App extends Application {
     public void onCreate() {
         super.onCreate();
 
-
-        SkinCompatManager.withoutActivity(App.this)
-                .addInflater(new SkinMaterialViewInflater())
-                .addInflater(new SkinConstraintViewInflater())
-                .loadSkin();
-
-        QbSdk.initX5Environment(App.this, new QbSdk.PreInitCallback() {
+        new Thread(new Runnable() {
             @Override
-            public void onCoreInitFinished() {
+            public void run() {
+                SkinCompatManager.withoutActivity(App.this)
+                        .addInflater(new SkinMaterialViewInflater())
+                        .addInflater(new SkinConstraintViewInflater())
+                        .loadSkin();
 
+                QbSdk.initX5Environment(App.this, new QbSdk.PreInitCallback() {
+                    @Override
+                    public void onCoreInitFinished() {
+
+                    }
+
+                    @Override
+                    public void onViewInitFinished(boolean b) {
+
+                    }
+                });
+
+                //Bugly
+                Bugly.init(getApplicationContext(), "9bc290a7b0", false);
+
+                OkHttpUtil.init(getApplicationContext());
             }
+        }).start();
 
-            @Override
-            public void onViewInitFinished(boolean b) {
-
-            }
-        });
-
-        //Bugly
-        Bugly.init(getApplicationContext(), "9bc290a7b0", false);
-
-        OkHttpUtil.init(getApplicationContext());
     }
 }

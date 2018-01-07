@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
@@ -56,6 +57,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        EventBus.getDefault().register(this);
 //        StatusBarUtil.setTransparent(this);
         mFragmentManager = getSupportFragmentManager();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dv_main);
@@ -159,6 +161,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     }
 
+    /**
+     * 切换Fragment
+     * @param fragment
+     */
     private void showFragment(Fragment fragment) {
         if (fragment == mLastFragment) {
             return;
@@ -212,6 +218,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+    @Subscribe
+    public void switchToClassify(String requestCode) {
+        if(Constant.SWITCH_TO_CLASSIFY.equals(requestCode)){
+            mNavigationView.setCheckedItem(R.id.nv_menu_main);
+            changeFragmentContent(R.id.nv_menu_main);
+        }
+    }
+
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
@@ -219,5 +233,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         return super.onKeyDown(keyCode, event);
+    }
+
+    @Override
+    protected void onDestroy() {
+        EventBus.getDefault().unregister(this);
+        super.onDestroy();
     }
 }

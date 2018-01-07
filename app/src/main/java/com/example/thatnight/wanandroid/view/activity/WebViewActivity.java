@@ -1,19 +1,27 @@
 package com.example.thatnight.wanandroid.view.activity;
 
+import android.content.ClipData;
+import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
+import android.graphics.PixelFormat;
 import android.graphics.drawable.Drawable;
+import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
+import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.Window;
+import android.view.WindowManager;
 import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.widget.FrameLayout;
@@ -36,6 +44,7 @@ import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.example.thatnight.wanandroid.utils.ProgressDialogUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.view.customview.CustomWebView;
 import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -49,9 +58,11 @@ import okhttp3.Cookie;
 import skin.support.SkinCompatManager;
 
 
-public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, WebPresenter> implements View.OnClickListener, WebContract.IWebView {
+public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, WebPresenter> implements View.OnClickListener,
+        WebContract.IWebView,
+        Toolbar.OnMenuItemClickListener {
 
-    private WebView mWebView;
+    private CustomWebView mWebView;
     private String mTextTitle, mLink;
     private int mId, mOriginId;
     private boolean isCollect;
@@ -103,47 +114,22 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
         mNestedScrollView = $(R.id.nsv_webview);
         mWebLayout = $(R.id.fl_web);
         mActionButton = $(R.id.fabtn_news);
-        mWebView = new WebView(getApplicationContext());
+        mWebView = new CustomWebView(getApplicationContext());
+        //点击标题置顶
         if (!isFirst) {
             Snackbar.make(mWebLayout, "单击标题 , 页面将滚动到顶部哦!", Snackbar.LENGTH_LONG).show();
             SharePreferenceUtil.put(getApplicationContext(), "webview_update", true);
         }
 
-        mPbar = new ProgressBar(this, null, android.R.attr.progressBarStyleHorizontal);
-        RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, 7);
-        mPbar.setLayoutParams(params);
-        Drawable drawable = getResources().getDrawable(R.drawable.bg_progressbar_web);
-        mPbar.setProgressDrawable(drawable);
-        mPbar.setProgress(0);
-        View view = null;
+        mWebLayout.addView(mWebView);
         if ("night".equals(SkinCompatManager.getInstance().getCurSkinName())) {
             isNight = true;
-            view = new View(WebViewActivity.this);
-            view.setLayoutParams(new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                    ViewGroup.LayoutParams.MATCH_PARENT));
-            view.setBackgroundColor(getResources().getColor(R.color.webviewBackgroundColor_night));
-//            mWebLayout.addView(view);
-        }
-
-        mWebView.addView(mPbar);
-        mWebLayout.addView(mWebView);
-
-        if (view != null) {
-            mWebLayout.addView(view);
+            mWebView.setNightMode(this);
         }
         setViewData();
     }
 
     private void setViewData() {
-//        CookieManager cookieManager = CookieManager.getInstance();
-//        List<Cookie> cookieList = OkHttpCookieJar.getWanAndroidCookies();
-//        StringBuilder sb = new StringBuilder();
-//        if (cookieList != null && cookieList.size() > 0) {
-//            for (Cookie cookie : cookieList) {
-//                sb.append(cookie.toString());
-//            }
-//        }
-//        cookieManager.setCookie(mLink, sb.toString());
 
         mWebView.clearCache(true);
         WebSettings settings = mWebView.getSettings();
@@ -169,18 +155,12 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
             public void onPageStarted(WebView webView, String s, Bitmap bitmap) {
                 webView.getSettings().setJavaScriptEnabled(true);
                 super.onPageStarted(webView, s, bitmap);
-                if (isNight) {
-                    ProgressDialogUtil.show(WebViewActivity.this);
-                }
             }
 
             @Override
             public void onPageFinished(WebView webView, String s) {
                 webView.getSettings().setJavaScriptEnabled(true);
                 super.onPageFinished(webView, s);
-                if (isNight) {
-                    ProgressDialogUtil.dismiss();
-                }
                 getImageUrls();
                 addImageClickListner();
             }
@@ -189,21 +169,6 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
             public boolean shouldOverrideUrlLoading(WebView webView, String s) {
                 webView.loadUrl(s);
                 return true;
-            }
-        });
-        mWebView.setWebChromeClient(new WebChromeClient() {
-            @Override
-            public void onProgressChanged(WebView webView, int i) {
-                super.onProgressChanged(webView, i);
-                if (i == 100) {
-                    mPbar.setVisibility(View.GONE);
-                } else {
-                    if (View.VISIBLE == mPbar.getVisibility()) {
-                        mPbar.setVisibility(View.VISIBLE);
-                    }
-                    mPbar.setProgress(i);
-                }
-                Log.d("i", "onProgressChanged:   " + i);
             }
         });
     }
@@ -268,18 +233,34 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
     public boolean onCreateOptionsMenu(Menu menu) {
         MenuInflater inflater = getMenuInflater();
         inflater.inflate(R.menu.menu_toolbar_web, menu);
-        MenuItem shareItem = menu.findItem(R.id.tb_share);
-        shareItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
+        mToolbar.setOnMenuItemClickListener(this);
+        return super.onCreateOptionsMenu(menu);
+    }
+
+    @Override
+    public boolean onMenuItemClick(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.tb_share:
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
                 intent.putExtra(Intent.EXTRA_TEXT, "向你分享" + "\"" + mTextTitle + "\"" + ": \n" + mLink);
                 startActivity(Intent.createChooser(intent, "分享"));
-                return false;
-            }
-        });
-        return super.onCreateOptionsMenu(menu);
+                break;
+            case R.id.tb_copy:
+                ClipboardManager clipboardManager = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                if (clipboardManager != null) {
+                    clipboardManager.setPrimaryClip(ClipData.newPlainText("copy_link", mWebView.getUrl()));
+                    Snackbar.make(mWebLayout, "复制链接成功", Snackbar.LENGTH_SHORT).show();
+                }
+                break;
+            case R.id.tb_browser:
+                Intent browser = new Intent(Intent.ACTION_VIEW, Uri.parse(mWebView.getUrl()));
+                startActivity(browser);
+                break;
+            default:
+                break;
+        }
+        return false;
     }
 
     @Override

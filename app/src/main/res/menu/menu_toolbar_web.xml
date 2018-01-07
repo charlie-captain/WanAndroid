@@ -5,10 +5,16 @@
     <item
         android:id="@+id/tb_share"
         android:icon="@drawable/ic_share"
-        android:title="分享"
-        app:showAsAction="always" />
+        android:title="分享链接" />
 
+    <item
+        android:id="@+id/tb_copy"
+        android:title="复制链接" />
 
+    <item
+        android:id="@+id/tb_browser"
+        android:icon="@drawable/ic_browser"
+        android:title="浏览器打开" />
 
 
 </menu>

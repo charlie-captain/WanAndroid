@@ -5,54 +5,35 @@
     android:id="@+id/cl_web_view"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="@color/webviewBackgroundColor"
     android:orientation="vertical"
-    tools:context=".view.activity.WebViewActivity">
 
+    tools:context=".view.activity.WebViewActivity">
     <android.support.design.widget.AppBarLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/colorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways|snap"
         >
 
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_scrollFlags="scroll|enterAlways|snap"
-            android:fitsSystemWindows="true">
-
-            <include layout="@layout/include_toolbar" />
-
-        </LinearLayout>
+        <include layout="@layout/include_toolbar" />
 
     </android.support.design.widget.AppBarLayout>
-
-    <!--<View-->
-    <!--android:layout_width="match_parent"-->
-    <!--android:layout_height="match_parent"-->
-    <!--android:background="@color/webviewBackgroundColor"-->
-    <!--/>-->
 
 
     <android.support.v4.widget.NestedScrollView
         android:id="@+id/nsv_webview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/webviewBackgroundColor"
         app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
-        <!--<com.tencent.smtt.sdk.WebView-->
-        <!--android:id="@+id/wb"-->
-        <!--android:layout_width="match_parent"-->
-        <!--android:layout_height="match_parent"-->
-        <!--&gt;-->
-        <!--</com.tencent.smtt.sdk.WebView>-->
-
+        <!--        android:background="@color/webviewBackgroundColor"
+-->
 
         <FrameLayout
             android:id="@+id/fl_web"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"></FrameLayout>
+            android:layout_height="wrap_content">
+        </FrameLayout>
 
 
     </android.support.v4.widget.NestedScrollView>

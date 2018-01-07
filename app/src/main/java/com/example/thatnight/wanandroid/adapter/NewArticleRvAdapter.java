@@ -1,6 +1,7 @@
 package com.example.thatnight.wanandroid.adapter;
 
 import android.support.v7.widget.RecyclerView;
+import android.text.Html;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -11,19 +12,17 @@ import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
-import com.example.thatnight.wanandroid.entity.CollectArticle;
 import com.example.thatnight.wanandroid.entity.Article;
-import com.example.thatnight.wanandroid.utils.CleanStringHtmlUtil;
 
-;
+;import java.util.regex.Pattern;
 
 /**
  * Created by thatnight on 2017.10.27.
  */
 
-public class ArticleRvAdapter extends BaseRecyclerViewAdapter {
+public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
 
-    private IOnIbtnClickListener mOnIbtnClickListener;
+    private OnArticleItemClickListener mOnIbtnClickListener;
     private SparseBooleanArray mSelectArray = new SparseBooleanArray();
 
     @Override
@@ -60,15 +59,31 @@ public class ArticleRvAdapter extends BaseRecyclerViewAdapter {
 
         @Override
         protected void bindView(Object o) {
-            if (o instanceof Article) {
-                Article article = (Article) o;
-                String nonHtmlTitle = CleanStringHtmlUtil.delHTMLTag(article.getTitle());
-                mTitle.setText(nonHtmlTitle);
+            Article article = (Article) o;
+            boolean isHtml = Pattern.matches(".*<em.+?>(.+?)</em>.*", article.getTitle());
+            if (isHtml) {
+                String textColor = "#FF4081";
+                String newTitle = article.getTitle().replaceAll("<em.+?>", "<font color=\"" + textColor + "\">")
+                        .replaceAll("</em>", "</font>");
+                mTitle.setText(Html.fromHtml(newTitle));
+            } else {
+                mTitle.setText(article.getTitle());
+            }
 
-                mAuthor.setText(article.getAuthor());
-                mTime.setText(article.getNiceDate());
-                mType.setText(article.getChapterName());
-                mIbLike.setTag(getLayoutPosition());
+            mAuthor.setText(article.getAuthor());
+            mTime.setText(article.getNiceDate());
+            mType.setText(article.getChapterName());
+            mIbLike.setTag(getLayoutPosition());
+            mType.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnIbtnClickListener != null) {
+                        mOnIbtnClickListener.onTypeClick(v, getLayoutPosition());
+                    }
+                }
+            });
+
+            if (article.getOriginId() <= 0) {      //最新文章
                 if (article.isCollect()) {
                     mIbLike.setSelected(true);
                     mSelectArray.put(getLayoutPosition(), true);
@@ -89,12 +104,7 @@ public class ArticleRvAdapter extends BaseRecyclerViewAdapter {
                         }
                     }
                 });
-            } else if (o instanceof CollectArticle) {
-                CollectArticle article = (CollectArticle) o;
-                mTitle.setText(article.getTitle());
-                mAuthor.setText(article.getAuthor());
-                mTime.setText(article.getNiceDate());
-                mType.setText(article.getChapterName());
+            } else {                        //收藏文章
                 mIbLike.setTag(getLayoutPosition());
                 mIbLike.setSelected(true);
                 mIbLike.setOnClickListener(new View.OnClickListener() {
@@ -110,12 +120,15 @@ public class ArticleRvAdapter extends BaseRecyclerViewAdapter {
 
     }
 
-    public void setOnIbtnClickListener(IOnIbtnClickListener onIbtnClickListener) {
+    public void setOnIbtnClickListener(OnArticleItemClickListener onIbtnClickListener) {
         mOnIbtnClickListener = onIbtnClickListener;
     }
 
-    public interface IOnIbtnClickListener {
+    public interface OnArticleItemClickListener {
         void onIbtnClick(View v, int position);
+
+        void onTypeClick(View v, int position);
     }
+
 
 }

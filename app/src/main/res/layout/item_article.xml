@@ -51,7 +51,7 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@id/item_tv_author"
             android:layout_marginStart="16dp"
-            android:textColor="@color/textColorSecondary"
+            android:textColor="@color/textColor_type"
             android:layout_toEndOf="@id/item_tv_author"
             android:text="分类"
             android:textSize="12sp"

@@ -8,32 +8,36 @@
     android:orientation="vertical"
     tools:context="com.example.thatnight.wanandroid.view.activity.AboutActivity">
 
-    <include
-        layout="@layout/include_toolbar" />
+    <include layout="@layout/include_toolbar" />
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/circleImageView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerInParent="true"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_below="@+id/tb"
+        android:layout_marginTop="64dp"
+        android:layout_centerHorizontal="true"
         android:layout_marginBottom="8dp"
         android:src="@mipmap/ic_launcher_round" />
 
     <TextView
+        android:id="@+id/tv_about_version"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@+id/circleImageView"
         android:layout_centerHorizontal="true"
         android:text="WanAndroid"
-        android:textColor="@color/textColorPrimary" />
+        android:textColor="@color/textColorPrimary"
+        android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/tv_about_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_above="@+id/tv_rights"
         android:layout_centerHorizontal="true"
-        android:textColor="@color/textColorSecondary"
-        android:text="\@2017- https://github.com/thatnight" />
+        android:text="\@2017- "
+        android:textColor="@color/textColorSecondary" />
 
 
     <TextView
@@ -43,6 +47,7 @@
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="48dp"
-        android:textColor="@color/textColorSecondary"
-        android:text="All rights reserved." />
+        android:gravity="center"
+        android:text="https://github.com/thatnight\nAll rights reserved."
+        android:textColor="@color/textColorSecondary" />
 </RelativeLayout>

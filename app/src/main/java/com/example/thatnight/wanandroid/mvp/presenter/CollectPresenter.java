@@ -1,6 +1,7 @@
 package com.example.thatnight.wanandroid.mvp.presenter;
 
 import com.example.thatnight.wanandroid.base.BasePresenter;
+import com.example.thatnight.wanandroid.entity.ArticleData;
 import com.example.thatnight.wanandroid.entity.CollectArticleData;
 import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.CollectContract;
@@ -37,7 +38,7 @@ public class CollectPresenter extends BasePresenter<CollectModel, CollectFragmen
         }
         if (0 == msg.getErrorCode()) {
             String json = GsonUtil.gsonToJson(msg.getData());
-            CollectArticleData data = GsonUtil.gsonToBean(json, CollectArticleData.class);
+            ArticleData data = GsonUtil.gsonToBean(json, ArticleData.class);
             if (isRefresh) {
                 view.refreshHtml(data.getDatas());
             } else {

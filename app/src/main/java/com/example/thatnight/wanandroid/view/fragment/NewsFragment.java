@@ -10,18 +10,20 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
-import com.example.thatnight.wanandroid.adapter.ArticleRvAdapter;
+import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
+import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
 import com.example.thatnight.wanandroid.mvp.model.NewsModel;
 import com.example.thatnight.wanandroid.mvp.presenter.NewsPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
-import com.example.thatnight.wanandroid.view.activity.LoginActivity;
+import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -43,14 +45,13 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
         implements OnRefreshListener,
         OnLoadmoreListener,
         BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
-        ArticleRvAdapter.IOnIbtnClickListener,
-        View.OnClickListener, NewsContract.IView {
+        View.OnClickListener, NewsContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
 
     private RecyclerView mRv;
     private RefreshLayout mRefreshLayout;
-    private ArticleRvAdapter mAdapter;
+    private NewArticleRvAdapter mAdapter;
     private int mPage;
     private View mIbtnCollect;
     private int mSelectPosition;
@@ -67,7 +68,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     protected void initView() {
         mRv = mRootView.findViewById(R.id.rv_main);
         mRefreshLayout = mRootView.findViewById(R.id.srl_main);
-        mAdapter = new ArticleRvAdapter();
+        mAdapter = new NewArticleRvAdapter();
         mRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelSize(R.dimen.recyclerview_decoration)));
@@ -151,6 +152,13 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     }
 
     @Override
+    public void onTypeClick(View v, int position) {
+        KeyValue keyValue = new KeyValue(Constant.SWITCH_TO_CLASSIFY, mArticles.get(position).getChapterName());
+        EventBus.getDefault().post(keyValue);
+
+    }
+
+    @Override
     public void onClick(View v) {
 
     }
@@ -213,8 +221,10 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshLayout(String requestCode) {
-        if ("refresh".equals(requestCode)) {
+        if (Constant.REFRESH.equals(requestCode) | Constant.REFRESH_NEWS.equals(requestCode)) {
             mRefreshLayout.autoRefresh();
+        } else if (Constant.TOP_NEWS.equals(requestCode)) {
+            mRv.smoothScrollToPosition(0);
         }
     }
 

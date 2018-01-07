@@ -27,3 +27,4 @@
 -dontwarn com.tencent.bugly.**
 -keep public class com.tencent.bugly.**{*;}
 -keep class android.support.**{*;}
+-keep public class * extends android.webkit.WebChromeClient
