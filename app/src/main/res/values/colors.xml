@@ -12,12 +12,13 @@
     <color name="nvItemColor">#161616</color>
     <color name="colorIbtnLike">#7b7b7b</color>
     <color name="itemBackgroundColor">#ffffff</color>
-    <color name="drawlayoutColor">#ffffff</color>
+    <color name="drawlayoutColor">#deffffff</color>
     <color name="tablayout_text_color">#efefef</color>
     <color name="background_settings">#ffffff</color>
     <color name="tablayout_text_selected_color">#FF4081</color>
     <color name="textColorPrimary">#161616</color>
     <color name="textColorSecondary">#7b7b7b</color>
+    <color name="textColor_type">#3F51B5</color>
     <color name="webviewBackgroundColor">#00000000</color>
 
     <!--night-->
@@ -37,8 +38,9 @@
     <color name="itemBackgroundColor_night">#ff2e2e2e</color>
     <color name="tablayout_text_color_night">#666666</color>
     <color name="tablayout_text_selected_color_night">#dcdcdc</color>
-    <color name="drawlayoutColor_night">#ff2e2e2e</color>
+    <color name="drawlayoutColor_night">#dd565656</color>
     <color name="webviewBackgroundColor_night">#32000000</color>
+    <color name="textColor_type_night">#dfffffff</color>
 
     <!--green-->
     <color name="colorPrimary_green">#4caf50</color>
@@ -47,6 +49,7 @@
     <color name="status_bar_color_green">#4caf50</color>
     <color name="toggleBtnColor_green">#ffef3e</color>
     <color name="tablayout_text_selected_color_green">#ecd801</color>
+    <color name="textColor_type_green">#4caf50</color>
 
 
     <!--blue-->
@@ -57,6 +60,7 @@
     <color name="toggleBtnColor_blue">#2196f3</color>
     <color name="tablayout_text_color_blue">#c1c1c1</color>
     <color name="tablayout_text_selected_color_blue">#ffffff</color>
+    <color name="textColor_type_blue">#0f87ea</color>
 
     <!--white-->
     <color name="colorPrimary_white">#f4f4f4</color>
@@ -65,6 +69,7 @@
     <color name="status_bar_color_white">#2196f3</color>
     <color name="toggleBtnColor_white">#2196f3</color>
     <color name="tablayout_text_selected_color_white">@color/colorAccent</color>
+    <color name="textColor_type_white">#f4f4f4</color>
 
 
 </resources>

@@ -45,7 +45,7 @@
     <PreferenceCategory android:title="关于">
         <PreferenceScreen
             android:key="help"
-            android:title="帮助与反馈" />
+            android:title="关于" />
     </PreferenceCategory>
 
 

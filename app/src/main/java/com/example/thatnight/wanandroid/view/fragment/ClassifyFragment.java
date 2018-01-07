@@ -13,10 +13,11 @@ import com.example.expandpopview.callback.OnTwoListCallback;
 import com.example.expandpopview.entity.KeyValue;
 import com.example.expandpopview.view.ExpandPopView;
 import com.example.thatnight.wanandroid.R;
-import com.example.thatnight.wanandroid.adapter.ArticleRvAdapter;
+import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
+import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.mvp.contract.ClassifyContract;
 import com.example.thatnight.wanandroid.mvp.model.ClassifyModel;
@@ -45,8 +46,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
         implements OnRefreshListener,
         OnLoadmoreListener,
         BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
-        ArticleRvAdapter.IOnIbtnClickListener,
-        ClassifyContract.IView {
+        ClassifyContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
     private RecyclerView mRv;
@@ -54,7 +54,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     private int mPage;
     private View mIbtnCollect;
     private int mSelectPosition;
-    private ArticleRvAdapter mAdapter;
+    private NewArticleRvAdapter mAdapter;
     private List<KeyValue> mParentList;
     private List<KeyValue> mChildList;
     private List<List<KeyValue>> mParentChildList;
@@ -69,7 +69,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
         mRefreshLayout = mRootView.findViewById(R.id.srl_main);
         mExpandPopView = mRootView.findViewById(R.id.epv_classify);
         mExpandPopView.setVisibility(View.VISIBLE);
-        mAdapter = new ArticleRvAdapter();
+        mAdapter = new NewArticleRvAdapter();
         mRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelSize(R.dimen.recyclerview_decoration)));
@@ -155,6 +155,11 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
             ViewUtil.setSelected(v);
             mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
         }
+    }
+
+    @Override
+    public void onTypeClick(View v, int position) {
+
     }
 
     @Override
@@ -250,8 +255,30 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshLayout(String requestCode) {
-        if ("refresh".equals(requestCode)) {
+        if (Constant.REFRESH.equals(requestCode)) {
             mRefreshLayout.autoRefresh();
+        } else if (Constant.TOP_CLASSIFY.equals(requestCode)) {
+            mRv.smoothScrollToPosition(0);
+        }
+    }
+
+    @Subscribe
+    public void switchToClassify(KeyValue key) {
+        if (Constant.SWITCH_TO_CLASSIFY.equals(key.getKey())) {
+            int index = -1;
+            for (int i = 0; i < mParentChildList.size(); i++) {
+                if (mParentChildList.get(i) != null) {
+//                    if (mParentChildList.get(i).contains(key.getValue())) {
+//                        index = mParentChildList.get(i).indexOf(key.getValue());
+//                        mExpandPopView.performClick(0, i, index);
+//                    }
+                    for (int j = 0; j < mParentChildList.get(i).size(); j++) {
+                        if (mParentChildList.get(i).get(j).getKey().toLowerCase().contains(key.getValue().toLowerCase())) {
+                            mExpandPopView.performClick(0, i, j);
+                        }
+                    }
+                }
+            }
         }
     }
 
@@ -260,4 +287,5 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
         super.onDestroyView();
         EventBus.getDefault().unregister(this);
     }
+
 }

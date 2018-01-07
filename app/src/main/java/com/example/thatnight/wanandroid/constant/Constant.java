@@ -32,4 +32,14 @@ public class Constant {
         activity requestcode
      */
     public static final int REQUEST_LOGIN = 19;
+
+
+    /*
+        EventBus post
+     */
+    public static final String REFRESH = "refresh";
+    public static final String REFRESH_NEWS = "refresh_news";
+    public static final String TOP_NEWS = "scroll_top_news";
+    public static final String TOP_CLASSIFY = "scroll_top_classify";
+    public static final String SWITCH_TO_CLASSIFY = "switch_to_classify";
 }

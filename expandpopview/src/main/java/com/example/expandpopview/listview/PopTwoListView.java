@@ -87,9 +87,19 @@ public class PopTwoListView extends PopLinearLayout implements IPopListView {
         });
     }
 
-    private void clickParent(PopViewAdapter adapter, int pos) {
+    /**
+     * click parent
+     *
+     * @param adapter
+     * @param pos
+     */
+    public void clickParent(PopViewAdapter adapter, int pos) {
         mParentPositionSelected = pos;
-        adapter.setSelectPosition(pos);
+        if (adapter == null) {
+            mParentAdapter.setSelectPosition(pos);
+        } else {
+            adapter.setSelectPosition(pos);
+        }
         if (mCallBack != null) {
             mCallBack.returnParentKeyValue(pos, mParentList.get(pos));
         }
@@ -101,9 +111,19 @@ public class PopTwoListView extends PopLinearLayout implements IPopListView {
         mChildAdapter.setKeyValueList(mChildList);
     }
 
-    private void clickChild(PopViewAdapter adapter, int pos) {
+    /**
+     * click child
+     *
+     * @param adapter
+     * @param pos
+     */
+    public void clickChild(PopViewAdapter adapter, int pos) {
         mChildPosition = pos;
-        adapter.setSelectPosition(pos);
+        if (adapter == null) {
+            mChildAdapter.setSelectPosition(pos);
+        } else {
+            adapter.setSelectPosition(pos);
+        }
         mChildListView.setSelection(pos);
         if (mCallBack != null) {
             mCallBack.returnChildKeyValue(pos, mChildList.get(pos));
@@ -116,6 +136,9 @@ public class PopTwoListView extends PopLinearLayout implements IPopListView {
         }
     }
 
+    /**
+     * refresh states
+     */
     public void refreshSelected() {
         if (mParentPosition != mParentPositionSelected) {
             mParentPositionSelected = mParentPosition;

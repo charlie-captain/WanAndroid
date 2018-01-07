@@ -11,17 +11,18 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.view.View;
 
+import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
-import com.example.thatnight.wanandroid.adapter.ArticleRvAdapter;
+import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
-import com.example.thatnight.wanandroid.entity.CollectArticle;
+import com.example.thatnight.wanandroid.constant.Constant;
+import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.mvp.contract.CollectContract;
 import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
 import com.example.thatnight.wanandroid.mvp.model.CollectModel;
 import com.example.thatnight.wanandroid.mvp.presenter.CollectPresenter;
-import com.example.thatnight.wanandroid.utils.HelperCallback;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
@@ -45,20 +46,19 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         implements OnRefreshListener,
         OnLoadmoreListener,
         BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
-        ArticleRvAdapter.IOnIbtnClickListener,
-        View.OnClickListener, CollectContract.IView {
+        View.OnClickListener, CollectContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
-    private List<CollectArticle> mArticles;
+    private List<Article> mArticles;
 
     private RecyclerView mRv;
     private RefreshLayout mRefreshLayout;
-    private ArticleRvAdapter mAdapter;
+    private NewArticleRvAdapter mAdapter;
     private int mPage;
     private View mIbtnCollect;
     private int mSelectPosition;
     private Handler mHandler = new Handler();
     private ItemTouchHelper mTouchHelper;
-    private CollectArticle mUnCollectArticle;
+    private Article mUnCollectArticle;
 
     @Override
     protected void initData(Bundle arguments) {
@@ -75,7 +75,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         setTitle("收藏");
         mRv = mRootView.findViewById(R.id.rv_main);
         mRefreshLayout = mRootView.findViewById(R.id.srl_main);
-        mAdapter = new ArticleRvAdapter();
+        mAdapter = new NewArticleRvAdapter();
         mRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelSize(R.dimen.recyclerview_decoration)));
@@ -136,7 +136,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
     @Override
     public void onItemClick(int pos) {
-        CollectArticle article = mArticles.get(pos);
+        Article article = mArticles.get(pos);
         Intent intent = WebViewActivity.newIntent(mActivity,
                 article.getId(),
                 article.getOriginId(),
@@ -163,6 +163,13 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     }
 
     @Override
+    public void onTypeClick(View v, int position) {
+        KeyValue keyValue = new KeyValue(Constant.SWITCH_TO_CLASSIFY, mArticles.get(position).getChapterName());
+        EventBus.getDefault().post(Constant.SWITCH_TO_CLASSIFY);
+        EventBus.getDefault().post(keyValue);
+    }
+
+    @Override
     public void onClick(View v) {
 
     }
@@ -178,14 +185,14 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
 
     @Override
-    public void refreshHtml(List<CollectArticle> articles) {
+    public void refreshHtml(List<Article> articles) {
         mArticles.clear();
         mArticles.addAll(articles);
         mAdapter.updateData(mArticles);
     }
 
     @Override
-    public void loadMoreHtml(List<CollectArticle> articles) {
+    public void loadMoreHtml(List<Article> articles) {
         mRefreshLayout.finishLoadmore();
         mArticles.addAll(articles);
         mAdapter.appendData(articles);
@@ -230,7 +237,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void refreshLayout(String requestCode) {
-        if ("refresh".equals(requestCode)) {
+        if (Constant.REFRESH.equals(requestCode)) {
             mRefreshLayout.autoRefresh();
         }
     }
