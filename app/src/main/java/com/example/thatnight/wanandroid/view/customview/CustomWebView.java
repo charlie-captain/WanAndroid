@@ -81,7 +81,6 @@ public class CustomWebView extends WebView {
 
     private void init() {
         setWebChromeClient(new CustomWebChromeClient());
-
     }
 
     public class CustomWebChromeClient extends com.tencent.smtt.sdk.WebChromeClient {

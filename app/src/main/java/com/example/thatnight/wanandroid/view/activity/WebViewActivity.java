@@ -12,6 +12,7 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
+import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -52,6 +53,7 @@ import com.tencent.smtt.sdk.WebViewClient;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import okhttp3.Call;
 import okhttp3.Cookie;
@@ -147,7 +149,14 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
             mWebView.loadUrl(mLink);
         }
         mActionButton.setSelected(isCollect);
-        setTitle(mTextTitle);
+        boolean isHtml = Pattern.matches(".*<em.+?>(.+?)</em>.*", mTextTitle);
+        if (isHtml) {
+            String newTitle = mTextTitle.replaceAll("<em.+?>", "")
+                    .replaceAll("</em>", "");
+            setTitle(newTitle);
+        } else {
+            setTitle(mTextTitle);
+        }
 
         mWebView.addJavascriptInterface(new JavaScriptCallback(), "imagelistner");
         mWebView.setWebViewClient(new WebViewClient() {
@@ -155,6 +164,7 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
             public void onPageStarted(WebView webView, String s, Bitmap bitmap) {
                 webView.getSettings().setJavaScriptEnabled(true);
                 super.onPageStarted(webView, s, bitmap);
+
             }
 
             @Override
@@ -171,6 +181,8 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
                 return true;
             }
         });
+
+
     }
 
     @Override

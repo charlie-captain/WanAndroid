@@ -75,6 +75,19 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mMainFragment = new MainFragment();
         showFragment(mMainFragment);
         mNavigationView.setCheckedItem(R.id.nv_menu_main);
+        showNewDialog();
+    }
+
+    private void showNewDialog() {
+        boolean isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), "update_app", true);
+        if (isFirst) {
+            SharePreferenceUtil.put(getApplicationContext(), "update_app", false);
+            new AlertDialog.Builder(this)
+                    .setTitle("更新内容")
+                    .setMessage("新增反馈留言功能\n文章分类可点击切换\n提升整体流畅性\n修复若干bug")
+                    .setNegativeButton("知道了",null).show();
+        }
+
     }
 
     private void initData() {
@@ -137,6 +150,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nv_menu_user:
                 Snackbar.make(mDrawerLayout, "未完待续...", Snackbar.LENGTH_SHORT).show();
                 break;
+
+            case R.id.nv_menu_comment:
+                startActivityAnim(new Intent(this, CommentActivity.class));
+                break;
             case R.id.nv_menu_settings:
                 startActivity(new Intent(MainActivity.this, SettingsActivity.class));
                 overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
@@ -163,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /**
      * 切换Fragment
+     *
      * @param fragment
      */
     private void showFragment(Fragment fragment) {
@@ -220,7 +238,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Subscribe
     public void switchToClassify(String requestCode) {
-        if(Constant.SWITCH_TO_CLASSIFY.equals(requestCode)){
+        if (Constant.SWITCH_TO_CLASSIFY.equals(requestCode)) {
             mNavigationView.setCheckedItem(R.id.nv_menu_main);
             changeFragmentContent(R.id.nv_menu_main);
         }
@@ -239,5 +257,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
+    }
+
+    public void startActivityAnim(Intent intent) {
+        startActivity(intent);
+        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 }

@@ -3,6 +3,7 @@ package com.example.thatnight.wanandroid.view.activity;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -29,6 +30,7 @@ import com.example.thatnight.wanandroid.mvp.model.SearchModel;
 import com.example.thatnight.wanandroid.mvp.presenter.SearchPresenter;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.HelperCallback;
+import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
@@ -209,6 +211,25 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
     }
 
     @Override
+    public void isCollectSuccess(boolean isSuccess, String s) {
+        Snackbar.make(mRv, s, Snackbar.LENGTH_SHORT)
+                .setAction("取消", new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        if (mIbtnCollect != null) {
+                            ViewUtil.setSelected(mIbtnCollect);
+                        }
+                        mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
+                    }
+                }).show();
+        if (!isSuccess) {
+            if (mIbtnCollect != null) {
+                ViewUtil.setSelected(mIbtnCollect);
+            }
+        }
+    }
+
+    @Override
     public void error(String s) {
         mRefreshLayout.finishRefresh(false);
         mRefreshLayout.finishLoadmore(false);
@@ -266,10 +287,12 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
 
     @Override
     public void onIbtnClick(View v, int position) {
-        mIbtnCollect = v;
-        mSelectPosition = position;
-        ViewUtil.setSelected(v);
-//        mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
+        if (LoginContextUtil.getInstance().getUserState().collect(this)) {
+            mIbtnCollect = v;
+            mSelectPosition = position;
+            ViewUtil.setSelected(v);
+            mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
+        }
     }
 
     @Override

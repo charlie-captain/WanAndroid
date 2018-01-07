@@ -34,4 +34,16 @@ public class SearchPresenter extends BasePresenter<SearchModel, SearchContract.I
             }
         });
     }
+
+    @Override
+    public void collect(boolean isCollect, String id) {
+        model.collect(isCollect, id, new SearchContract.IModel.OnCollectCallback() {
+            @Override
+            public void collectResult(boolean isCollect, String error) {
+                if (view != null) {
+                    view.isCollectSuccess(isCollect, error);
+                }
+            }
+        });
+    }
 }

@@ -11,7 +11,7 @@
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.CAMERA"/>
+    <uses-permission android:name="android.permission.CAMERA" />
 
     <application
         android:name=".base.App"
@@ -30,8 +30,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/provider_paths" />
         </provider>
-        <activity android:name=".view.activity.MainActivity" android:launchMode="singleTask">
-        </activity>
+
+        <activity
+            android:name=".view.activity.MainActivity"
+            android:launchMode="singleTask" />
         <activity android:name=".view.activity.WebViewActivity" />
         <activity
             android:name=".view.activity.LoginActivity"
@@ -42,6 +44,7 @@
             android:theme="@style/SplashTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
@@ -51,7 +54,6 @@
         <activity
             android:name=".view.activity.SettingsActivity"
             android:theme="@style/SettingsTheme" />
-
         <activity
             android:name="com.tencent.bugly.beta.ui.BetaActivity"
             android:configChanges="keyboardHidden|orientation|screenSize|locale"
@@ -60,7 +62,8 @@
         <activity
             android:name=".view.activity.PhotoActivity"
             android:theme="@style/TransParentTheme" />
-        <activity android:name=".view.activity.SearchActivity"></activity>
+        <activity android:name=".view.activity.SearchActivity" />
+        <activity android:name=".view.activity.CommentActivity" />
     </application>
 
 </manifest>

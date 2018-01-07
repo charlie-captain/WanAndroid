@@ -14,11 +14,14 @@ public class SearchContract {
     public interface IPresenter extends BaseContract.IBasePresenter {
         void search(boolean isRefresh, String key, String page);
 
+        void collect(boolean isCollect, String id);
 
     }
 
     public interface IView extends BaseContract.IBaseView {
         void showArticles(boolean isRefresh, List<Article> articles);
+
+        void isCollectSuccess(boolean isSuccess, String s);
 
         void error(String s);
     }
@@ -30,6 +33,12 @@ public class SearchContract {
 
             void error(String s);
         }
+
+        interface OnCollectCallback {
+            void collectResult(boolean isCollect, String error);
+        }
+
+        void collect(boolean isCollect, String id, OnCollectCallback onCollectCallback);
 
         void search(String key, String page, OnSearchCallback onSearchCallback);
     }
