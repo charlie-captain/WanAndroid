@@ -18,7 +18,7 @@
 ---
 
 ### 下载地址 - 酷安市场
-[Wanandroid 1.2.1](https://www.coolapk.com/apk/169842)
+[Wanandroid 1.3](https://www.coolapk.com/apk/169842)
 
  
 ### 项目框架
@@ -35,6 +35,7 @@
 11. [Android-skin-support](https://github.com/ximsfei/Android-skin-support)  --换肤框架
 12. [ExpandPopView](https://github.com/thatnight/ExpandPopViewDemo) --二级下拉列表
 13. EventBus  --组件间通信
+14. Bmob --云后台
 
 ### 项目进度
 - [x] 完成登录注册以及游客登陆
@@ -46,12 +47,18 @@
 - [ ] 搜索热词
 - [ ] 常用网站
 - [x] 换肤，夜间模式
-- [ ] 反馈与帮助
+- [x] 反馈与帮助
 - [ ] 修复bug与提高流畅性
 
 --- 
 
 ### 更新版本
+- #### 1.3
+  - 新增反馈留言
+  - 文章分类可点击
+  - 提升整体流畅性
+  - 修复若干bug
+
 
 - #### 1.2 / 1.2.1
     - 搜索功能
