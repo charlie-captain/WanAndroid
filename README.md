@@ -5,7 +5,7 @@
   一款含有有丰富Android开发文章的App,内容每天都会更新。
   原网站 http://www.wanandroid.com ，数据内容源至hongyang大神的网址，我只是将网址转化为App方便大家学习，侵删。
 
-  接口地址:  [http://www.wanandroid.com/blog/2](http://www.wanandroid.com/blog/2)
+  接口地址:  [http://www.wanandroid.com/blog/show/2](http://www.wanandroid.com/blog/show/2)
   
 --- 
 
