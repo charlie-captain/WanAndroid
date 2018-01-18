@@ -14,6 +14,7 @@ import android.text.TextWatcher;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -116,6 +117,7 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
             mSearchView.setText(mKey);
             mSearchView.setSelection(mKey.length());
             mPresenter.search(false, mKey, String.valueOf(mPage));
+            addHistory(mKey);
         }
     }
 
@@ -145,11 +147,7 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
                     if (v != null && v.getText() != null) {
                         mPresenter.search(true, v.getText().toString(), String.valueOf(mPage));
                         ViewUtil.inputSoftWare(false, v);
-                        if (mSearchHistory == null) {
-                            mSearchHistory = new ArrayList<>();
-                        }
-                        mSearchHistory.add(v.getText().toString());
-                        mSearchAdatper.updateData(mSearchHistory);
+                        addHistory(v.getText().toString().trim());
                         return true;
                     }
                 }
@@ -180,6 +178,22 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
         });
     }
 
+    /**
+     * 添加到历史搜索
+     *
+     * @param s
+     */
+    private void addHistory(String s) {
+        if (mSearchHistory == null) {
+            mSearchHistory = new ArrayList<>();
+        }
+        if (mSearchHistory.contains(s)) {
+            return;
+        }
+        mSearchHistory.add(s);
+        mSearchAdatper.updateData(mSearchHistory);
+    }
+
     @Override
     public void isLoading(boolean isLoading) {
         if (isLoading) {
@@ -207,6 +221,10 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
         if (!isEditting) {
             mRv.setAdapter(mAdapter);
             isEditting = true;
+        }
+        if (!TextUtils.isEmpty(mKey)) {
+            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.hideSoftInputFromWindow(mRv.getWindowToken(), 0);
         }
     }
 
@@ -297,6 +315,11 @@ public class SearchActivity extends SwipeBackActivity<SearchContract.IView, Sear
 
     @Override
     public void onTypeClick(View v, int position) {
+
+    }
+
+    @Override
+    public void onAuthorClick(View v, int position) {
 
     }
 

@@ -16,6 +16,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
 import android.view.KeyEvent;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -33,6 +34,7 @@ import com.example.thatnight.wanandroid.utils.MyStatusBarUtil;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
 import com.jaeger.library.StatusBarUtil;
+import com.squareup.haha.perflib.Main;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -63,7 +65,16 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dv_main);
         mNavigationView = (NavigationView) findViewById(R.id.nv_main);
         mName = mNavigationView.getHeaderView(0).findViewById(R.id.tv_nv_header_name);
+        mIcon = mNavigationView.getHeaderView(0).findViewById(R.id.iv_nv_header_icon);
         mNavigationView.setNavigationItemSelectedListener(this);
+        mIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (LoginContextUtil.getInstance().getUserState().getClass() == LogoutState.class) {
+                    startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
+                }
+            }
+        });
         initData();
 
 //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
@@ -85,25 +96,28 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             new AlertDialog.Builder(this)
                     .setTitle("更新内容")
                     .setMessage("新增反馈留言功能\n文章分类可点击切换\n提升整体流畅性\n修复若干bug")
-                    .setNegativeButton("知道了",null).show();
+                    .setNegativeButton("知道了", null).show();
         }
 
     }
 
     private void initData() {
         mAccount = getIntent().getParcelableExtra("account");
+
+        //如果通过传值登录
         if (mAccount != null) {
             SharePreferenceUtil.put(getApplicationContext(), "account", mAccount.getUsername());
             SharePreferenceUtil.put(getApplicationContext(), "password", mAccount.getPassword());
+            SharePreferenceUtil.put(getApplicationContext(), getString(R.string.sp_auto_login), true);
             mName.setText(mAccount.getUsername());
-        } else {
+        } else {        //判断是否游客
             boolean isVisitor = (boolean) SharePreferenceUtil.get(getApplicationContext(), "visitor", false);
             if (isVisitor) {
                 mName.setText("Visitor");
-            } else {
+            } else {    //否则设置已登陆
                 String userName = (String) SharePreferenceUtil.get(getApplicationContext(), "account", "");
                 if (!TextUtils.isEmpty(userName)) {
-                    mName.setText(userName);
+                        mName.setText(userName);
                 } else {
                     mName.setText("error");
                 }
@@ -118,6 +132,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (mAccount != null) {
             SharePreferenceUtil.put(getApplicationContext(), "account", mAccount.getUsername());
             SharePreferenceUtil.put(getApplicationContext(), "password", mAccount.getPassword());
+            SharePreferenceUtil.put(getApplicationContext(), getString(R.string.sp_auto_login), true);
             mName.setText(mAccount.getUsername());
             EventBus.getDefault().post("refresh");
         }

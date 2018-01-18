@@ -24,6 +24,7 @@ import com.example.thatnight.wanandroid.mvp.model.ClassifyModel;
 import com.example.thatnight.wanandroid.mvp.presenter.ClassifyPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -160,6 +161,11 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     @Override
     public void onTypeClick(View v, int position) {
 
+    }
+
+    @Override
+    public void onAuthorClick(View v, int position) {
+        startActivityAnim(SearchActivity.newIntent(mActivity, mArticles.get(position).getAuthor()));
     }
 
     @Override

@@ -67,8 +67,8 @@
     </style>
 
     <style name="ToolbarPopupTheme" parent="@style/ThemeOverlay.AppCompat.Dark">
-        <item name="android:colorBackground">@color/background</item>
-        <item name="android:textColor">@color/textColorPrimary</item>
+        <item name="android:colorBackground">@color/background_settings</item>
+        <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
 </resources>

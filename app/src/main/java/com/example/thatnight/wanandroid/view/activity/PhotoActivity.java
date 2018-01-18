@@ -3,15 +3,10 @@ package com.example.thatnight.wanandroid.view.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.media.Image;
 import android.net.Uri;
 import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.LayoutInflater;
@@ -27,13 +22,9 @@ import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BasePresenter;
 import com.example.thatnight.wanandroid.utils.ImageUtil;
-import com.example.thatnight.wanandroid.utils.OkHttpUtil;
-import com.jaeger.library.StatusBarUtil;
-import com.wingsofts.dragphotoview.DragPhotoView;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
-import com.yanzhenjie.permission.PermissionNo;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,7 +41,7 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
     private static final String PHOTO_LIST = "photo_list";
     private static final String PHOTO_INDEX = "photo_index";
 
-    private Dialog mCameraDialog;
+    private Dialog mLongClickDialog;
 
     public static <T> Intent newIntent(Context context, int index, ArrayList<T> list) {
         Intent intent = new Intent(context, PhotoActivity.class);
@@ -152,16 +143,16 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
     @Override
     public void longClick(View view, int position) {
         mImageView = view;
-        if (mCameraDialog == null) {
-            mCameraDialog = new Dialog(this, R.style.DialogShareTheme);
+        if (mLongClickDialog == null) {
+            mLongClickDialog = new Dialog(this, R.style.DialogShareTheme);
             LinearLayout root = (LinearLayout) LayoutInflater.from(this).inflate(
                     R.layout.dialog_photo_longclick, null);
             //初始化视图
             root.findViewById(R.id.btn_dialog_save).setOnClickListener(this);
             root.findViewById(R.id.btn_dialog_share).setOnClickListener(this);
             root.findViewById(R.id.btn_dialog_cancel).setOnClickListener(this);
-            mCameraDialog.setContentView(root);
-            Window dialogWindow = mCameraDialog.getWindow();
+            mLongClickDialog.setContentView(root);
+            Window dialogWindow = mLongClickDialog.getWindow();
             dialogWindow.setGravity(Gravity.BOTTOM);
 //        dialogWindow.setWindowAnimations(R.style.dialogstyle); // 添加动画
             WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
@@ -175,10 +166,10 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
             dialogWindow.setAttributes(lp);
         }
 
-        if (mCameraDialog.isShowing()) {
-            mCameraDialog.dismiss();
+        if (mLongClickDialog.isShowing()) {
+            mLongClickDialog.dismiss();
         }
-        mCameraDialog.show();
+        mLongClickDialog.show();
     }
 
     @Override
@@ -211,15 +202,15 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
                 }
                 break;
             case R.id.btn_dialog_cancel:
-                if (mCameraDialog.isShowing()) {
-                    mCameraDialog.dismiss();
+                if (mLongClickDialog.isShowing()) {
+                    mLongClickDialog.dismiss();
                 }
                 break;
             default:
                 break;
         }
-        if (mCameraDialog.isShowing()) {
-            mCameraDialog.dismiss();
+        if (mLongClickDialog.isShowing()) {
+            mLongClickDialog.dismiss();
         }
     }
 
@@ -238,8 +229,8 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mCameraDialog != null) {
-            mCameraDialog.dismiss();
+        if (mLongClickDialog != null) {
+            mLongClickDialog.dismiss();
         }
     }
 }

@@ -159,6 +159,11 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     }
 
     @Override
+    public void onAuthorClick(View v, int position) {
+        startActivityAnim(SearchActivity.newIntent(mActivity, mArticles.get(position).getAuthor()));
+    }
+
+    @Override
     public void onClick(View v) {
 
     }

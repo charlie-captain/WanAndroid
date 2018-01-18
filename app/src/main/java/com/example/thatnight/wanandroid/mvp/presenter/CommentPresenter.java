@@ -22,6 +22,10 @@ public class CommentPresenter extends BasePresenter<CommentModel, CommentActivit
 
     @Override
     public void getComment(boolean isRefresh, int page) {
+        if(model==null){
+            // TODO: 2018.1.10 解决Activity退出而引用空指针
+            return; //防止activity退出, 而空指针
+        }
         model.getComment(isRefresh, page, new CommentContract.IModel.OnCommentListener() {
 
             @Override

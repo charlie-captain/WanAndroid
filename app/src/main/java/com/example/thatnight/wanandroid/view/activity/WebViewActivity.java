@@ -131,6 +131,9 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
         setViewData();
     }
 
+    /**
+     * 设置WebView
+     */
     private void setViewData() {
 
         mWebView.clearCache(true);
@@ -149,6 +152,8 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
             mWebView.loadUrl(mLink);
         }
         mActionButton.setSelected(isCollect);
+
+        //过滤html的title
         boolean isHtml = Pattern.matches(".*<em.+?>(.+?)</em>.*", mTextTitle);
         if (isHtml) {
             String newTitle = mTextTitle.replaceAll("<em.+?>", "")
@@ -158,6 +163,7 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
             setTitle(mTextTitle);
         }
 
+        //添加图片监听
         mWebView.addJavascriptInterface(new JavaScriptCallback(), "imagelistner");
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
@@ -197,6 +203,7 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
 
     @Override
     protected void initListener() {
+        //点击标题置顶
         mTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -323,6 +330,7 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
         }
         ProgressDialogUtil.dismiss();
     }
+
 
     public void getImageUrls() {
 

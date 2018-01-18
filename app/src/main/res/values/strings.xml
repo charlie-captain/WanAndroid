@@ -17,6 +17,7 @@
 
     <!--settings-->
     <string name="pref_day_light">day_light</string>
+    <string name="pref_auto_login">auto_login</string>
     <string name="pref_notification">notification</string>
     <string name="pref_user_name">user_name</string>
     <string name="pref_user_password">user_password</string>
@@ -24,4 +25,8 @@
     <string name="pref_theme">theme</string>
 
     <string name="pref_default_value">安卓蓝</string>
+    <string name="bugly_appkey">9bc290a7b0</string>
+    <string name="bmob_appkey">54bd3008726f332bb21334f096b4b0c3</string>
+    <string name="sp_auto_login">auto_login</string>
+    <string name="pref_update">update</string>
 </resources>

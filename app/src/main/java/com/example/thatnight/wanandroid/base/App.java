@@ -2,7 +2,9 @@ package com.example.thatnight.wanandroid.base;
 
 import android.app.Application;
 
+import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
+import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.smtt.sdk.QbSdk;
 
@@ -24,11 +26,19 @@ public class App extends Application {
         new Thread(new Runnable() {
             @Override
             public void run() {
+                //检测内存泄漏
+                if(LeakCanary.isInAnalyzerProcess(App.this)){
+                    return;
+                }
+                LeakCanary.install(App.this);
+
+                //换肤框架
                 SkinCompatManager.withoutActivity(App.this)
                         .addInflater(new SkinMaterialViewInflater())
                         .addInflater(new SkinConstraintViewInflater())
                         .loadSkin();
 
+                //x5
                 QbSdk.initX5Environment(App.this, new QbSdk.PreInitCallback() {
                     @Override
                     public void onCoreInitFinished() {
@@ -42,10 +52,11 @@ public class App extends Application {
                 });
 
                 //Bugly
-                Bugly.init(getApplicationContext(), "9bc290a7b0", false);
+                Bugly.init(getApplicationContext(), getString(R.string.bugly_appkey), false);
 
                 OkHttpUtil.init(getApplicationContext());
-                Bmob.initialize(App.this, "54bd3008726f332bb21334f096b4b0c3");
+                //云后台
+                Bmob.initialize(App.this, getString(R.string.bmob_appkey));
             }
         }).start();
 

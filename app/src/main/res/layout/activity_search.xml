@@ -43,13 +43,14 @@
                     android:imeOptions="actionSearch"
                     android:maxLines="1"
                     android:singleLine="true"
+                    android:textSize="16sp"
                     android:textColor="@color/textColorPrimary"
                     android:textColorHint="@color/textColorSecondary" />
 
                 <ImageButton
                     android:id="@+id/tb_search_clear"
-                    android:layout_width="@dimen/width_height_button"
-                    android:layout_height="@dimen/width_height_button"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:layout_gravity="right|center"
                     android:layout_marginRight="8dp"
                     android:background="?attr/selectableItemBackgroundBorderless"

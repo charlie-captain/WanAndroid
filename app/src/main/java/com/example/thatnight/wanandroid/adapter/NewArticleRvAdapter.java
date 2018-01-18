@@ -82,6 +82,14 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
                     }
                 }
             });
+            mAuthor.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnIbtnClickListener != null) {
+                        mOnIbtnClickListener.onAuthorClick(v, getLayoutPosition());
+                    }
+                }
+            });
 
             if (article.getOriginId() <= 0) {      //最新文章
                 if (article.isCollect()) {
@@ -128,6 +136,8 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
         void onIbtnClick(View v, int position);
 
         void onTypeClick(View v, int position);
+
+        void onAuthorClick(View v, int position);
     }
 
 

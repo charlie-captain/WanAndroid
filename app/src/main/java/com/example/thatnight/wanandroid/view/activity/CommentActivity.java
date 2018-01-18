@@ -76,6 +76,11 @@ public class CommentActivity extends SwipeBackActivity<CommentContract.IView, Co
         mAddButton.setOnClickListener(this);
         mPage = 0;
 
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         mRefreshLayout.autoRefresh();
     }
 

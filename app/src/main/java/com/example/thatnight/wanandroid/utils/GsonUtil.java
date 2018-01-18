@@ -14,6 +14,7 @@ import com.google.gson.reflect.TypeToken;
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
@@ -111,6 +112,15 @@ public class GsonUtil {
             }
         }
         return list;
+    }
+
+    public static <T> Set<T> gsonToSet(String set, Class<T> cls) {
+        Set<T> hashSet = new HashSet<>();
+        if (sGson != null) {
+            hashSet = sGson.fromJson(set, new TypeToken<HashSet<T>>() {
+            }.getType());
+        }
+        return hashSet;
     }
 
     /**

@@ -25,6 +25,7 @@ import com.example.thatnight.wanandroid.mvp.model.CollectModel;
 import com.example.thatnight.wanandroid.mvp.presenter.CollectPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -167,6 +168,11 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         KeyValue keyValue = new KeyValue(Constant.SWITCH_TO_CLASSIFY, mArticles.get(position).getChapterName());
         EventBus.getDefault().post(Constant.SWITCH_TO_CLASSIFY);
         EventBus.getDefault().post(keyValue);
+    }
+
+    @Override
+    public void onAuthorClick(View v, int position) {
+        startActivityAnim(SearchActivity.newIntent(mActivity, mArticles.get(position).getAuthor()));
     }
 
     @Override
