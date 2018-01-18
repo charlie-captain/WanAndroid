@@ -59,12 +59,13 @@ public class RegisterActivity extends SwipeBackActivity<RegisterContract.IView, 
                 if (TextUtils.isEmpty(getName()) || TextUtils.isEmpty(getPassword())
                         || TextUtils.isEmpty(mPwd.getText().toString().trim())) {
                     Snackbar.make(mBtnRegister, "账号或密码不能为空", Snackbar.LENGTH_SHORT).show();
+                    mBtnRegister.errorAnimation();
                 } else {
                     if (mPwd.getText().toString().trim().equals(mRePwd.getText().toString().trim())) {
-                        mBtnRegister.startAnimation();
                         mPresenter.register();
                     } else {
                         Snackbar.make(mBtnRegister, "两次密码输入不相同", Snackbar.LENGTH_SHORT).show();
+                        mBtnRegister.errorAnimation();
                     }
                 }
             }

@@ -19,8 +19,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
@@ -30,11 +30,8 @@ import com.example.thatnight.wanandroid.utils.ExitUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
-import com.example.thatnight.wanandroid.utils.MyStatusBarUtil;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
-import com.jaeger.library.StatusBarUtil;
-import com.squareup.haha.perflib.Main;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -89,13 +86,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         showNewDialog();
     }
 
+    //显示更新特性
     private void showNewDialog() {
-        boolean isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), "update_app", true);
+        boolean isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), Constant.UPDATE_DIALOG, true);
         if (isFirst) {
-            SharePreferenceUtil.put(getApplicationContext(), "update_app", false);
+            SharePreferenceUtil.put(getApplicationContext(), Constant.UPDATE_DIALOG, false);
             new AlertDialog.Builder(this)
                     .setTitle("更新内容")
-                    .setMessage("新增反馈留言功能\n文章分类可点击切换\n提升整体流畅性\n修复若干bug")
+                    .setMessage("新增热修复功能\n文章作者和分类可点击切换\n新增一些设置\n修复若干bug")
                     .setNegativeButton("知道了", null).show();
         }
 
@@ -117,7 +115,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             } else {    //否则设置已登陆
                 String userName = (String) SharePreferenceUtil.get(getApplicationContext(), "account", "");
                 if (!TextUtils.isEmpty(userName)) {
-                        mName.setText(userName);
+                    mName.setText(userName);
                 } else {
                     mName.setText("error");
                 }

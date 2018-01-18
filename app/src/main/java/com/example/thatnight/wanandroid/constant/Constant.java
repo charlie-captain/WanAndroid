@@ -42,4 +42,6 @@ public class Constant {
     public static final String TOP_NEWS = "scroll_top_news";
     public static final String TOP_CLASSIFY = "scroll_top_classify";
     public static final String SWITCH_TO_CLASSIFY = "switch_to_classify";
+
+    public static final String UPDATE_DIALOG = "update_app_1.4";
 }

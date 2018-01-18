@@ -74,8 +74,8 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
                 ViewUtil.inputSoftWare(false, v);
                 if (TextUtils.isEmpty(getName()) || TextUtils.isEmpty(getPassword())) {
                     Snackbar.make(mBtnLogin, "账号或密码不能为空", Snackbar.LENGTH_SHORT).show();
+                    mBtnLogin.errorAnimation();
                 } else {
-                    mBtnLogin.startAnimation();
                     mPresenter.login();
                 }
             }

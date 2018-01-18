@@ -1,6 +1,15 @@
 apply plugin: 'com.android.application'
+apply from: 'tinker-support.gradle'
 
 android {
+    signingConfigs {
+        myconfig {
+            keyAlias 'key0'
+            keyPassword '703692499'
+            storeFile file('D:/RDC/WanAndroid/keys/keys.jks')
+            storePassword '703692499'
+        }
+    }
     compileSdkVersion 26
     buildToolsVersion '26.0.2'
     defaultConfig {
@@ -17,11 +26,15 @@ android {
         release {
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+            signingConfig signingConfigs.myconfig
+        }
+
+        debug {
+            signingConfig signingConfigs.myconfig
         }
     }
     productFlavors {
     }
-
 }
 
 configurations.all {
@@ -66,5 +79,4 @@ dependencies {
     implementation 'cn.bmob.android:bmob-sdk:3.5.5'
     debugCompile 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseCompile 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
-
 }
