@@ -1,24 +1,26 @@
-### WanAndroid
+## WanAndroid
 
 ### 前言
   
   一款含有有丰富Android开发文章的App,内容每天都会更新。
   原网站 http://www.wanandroid.com ，数据内容源至hongyang大神的网址，我只是将网址转化为App方便大家学习，侵删。
 
-  接口地址:  [http://www.wanandroid.com/blog/2](http://www.wanandroid.com/blog/2)
+  接口地址:  [http://www.wanandroid.com/blog/show/2](http://www.wanandroid.com/blog/show/2)
   
 --- 
 
 ### 截图
 
-![image](http://image.coolapk.com/apk_image/2017/1225/db0f01e54a628744866dbccfb8dc6486-169842-o_1c26p2fgontm1b9knog11521p5bq-uid-1231724@1080x1920.png.t.jpg)![首页](http://image.coolapk.com/apk_image/2017/1225/0bbb7e42af0d3d9efdc2547298bb7ca9-169842-o_1c26p2ruhigisk1hf71tjd1k3016-uid-1231724@1080x1920.png.t.jpg)![image](http://image.coolapk.com/apk_image/2017/1225/a2c1735b44298b43e5ffdcb8e556e095-169842-o_1c26p2ti1135lrrgaut12hb1sho1c-uid-1231724@1080x1920.png.t.jpg)![image](http://image.coolapk.com/apk_image/2017/1225/776431e70adf41dd4c70013e8354cd2d-169842-o_1c26p2vak1mbk6ga1u4r1nrjd7n1i-uid-1231724@1080x1920.png.t.jpg)![image](http://image.coolapk.com/apk_image/2017/1225/1af87bd3e986c0cc0743936d7690bf4f-169842-o_1c26p2hepdlartdhls1soi1ur610-uid-1231724@1080x1920.png.t.jpg)
+![image](http://image.coolapk.com/apk_image/2017/1225/db0f01e54a628744866dbccfb8dc6486-169842-o_1c26p2fgontm1b9knog11521p5bq-uid-1231724@1080x1920.png.t.jpg)![首页](http://image.coolapk.com/apk_image/2017/1225/0bbb7e42af0d3d9efdc2547298bb7ca9-169842-o_1c26p2ruhigisk1hf71tjd1k3016-uid-1231724@1080x1920.png.t.jpg)![image](http://image.coolapk.com/apk_image/2017/1225/a2c1735b44298b43e5ffdcb8e556e095-169842-o_1c26p2ti1135lrrgaut12hb1sho1c-uid-1231724@1080x1920.png.t.jpg)![image](http://image.coolapk.com/apk_image/2017/1225/776431e70adf41dd4c70013e8354cd2d-169842-o_1c26p2vak1mbk6ga1u4r1nrjd7n1i-uid-1231724@1080x1920.png.t.jpg)![image](http://image.coolapk.com/apk_image/2017/1225/1af87bd3e986c0cc0743936d7690bf4f-169842-o_1c26p2hepdlartdhls1soi1ur610-uid-1231724@1080x1920.png.t.jpg)![image](http://image.coolapk.com/apk_image/2018/0109/4dac652efe8130b7e0915d51240d967d-169842-o_1c3ct1dkkip6dktkl814jh1qbbq-uid-1231724@1080x1920.png.t.jpg)
 
 
 
 ---
 
-### 下载地址 - 酷安市场
-[Wanandroid 1.3](https://www.coolapk.com/apk/169842)
+### 下载地址
+
+- [Wanandroid 1.3](https://www.coolapk.com/apk/169842) -- 酷安市场
+- [Github-release](https://github.com/thatnight/WanAndroid/releases)
 
  
 ### 项目框架
