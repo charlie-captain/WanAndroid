@@ -19,7 +19,7 @@
 
 ### 下载地址
 
-- [Wanandroid 1.3](https://www.coolapk.com/apk/169842) -- 酷安市场
+- [Wanandroid 1.3.1](https://www.coolapk.com/apk/169842) -- 酷安市场
 - [Github-release](https://github.com/thatnight/WanAndroid/releases)
 
  
@@ -55,6 +55,12 @@
 --- 
 
 ### 更新版本
+- #### 1.3.1
+  - 新增热修复功能，从此修复bug无声无息
+  - 文章作者和分类可点击切换
+  - 新增一些没用的设置
+  - 修复若干奔溃bug
+  
 - #### 1.3
   - 新增反馈留言
   - 文章分类可点击
