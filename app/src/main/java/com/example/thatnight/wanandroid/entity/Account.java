@@ -3,6 +3,8 @@ package com.example.thatnight.wanandroid.entity;
 import android.os.Parcel;
 import android.os.Parcelable;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,14 +22,18 @@ public class Account implements Parcelable {
      * icon : null
      * type : 0
      * collectIds : []
+     * email :
+     * icon :
      */
 
     private int id;
     private String username;
     private String password;
-    private Object icon;
     private int type;
     private List<Integer> collectIds;
+    private String email;
+    @SerializedName("icon")
+    private String iconX;
 
     public int getId() {
         return id;
@@ -53,14 +59,6 @@ public class Account implements Parcelable {
         this.password = password;
     }
 
-    public Object getIcon() {
-        return icon;
-    }
-
-    public void setIcon(Object icon) {
-        this.icon = icon;
-    }
-
     public int getType() {
         return type;
     }
@@ -77,6 +75,21 @@ public class Account implements Parcelable {
         this.collectIds = collectIds;
     }
 
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
+    }
+
+    public String getIconX() {
+        return iconX;
+    }
+
+    public void setIconX(String iconX) {
+        this.iconX = iconX;
+    }
 
     @Override
     public int describeContents() {
@@ -88,9 +101,10 @@ public class Account implements Parcelable {
         dest.writeInt(this.id);
         dest.writeString(this.username);
         dest.writeString(this.password);
-        dest.writeParcelable((Parcelable) this.icon, flags);
         dest.writeInt(this.type);
         dest.writeList(this.collectIds);
+        dest.writeString(this.email);
+        dest.writeString(this.iconX);
     }
 
     public Account() {
@@ -100,10 +114,11 @@ public class Account implements Parcelable {
         this.id = in.readInt();
         this.username = in.readString();
         this.password = in.readString();
-        this.icon = in.readParcelable(Object.class.getClassLoader());
         this.type = in.readInt();
         this.collectIds = new ArrayList<Integer>();
         in.readList(this.collectIds, Integer.class.getClassLoader());
+        this.email = in.readString();
+        this.iconX = in.readString();
     }
 
     public static final Creator<Account> CREATOR = new Creator<Account>() {

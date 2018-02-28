@@ -32,7 +32,8 @@ public class RegisterPresenter extends BasePresenter<RegisterModel, RegisterActi
             return;
         }
         if (0 == msg.getErrorCode()) {
-            Account account = GsonUtil.gsonToBean(msg.getData().toString(), Account.class);
+            String accountJson = GsonUtil.gsonToJson(msg.getData());
+            Account account = GsonUtil.gsonToBean(accountJson, Account.class);
             view.isSuccess(true, account, null);
         } else {
             view.isSuccess(false, null, msg.getErrorMsg().toString());

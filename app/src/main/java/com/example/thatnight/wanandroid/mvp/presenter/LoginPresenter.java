@@ -24,14 +24,19 @@ public class LoginPresenter extends BasePresenter<LoginModel, LoginActivity> imp
     public void getResult(Msg msg) {
         view.isLoading(false);
         if (msg == null) {
-            view.isSuccess(false, null,"登陆失败 , 服务器开小差了");
+            view.isSuccess(false, null, "登陆失败 , 服务器开小差了");
             return;
         }
         if (0 == msg.getErrorCode()) {
-            Account account = GsonUtil.gsonToBean(msg.getData().toString(), Account.class);
-            view.isSuccess(true, account,null);
+            String accountJson = GsonUtil.gsonToJson(msg.getData());
+            Account account = GsonUtil.gsonToBean(accountJson, Account.class);
+            if (account == null) {
+                view.isSuccess(false, null, "登陆失败 , 程序异常");
+            } else {
+                view.isSuccess(true, account, null);
+            }
         } else {
-            view.isSuccess(false, null,"登陆失败 , "+msg.getErrorMsg());
+            view.isSuccess(false, null, "登陆失败 , " + msg.getErrorMsg());
         }
     }
 }

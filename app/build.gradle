@@ -5,9 +5,9 @@ android {
     signingConfigs {
         myconfig {
             keyAlias 'key0'
-            keyPassword 'xxx'
+            keyPassword '703692499'
             storeFile file('D:/RDC/WanAndroid/keys/keys.jks')
-            storePassword 'xxx'
+            storePassword '703692499'
         }
     }
     compileSdkVersion 26
