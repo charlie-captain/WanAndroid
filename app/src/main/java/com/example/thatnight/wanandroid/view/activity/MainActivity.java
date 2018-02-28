@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             SharePreferenceUtil.put(getApplicationContext(), Constant.UPDATE_DIALOG, false);
             new AlertDialog.Builder(this)
                     .setTitle("更新内容")
-                    .setMessage("新增热修复功能\n文章作者和分类可点击切换\n新增一些设置\n修复若干bug")
+                    .setMessage("修复登录异常\n修复若干bug\n不更新咯...")
                     .setNegativeButton("知道了", null).show();
         }
 
