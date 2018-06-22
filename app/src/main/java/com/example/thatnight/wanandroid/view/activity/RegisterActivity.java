@@ -8,8 +8,8 @@ import android.widget.EditText;
 
 import com.example.animbutton.AnimButton;
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
-import com.example.thatnight.wanandroid.base.SwipeBackActivity;
 import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.mvp.contract.RegisterContract;
@@ -22,7 +22,7 @@ import com.example.thatnight.wanandroid.utils.ViewUtil;
 
 import org.greenrobot.eventbus.EventBus;
 
-public class RegisterActivity extends SwipeBackActivity<RegisterContract.IView, RegisterPresenter> implements RegisterContract.IView {
+public class RegisterActivity extends BaseActivity<RegisterContract.IView, RegisterPresenter> implements RegisterContract.IView {
 
     private EditText mName, mPwd, mRePwd;
     private AnimButton mBtnRegister;

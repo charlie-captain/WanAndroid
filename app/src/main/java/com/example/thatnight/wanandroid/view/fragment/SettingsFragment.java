@@ -1,47 +1,54 @@
 package com.example.thatnight.wanandroid.view.fragment;
 
 
+
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.preference.EditTextPreference;
-import android.preference.ListPreference;
-import android.preference.Preference;
-import android.preference.PreferenceFragment;
-import android.preference.PreferenceScreen;
-import android.preference.SwitchPreference;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
+import android.support.v14.preference.SwitchPreference;
+import android.support.v7.app.AppCompatDelegate;
+import android.support.v7.preference.ListPreference;
+import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceScreen;
+import android.support.v7.preference.SwitchPreferenceCompat;
 import android.text.TextUtils;
-import android.widget.Toast;
+import android.view.ContextThemeWrapper;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
-import com.example.thatnight.wanandroid.view.activity.AboutActivity;
+import com.takisoft.fix.support.v7.preference.EditTextPreference;
+import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 import com.tencent.bugly.beta.Beta;
 
 import skin.support.SkinCompatManager;
-import skin.support.content.res.SkinCompatResources;
-import skin.support.widget.SkinCompatHelper;
 
-/**
- * A simple {@link Fragment} subclass.
- */
-public class SettingsFragment extends PreferenceFragment implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
 
-    private SwitchPreference mSpDayLight, mSpAutoLogin;
+    private SwitchPreference mSpDayLight;
+    private SwitchPreference mSpAutoLogin;
     private EditTextPreference mEtpUserName;
     private EditTextPreference mEtpUserPwd;
     private PreferenceScreen mPsHelp, mPsUpdate;
     private ListPreference mTheme;
 
+//    @Override
+//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+//        Context context = new ContextThemeWrapper(getActivity(),R.style.SettingsTheme);
+//        LayoutInflater inflater1  = inflater.cloneInContext(context);
+//        return super.onCreateView(inflater1, container, savedInstanceState);
+//    }
 
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        addPreferencesFromResource(R.xml.preference_settings);
+    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preference_settings,rootKey);
+
         init();
+
     }
 
     private void init() {
@@ -94,6 +101,8 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         if (mSpDayLight == preference) {
             if (mSpDayLight.isChecked()) {
                 SkinCompatManager.getInstance().loadSkin("night", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
+
             } else {
                 String skinName = (String) SharePreferenceUtil.get(getActivity().getApplicationContext(), "skin", "");
                 if (!TextUtils.isEmpty(skinName)) {
@@ -121,7 +130,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
 
         //关于
         if (mPsHelp == preference) {
-            startActivity(new Intent(getActivity(), AboutActivity.class));
+            startActivity(new Intent(getActivity(), AboutFragment.class));
             getActivity().overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
         }
         return false;
@@ -161,4 +170,7 @@ public class SettingsFragment extends PreferenceFragment implements Preference.O
         return false;
     }
 
+    public void hideFragments() {
+
+    }
 }

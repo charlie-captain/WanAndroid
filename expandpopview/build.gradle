@@ -1,5 +1,4 @@
 apply plugin: 'com.android.library'
-apply plugin: 'maven'
 apply plugin: 'com.novoda.bintray-release'
 
 android {
@@ -35,7 +34,7 @@ publish {
     userOrg = 'tonight'
     groupId = 'com.example.thatnight'
     artifactId = 'expandpopview'
-    version = '1.1.6'
-    description = 'Two level list'
+    publishVersion = '1.1.6'
+    desc = 'Two level list'
     website = "https://github.com/thatnight/ExpandPopViewDemo"
 }

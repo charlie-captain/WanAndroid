@@ -51,6 +51,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         initPresenter();
         if (mRootView == null) {
             mRootView = inflater.inflate(getLayoutId(), container, false);
+            initToolBar();
             initData(getArguments());
             initView();
             initListener();
@@ -58,6 +59,13 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
             onLazyLoad();
         }
         return mRootView;
+    }
+
+    protected  void initToolBar(){
+        mToolbar = mRootView.findViewById(R.id.tb);
+        if(mToolbar !=null){
+            mToolbar.setTitle("");
+        }
     }
 
     private void initPresenter() {
@@ -105,6 +113,10 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         }
     }
 
+    /**
+     * 显示抽屉
+     * @param isShow
+     */
     protected void setDraw(boolean isShow) {
         if (isShow) {
             mIbtnDraw = mRootView.findViewById(R.id.tb_draw);

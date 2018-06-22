@@ -51,7 +51,7 @@
     <!--</PreferenceCategory>-->
 
 
-    <PreferenceCategory android:title="更多">
+    <PreferenceCategory android:title="更多" >
         <PreferenceScreen
             android:key="update"
             android:summary="版本号"

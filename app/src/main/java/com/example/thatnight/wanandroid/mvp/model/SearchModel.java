@@ -1,7 +1,6 @@
 package com.example.thatnight.wanandroid.mvp.model;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.constant.Constant;
@@ -11,12 +10,12 @@ import com.example.thatnight.wanandroid.mvp.contract.SearchContract;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
-import com.google.gson.Gson;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.Call;
+import cn.bmob.v3.okhttp3.Call;
+
 
 /**
  * Created by ThatNight on 2017.12.16.

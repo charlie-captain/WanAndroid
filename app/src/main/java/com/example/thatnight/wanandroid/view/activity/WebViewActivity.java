@@ -5,62 +5,45 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
-import android.graphics.PixelFormat;
-import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
 import android.support.v7.widget.Toolbar;
-import android.text.Html;
 import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
-import android.view.Window;
-import android.view.WindowManager;
-import android.webkit.CookieManager;
 import android.webkit.JavascriptInterface;
 import android.widget.FrameLayout;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.RelativeLayout;
-import android.widget.ScrollView;
-import android.widget.Scroller;
-import android.widget.Toast;
 
 import com.example.thatnight.wanandroid.R;
-import com.example.thatnight.wanandroid.base.SwipeBackActivity;
+import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.mvp.contract.WebContract;
 import com.example.thatnight.wanandroid.mvp.model.WebModel;
 import com.example.thatnight.wanandroid.mvp.presenter.WebPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
-import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.example.thatnight.wanandroid.utils.ProgressDialogUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ViewUtil;
 import com.example.thatnight.wanandroid.view.customview.CustomWebView;
-import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
 import java.util.ArrayList;
-import java.util.List;
 import java.util.regex.Pattern;
 
-import okhttp3.Call;
-import okhttp3.Cookie;
+import cn.bmob.v3.okhttp3.Call;
 import skin.support.SkinCompatManager;
 
 
-public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, WebPresenter> implements View.OnClickListener,
+public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPresenter> implements View.OnClickListener,
         WebContract.IWebView,
         Toolbar.OnMenuItemClickListener {
 
@@ -130,6 +113,7 @@ public class WebViewActivity extends SwipeBackActivity<WebContract.IWebView, Web
         }
         setViewData();
     }
+
 
     /**
      * 设置WebView

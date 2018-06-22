@@ -69,6 +69,7 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
                     | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
             decorView.setSystemUiVisibility(option);
         }
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mIndex = getIntent().getIntExtra(PHOTO_INDEX, 0);
 
         mPhotoList = (List<T>) getIntent().getExtras().getSerializable(PHOTO_LIST);

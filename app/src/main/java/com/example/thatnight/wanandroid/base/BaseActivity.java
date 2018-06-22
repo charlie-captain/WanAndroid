@@ -14,6 +14,7 @@ import com.example.thatnight.wanandroid.utils.MyStatusBarUtil;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.jaeger.library.StatusBarUtil;
 
+import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
 import skin.support.app.SkinCompatActivity;
 
 /**
@@ -22,7 +23,7 @@ import skin.support.app.SkinCompatActivity;
 
 
 public abstract class BaseActivity<V extends BaseContract.IBaseView,
-        P extends BasePresenter> extends SkinCompatActivity implements BaseContract.IBaseView {
+        P extends BasePresenter> extends SkinCompatActivity implements BaseContract.IBaseView  ,BGASwipeBackHelper.Delegate{
 
     protected Toolbar mToolbar;
     protected TextView mTitle;
@@ -30,8 +31,11 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
     protected boolean mShowBack;
     protected P mPresenter;
 
+    protected BGASwipeBackHelper mBGASwipeBackHelper;
+
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        initSwipeBackHelper();
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
 //        setStatusBar(isSetStatusBar());
@@ -41,6 +45,11 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
         initData();
         initView();
         initListener();
+    }
+
+    protected void initSwipeBackHelper(){
+        mBGASwipeBackHelper = new BGASwipeBackHelper(this,this);
+        mBGASwipeBackHelper.setIsOnlyTrackingLeftEdge(false);
     }
 
     protected abstract Boolean isSetStatusBar();
@@ -55,6 +64,40 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
         if (isSet) {
             StatusBarUtil.setTransparent(this);
         }
+    }
+
+    /**
+     * 是否支持滑动返回。这里在父类中默认返回 true 来支持滑动返回，如果某个界面不想支持滑动返回则重写该方法返回 false 即可
+     *
+     * @return
+     */
+    @Override
+    public boolean isSupportSwipeBack() {
+        return true;
+    }
+
+    /**
+     * 正在滑动返回
+     *
+     * @param slideOffset 从 0 到 1
+     */
+    @Override
+    public void onSwipeBackLayoutSlide(float slideOffset) {
+    }
+
+    /**
+     * 没达到滑动返回的阈值，取消滑动返回动作，回到默认状态
+     */
+    @Override
+    public void onSwipeBackLayoutCancel() {
+    }
+
+    /**
+     * 滑动返回执行完毕，销毁当前 Activity
+     */
+    @Override
+    public void onSwipeBackLayoutExecuted() {
+        mBGASwipeBackHelper.swipeBackward();
     }
 
     protected abstract BaseModel initModel();
@@ -112,6 +155,7 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
             mPresenter.detachView();
         }
 
+
     }
 
 
@@ -166,6 +210,11 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
 
     @Override
     public void onBackPressed() {
+        if(mBGASwipeBackHelper.isSliding()){
+            return;
+        }
+        mBGASwipeBackHelper.backward();
+
         super.onBackPressed();
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
     }

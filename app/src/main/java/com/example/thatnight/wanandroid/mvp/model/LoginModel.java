@@ -1,5 +1,6 @@
 package com.example.thatnight.wanandroid.mvp.model;
 
+
 import android.text.TextUtils;
 
 import com.example.thatnight.wanandroid.base.BaseModel;
@@ -14,7 +15,7 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.util.HashMap;
 import java.util.Map;
 
-import okhttp3.Call;
+import cn.bmob.v3.okhttp3.Call;
 
 /**
  * Created by thatnight on 2017.11.1.

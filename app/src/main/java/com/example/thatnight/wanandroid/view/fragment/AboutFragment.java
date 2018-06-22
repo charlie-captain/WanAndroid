@@ -1,26 +1,20 @@
-package com.example.thatnight.wanandroid.view.activity;
+package com.example.thatnight.wanandroid.view.fragment;
 
-import android.app.Activity;
 import android.os.Bundle;
 import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BasePresenter;
-import com.example.thatnight.wanandroid.base.SwipeBackActivity;
 
 import java.util.Calendar;
-import java.util.Date;
 
-public class AboutActivity extends SwipeBackActivity {
+public class AboutFragment extends BaseFragment {
 
     private TextView mTvVersion, mTvRight;
 
-    @Override
-    protected Boolean isSetStatusBar() {
-        return true;
-    }
 
     @Override
     protected BaseModel initModel() {
@@ -34,7 +28,6 @@ public class AboutActivity extends SwipeBackActivity {
 
     @Override
     protected void initView() {
-        mShowBack = true;
         setTitle("关于");
         mTvRight = (TextView) $(R.id.tv_about_right);
         mTvVersion = (TextView) $(R.id.tv_about_version);
@@ -45,14 +38,20 @@ public class AboutActivity extends SwipeBackActivity {
     }
 
     @Override
+    protected void initData(Bundle arguments) {
+
+    }
+
+    @Override
     protected void initListener() {
 
     }
 
     @Override
-    protected void initData() {
+    protected void onLazyLoad() {
 
     }
+
 
     @Override
     public int getLayoutId() {
