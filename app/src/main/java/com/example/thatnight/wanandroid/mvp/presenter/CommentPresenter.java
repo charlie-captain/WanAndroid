@@ -4,20 +4,15 @@ import com.example.thatnight.wanandroid.base.BasePresenter;
 import com.example.thatnight.wanandroid.entity.Comment;
 import com.example.thatnight.wanandroid.mvp.contract.CommentContract;
 import com.example.thatnight.wanandroid.mvp.model.CommentModel;
-import com.example.thatnight.wanandroid.view.activity.CommentActivity;
+import com.example.thatnight.wanandroid.view.fragment.CommentFragment;
 
 import java.util.List;
-
-import cn.bmob.v3.BmobQuery;
-import cn.bmob.v3.datatype.BmobQueryResult;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.FindListener;
 
 /**
  * Created by ThatNight on 2018.1.7.
  */
 
-public class CommentPresenter extends BasePresenter<CommentModel, CommentActivity>
+public class CommentPresenter extends BasePresenter<CommentModel, CommentFragment>
         implements CommentContract.IPresenter {
 
     @Override

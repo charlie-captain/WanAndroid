@@ -4,7 +4,8 @@ import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-import okhttp3.Cookie;
+import cn.bmob.v3.okhttp3.Cookie;
+
 
 /**
  * Created by ThatNight on 2017.12.25.

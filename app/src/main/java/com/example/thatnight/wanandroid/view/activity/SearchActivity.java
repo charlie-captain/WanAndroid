@@ -1,5 +1,6 @@
 package com.example.thatnight.wanandroid.view.activity;
 
+
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
@@ -22,9 +23,9 @@ import android.widget.TextView;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
 import com.example.thatnight.wanandroid.adapter.SearchAdapter;
+import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
-import com.example.thatnight.wanandroid.base.SwipeBackActivity;
 import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.mvp.contract.SearchContract;
 import com.example.thatnight.wanandroid.mvp.model.SearchModel;
@@ -42,7 +43,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends SwipeBackActivity<SearchContract.IView, SearchPresenter>
+public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPresenter>
         implements SearchContract.IView, View.OnClickListener, OnRefreshListener, OnLoadmoreListener,
         BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
         NewArticleRvAdapter.OnArticleItemClickListener {

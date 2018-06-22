@@ -19,7 +19,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.LogoutState;
@@ -31,13 +30,16 @@ import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
+import com.example.thatnight.wanandroid.view.fragment.CommentContainerFragment;
+import com.example.thatnight.wanandroid.view.fragment.CommentFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
+import com.example.thatnight.wanandroid.view.fragment.SettingsContainerFragment;
+import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
-        OnDrawBtnClickCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDrawBtnClickCallback {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -46,6 +48,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private MainFragment mMainFragment;
     private CollectFragment mCollectFragment;
+    private SettingsContainerFragment mSettingsFragment;
+    private CommentContainerFragment mCommentFragment;
 
     private FragmentManager mFragmentManager;
     private FragmentTransaction mTransaction;
@@ -57,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
-//        StatusBarUtil.setTransparent(this);
+        //        StatusBarUtil.setTransparent(this);
         mFragmentManager = getSupportFragmentManager();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dv_main);
         mNavigationView = (NavigationView) findViewById(R.id.nv_main);
@@ -74,11 +78,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         });
         initData();
 
-//        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-//                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
-//        );
-//        mDrawerLayout.addDrawerListener(toggle);
-//        toggle.syncState();
+        //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
+        //                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
+        //        );
+        //        mDrawerLayout.addDrawerListener(toggle);
+        //        toggle.syncState();
 
         mMainFragment = new MainFragment();
         showFragment(mMainFragment);
@@ -91,10 +95,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         boolean isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), Constant.UPDATE_DIALOG, true);
         if (isFirst) {
             SharePreferenceUtil.put(getApplicationContext(), Constant.UPDATE_DIALOG, false);
-            new AlertDialog.Builder(this)
-                    .setTitle("更新内容")
-                    .setMessage("修复登录异常\n修复若干bug\n不更新咯...")
-                    .setNegativeButton("知道了", null).show();
+            new AlertDialog.Builder(this).setTitle("更新内容").setMessage("修复登录异常\n修复若干bug\n不更新咯...").setNegativeButton("知道了", null).show();
         }
 
     }
@@ -163,13 +164,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nv_menu_user:
                 Snackbar.make(mDrawerLayout, "未完待续...", Snackbar.LENGTH_SHORT).show();
                 break;
-
             case R.id.nv_menu_comment:
-                startActivityAnim(new Intent(this, CommentActivity.class));
+                if (mCommentFragment == null) {
+                    mCommentFragment = new CommentContainerFragment();
+                }
+                showFragment(mCommentFragment);
                 break;
             case R.id.nv_menu_settings:
-                startActivity(new Intent(MainActivity.this, SettingsActivity.class));
-                overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
+                if (mSettingsFragment == null) {
+                    mSettingsFragment = new SettingsContainerFragment();
+                }
+                showFragment(mSettingsFragment);
                 break;
             case R.id.nv_menu_exit:
                 new AlertDialog.Builder(this).
@@ -192,7 +197,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     /**
-     * 切换Fragment
+     * 切换 v4. Fragment
      *
      * @param fragment
      */
@@ -216,6 +221,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
         mLastFragment = fragment;
     }
+
 
     @Override
     public void onBackPressed() {
@@ -275,5 +281,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void startActivityAnim(Intent intent) {
         startActivity(intent);
         overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
+    }
+
+    public android.app.FragmentTransaction getDefaultAppTransaction() {
+        return getFragmentManager().beginTransaction().setCustomAnimations(R.animator.antor_fade_in, R.animator.antor_fade_out);
+    }
+
+    public FragmentTransaction getV4AppTransaction() {
+        return getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.antor_fade_in, R.animator.antor_fade_out);
     }
 }

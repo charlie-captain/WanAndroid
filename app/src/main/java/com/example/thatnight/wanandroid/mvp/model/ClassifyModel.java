@@ -1,7 +1,6 @@
 package com.example.thatnight.wanandroid.mvp.model;
 
 import android.text.TextUtils;
-import android.util.Log;
 
 import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.base.BaseModel;
@@ -13,7 +12,6 @@ import com.example.thatnight.wanandroid.mvp.contract.ClassifyContract;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
-import com.google.gson.Gson;
 import com.tencent.bugly.crashreport.CrashReport;
 
 import org.jsoup.Jsoup;
@@ -24,7 +22,7 @@ import org.jsoup.select.Elements;
 import java.util.ArrayList;
 import java.util.List;
 
-import okhttp3.Call;
+import cn.bmob.v3.okhttp3.Call;
 
 /**
  * Created by thatnight on 2017.11.1.

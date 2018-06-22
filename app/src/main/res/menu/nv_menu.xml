@@ -20,7 +20,7 @@
 
     <group
         android:id="@+id/nv_menu_group_more"
-        android:checkableBehavior="none">
+        android:checkableBehavior="single">
         <item
             android:id="@+id/nv_menu_comment"
             android:icon="@drawable/ic_comment"
@@ -29,9 +29,11 @@
             android:id="@+id/nv_menu_settings"
             android:icon="@drawable/ic_settings"
             android:title="设置" />
+
         <item
             android:id="@+id/nv_menu_exit"
             android:icon="@drawable/ic_exit"
+            android:checkable="false"
             android:title="注销" />
     </group>
 

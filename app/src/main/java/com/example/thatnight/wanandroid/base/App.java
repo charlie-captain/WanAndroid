@@ -13,6 +13,7 @@ import com.tencent.bugly.beta.Beta;
 import com.tencent.smtt.sdk.QbSdk;
 import com.tencent.tinker.loader.app.DefaultApplicationLike;
 
+import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
 import cn.bmob.v3.Bmob;
 import skin.support.SkinCompatManager;
 import skin.support.constraint.app.SkinConstraintViewInflater;
@@ -32,6 +33,8 @@ public class App extends DefaultApplicationLike {
     @Override
     public void onCreate() {
         super.onCreate();
+
+        BGASwipeBackHelper.init(getApplication(),null);
 
         new Thread(new Runnable() {
             @Override
