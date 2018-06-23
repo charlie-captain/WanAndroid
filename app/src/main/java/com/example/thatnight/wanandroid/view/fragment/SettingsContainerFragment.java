@@ -26,6 +26,11 @@ public class SettingsContainerFragment extends BaseContainerFragment {
     }
 
     @Override
+    protected void initView() {
+        super.initView();
+    }
+
+    @Override
     protected void initData(Bundle arguments) {
         super.initData(arguments);
         setTitle("设置");
@@ -36,4 +41,9 @@ public class SettingsContainerFragment extends BaseContainerFragment {
     protected Fragment initSupportFragment() {
         return new SettingsFragment();
     }
+
+    public  Fragment getFragment(){
+        return mSupportFragment;
+    }
+
 }

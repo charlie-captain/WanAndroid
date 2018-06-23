@@ -138,7 +138,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         mDrawBtnClickCallback = callback;
     }
 
-    protected void setTitle(String title) {
+    public void setTitle(String title) {
         mTitle = mRootView.findViewById(R.id.tb_title);
         if (mTitle != null) {
             mTitle.setText(title);

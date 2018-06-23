@@ -20,6 +20,7 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
@@ -92,10 +93,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //显示更新特性
     private void showNewDialog() {
-        boolean isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), Constant.UPDATE_DIALOG, true);
+        boolean isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), BuildConfig.VERSION_NAME, true);
         if (isFirst) {
-            SharePreferenceUtil.put(getApplicationContext(), Constant.UPDATE_DIALOG, false);
-            new AlertDialog.Builder(this).setTitle("更新内容").setMessage("修复登录异常\n修复若干bug\n不更新咯...").setNegativeButton("知道了", null).show();
+            SharePreferenceUtil.put(getApplicationContext(), BuildConfig.VERSION_NAME, false);
+            new AlertDialog.Builder(this).setTitle("更新内容").setMessage("重构代码\n提高稳定性").setNegativeButton("知道了", null).show();
         }
 
     }
@@ -220,16 +221,29 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mTransaction.hide(mLastFragment).show(fragment).commit();
         }
         mLastFragment = fragment;
+        if (mSettingsFragment != null && mLastFragment == mSettingsFragment &&
+                mSettingsFragment.getFragment() != null &&
+                ((SettingsFragment) mSettingsFragment.getFragment()).isShowAbout()) {
+            mSettingsFragment.getChildFragmentManager().popBackStackImmediate();
+            mSettingsFragment.setTitle("设置");
+        }
     }
 
 
     @Override
     public void onBackPressed() {
+
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else if (mSettingsFragment != null && mSettingsFragment.isVisible()
+                &&
+                mSettingsFragment.getChildFragmentManager().getBackStackEntryCount() > 0) {
+            mSettingsFragment.getChildFragmentManager().popBackStackImmediate();
+            mSettingsFragment.setTitle("设置");
         } else {
-            super.onBackPressed();
-            overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+            ExitUtil.exitCheck(this, mNavigationView);
+//            super.onBackPressed();
+//            overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
         }
     }
 
@@ -261,15 +275,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mNavigationView.setCheckedItem(R.id.nv_menu_main);
             changeFragmentContent(R.id.nv_menu_main);
         }
-    }
-
-    @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            ExitUtil.exitCheck(this, mNavigationView);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
     }
 
     @Override

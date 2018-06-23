@@ -16,8 +16,8 @@ android {
         applicationId "com.example.thatnight.wanandroid"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 6
-        versionName "1.4"
+        versionCode 7
+        versionName "1.5"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -78,4 +78,6 @@ dependencies {
 
 //    implementation 'com.android.support:preference-v7:27.1.1'
     implementation 'com.takisoft.fix:preference-v7:27.1.1.1'
+
+    implementation 'com.android.support:support-vector-drawable:27.1.1'
 }

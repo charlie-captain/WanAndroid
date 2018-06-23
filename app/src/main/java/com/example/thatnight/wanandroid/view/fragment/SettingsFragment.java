@@ -1,22 +1,24 @@
 package com.example.thatnight.wanandroid.view.fragment;
 
 
-
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v14.preference.SwitchPreference;
+import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
 import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.preference.SwitchPreferenceCompat;
+import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
 import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ListView;
 
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
@@ -35,17 +37,19 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private EditTextPreference mEtpUserPwd;
     private PreferenceScreen mPsHelp, mPsUpdate;
     private ListPreference mTheme;
+    private AboutFragment mAboutFragment;
 
-//    @Override
-//    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-//        Context context = new ContextThemeWrapper(getActivity(),R.style.SettingsTheme);
-//        LayoutInflater inflater1  = inflater.cloneInContext(context);
-//        return super.onCreateView(inflater1, container, savedInstanceState);
-//    }
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        View view = super.onCreateView(inflater, container, savedInstanceState);
+        getListView().setBackgroundColor(ContextCompat.getColor(inflater.getContext(),R.color.background));
+
+        return view;
+    }
 
     @Override
     public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.preference_settings,rootKey);
+        setPreferencesFromResource(R.xml.preference_settings, rootKey);
 
         init();
 
@@ -123,15 +127,25 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
 
         //检查更新
-        if(mPsUpdate==preference){
+        if (mPsUpdate == preference) {
             Beta.checkUpgrade();
 //            Toast.makeText(getActivity(), "正在检查更新...", Toast.LENGTH_SHORT).show();
         }
 
         //关于
         if (mPsHelp == preference) {
-            startActivity(new Intent(getActivity(), AboutFragment.class));
-            getActivity().overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
+            if (mAboutFragment == null) {
+                mAboutFragment = new AboutFragment();
+            }
+            if (!mAboutFragment.isAdded()) {
+                getParentFragment().getChildFragmentManager().beginTransaction()
+                        .add(R.id.fl_content, mAboutFragment).commit();
+            }
+            getParentFragment().getChildFragmentManager().beginTransaction().hide(this)
+                    .show(mAboutFragment)
+                    .addToBackStack(null)
+                    .commit();
+            ((SettingsContainerFragment) getParentFragment()).setTitle("关于");
         }
         return false;
 
@@ -172,5 +186,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     public void hideFragments() {
 
+        if (mAboutFragment != null) {
+            getParentFragment().getChildFragmentManager().beginTransaction().hide(mAboutFragment).show(this).commit();
+        }
+    }
+
+    public boolean isShowAbout() {
+        return mAboutFragment != null && mAboutFragment.isVisible();
     }
 }
