@@ -36,6 +36,9 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 评论页面
+ */
 public class CommentFragment extends BaseFragment<CommentContract.IView, CommentPresenter>
         implements CommentContract.IView, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, OnLoadmoreListener, OnRefreshListener, View.OnClickListener {
 

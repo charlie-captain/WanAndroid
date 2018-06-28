@@ -17,6 +17,7 @@ import com.example.thatnight.wanandroid.entity.Article;
 ;import java.util.regex.Pattern;
 
 /**
+ * 最新文章Adapter
  * Created by thatnight on 2017.10.27.
  */
 

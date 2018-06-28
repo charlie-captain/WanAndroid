@@ -11,8 +11,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-    <string name="login_register">现在注册</string>
-    <string name="login_visitor">游客登录</string>
+    <string name="login_register">Sign up</string>
+    <string name="login_visitor">Look</string>
 
 
     <!--settings-->

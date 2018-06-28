@@ -20,10 +20,14 @@ public class LoginContract {
     public interface ILoginPresenter extends BaseContract.IBasePresenter {
         void login();
 
+        void register();
+
+
         void getResult(Msg msg);
     }
 
     public interface ILoginModel extends BaseContract.IBaseModel {
         void login(String name, String pwd, ILoginPresenter iLoginPresenter);
+        void register(String name, String pwd, ILoginPresenter iLoginPresenter);
     }
 }

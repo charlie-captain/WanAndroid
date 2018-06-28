@@ -39,10 +39,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 分类页面
  * @author thatnight
  * @date 2017.10.27
  */
-
 public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, ClassifyPresenter>
         implements OnRefreshListener,
         OnLoadmoreListener,

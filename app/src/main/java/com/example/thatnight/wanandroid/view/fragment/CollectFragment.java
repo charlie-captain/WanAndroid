@@ -40,6 +40,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 收藏页面
  * Created by thatnight on 2017.10.27.
  */
 

@@ -26,9 +26,12 @@ import com.google.gson.Gson;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+/**
+ * 登录界面
+ */
 public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginPresenter> implements LoginContract.ILoginView {
 
-    private EditText mName, mPwd;
+    private EditText mName, mPwd, mPwdAgain;
     private AnimButton mBtnLogin;
     private Button mRegister, mVisitor;
 
@@ -51,6 +54,7 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
     protected void initView() {
         mName = $(R.id.et_login_account);
         mPwd = $(R.id.et_login_psw);
+        mPwdAgain = $(R.id.et_login_psw_again);
         mRegister = $(R.id.tv_register);
         mBtnLogin = $(R.id.btn_login);
         mVisitor = $(R.id.tv_visitor);
@@ -76,14 +80,40 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
                     Snackbar.make(mBtnLogin, "账号或密码不能为空", Snackbar.LENGTH_SHORT).show();
                     mBtnLogin.errorAnimation();
                 } else {
-                    mPresenter.login();
+                    if (mPwdAgain.getVisibility() == View.GONE) {
+                        mPresenter.login();
+                    } else {
+                        if (TextUtils.isEmpty(mPwdAgain.getText().toString().trim())) {
+                            Snackbar.make(mBtnLogin, "请再次输入密码", Snackbar.LENGTH_SHORT).show();
+                        } else {
+                            if (mPwd.getText().toString().trim().equals(mPwdAgain.getText().toString().trim())) {
+                                mPresenter.register();
+                            } else {
+                                Snackbar.make(mBtnLogin, "两次密码不一样", Snackbar.LENGTH_SHORT).show();
+                            }
+                        }
+                    }
                 }
             }
         });
         mRegister.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                startActivityAnim(new Intent(LoginActivity.this, RegisterActivity.class));
+                if (mPwdAgain.getVisibility() == View.VISIBLE) {
+                    mPwdAgain.setVisibility(View.GONE);
+                    mPwd.setText("");
+                    mPwdAgain.setText("");
+                    mName.setText("");
+                    mBtnLogin.setStartText("Sign In");
+                    mRegister.setText("Sign Up");
+                } else {
+                    mPwdAgain.setVisibility(View.VISIBLE);
+                    mPwd.setText("");
+                    mPwdAgain.setText("");
+                    mName.setText("");
+                    mBtnLogin.setStartText("Sign Up");
+                    mRegister.setText("Sign In");
+                }
             }
         });
         mVisitor.setOnClickListener(new View.OnClickListener() {

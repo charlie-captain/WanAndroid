@@ -11,6 +11,9 @@ import com.example.thatnight.wanandroid.base.BasePresenter;
 
 import java.util.Calendar;
 
+/**
+ * 关于
+ */
 public class AboutFragment extends BaseFragment {
 
     private TextView mTvVersion, mTvRight;

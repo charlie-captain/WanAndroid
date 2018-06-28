@@ -10,6 +10,7 @@ import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BasePresenter;
 
 /**
+ * 设置容器
  * date: 2018/6/22
  * author: thatnight
  */

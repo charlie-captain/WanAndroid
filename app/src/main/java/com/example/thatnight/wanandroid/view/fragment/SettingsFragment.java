@@ -29,6 +29,9 @@ import com.tencent.bugly.beta.Beta;
 
 import skin.support.SkinCompatManager;
 
+/**
+ * 设置界面
+ */
 public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
 
     private SwitchPreference mSpDayLight;

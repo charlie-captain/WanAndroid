@@ -11,6 +11,7 @@ import android.view.View;
 import android.view.ViewPropertyAnimator;
 
 /**
+ * 悬浮按钮的Behavior
  * Created by thatnight on 2017.10.30.
  */
 
