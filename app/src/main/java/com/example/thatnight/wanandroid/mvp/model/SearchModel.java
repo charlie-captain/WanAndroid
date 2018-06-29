@@ -27,64 +27,39 @@ public class SearchModel extends BaseModel implements SearchContract.IModel {
 
     @Override
     public void collect(final boolean isCollect, String id, final OnCollectCallback onCollectCallback) {
+        String url = "";
         if (isCollect) {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + id + "/json", null, new OkHttpResultCallback() {
-                @Override
-                public void onError(Call call, Exception e) {
-                    onCollectCallback.collectResult(false, "取消收藏失败");
-                }
-
-                @Override
-                public void onResponse(byte[] bytes) {
-                    String response = new String(bytes);
-                    if (TextUtils.isEmpty(response)) {
-                        onCollectCallback.collectResult(isCollect, null);
-                        return;
-                    }
-                    Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                    if (msg == null) {
-                        onCollectCallback.collectResult(false, "取消收藏失败");
-                        return;
-                    }
-                    if (isCollect) {
-                        if (0 == msg.getErrorCode()) {
-                            onCollectCallback.collectResult(true, "收藏成功");
-                        } else {
-                            onCollectCallback.collectResult(false, "收藏失败");
-                        }
-                    }
-                }
-
-            });
+            url = Constant.URL_BASE + Constant.URL_COLLECT + id + "/json";
         } else {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json", null, new OkHttpResultCallback() {
-                @Override
-                public void onError(Call call, Exception e) {
+            url = Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json";
+        }
+        OkHttpUtil.getInstance().postAsync(url, null, new OkHttpResultCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+                onCollectCallback.collectResult(false, "取消收藏失败");
+            }
+
+            @Override
+            public void onResponse(byte[] bytes) {
+                String response = new String(bytes);
+                if (TextUtils.isEmpty(response)) {
+                    onCollectCallback.collectResult(isCollect, null);
+                    return;
+                }
+
+                Msg msg = GsonUtil.gsonToBean(response, Msg.class);
+                if (msg == null) {
+                    onCollectCallback.collectResult(false, "取消收藏失败");
+                    return;
+                }
+                if (0 == msg.getErrorCode()) {
+                    onCollectCallback.collectResult(true, "取消收藏成功");
+                } else {
                     onCollectCallback.collectResult(false, "取消收藏失败");
                 }
+            }
 
-                @Override
-                public void onResponse(byte[] bytes) {
-                    String response = new String(bytes);
-                    if (TextUtils.isEmpty(response)) {
-                        onCollectCallback.collectResult(isCollect, null);
-                        return;
-                    }
-
-                    Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                    if (msg == null) {
-                        onCollectCallback.collectResult(false, "取消收藏失败");
-                        return;
-                    }
-                    if (0 == msg.getErrorCode()) {
-                        onCollectCallback.collectResult(true, "取消收藏成功");
-                    } else {
-                        onCollectCallback.collectResult(false, "取消收藏失败");
-                    }
-                }
-
-            });
-        }
+        });
     }
 
     @Override

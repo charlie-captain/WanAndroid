@@ -190,7 +190,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
                 public void returnParentKeyValue(int pos, com.example.expandpopview.entity.KeyValue keyValue) {
                     mParentPosition = pos;
                     if (mParentChildList.get(pos) == null) {
-//                        mPresenter.getChildren(keyValue.getValue());
+
                     } else {
 
                     }

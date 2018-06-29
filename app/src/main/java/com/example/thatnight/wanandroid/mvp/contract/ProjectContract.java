@@ -4,6 +4,8 @@ import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.base.BaseContract;
 import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.entity.Msg;
+import com.example.thatnight.wanandroid.entity.Project;
+import com.example.thatnight.wanandroid.entity.ProjectItem;
 
 import java.util.List;
 
@@ -11,42 +13,38 @@ import java.util.List;
  * Created by thatnight on 2017.11.1.
  */
 
-public class ClassifyContract {
+public class ProjectContract {
     public interface IView extends BaseContract.IBaseView {
 
-        void setExpandPopView(List<KeyValue> parentList, List<List<KeyValue>> parentChildrenList);
+        void refresh(List<ProjectItem> articles);
 
-        void refreshExpandPopView(List<KeyValue> childrenList);
+        void loadMore(List<ProjectItem> articles);
 
-        void refreshHtml(List<Article> articles);
-
-        void loadMoreHtml(List<Article> articles);
+        void setProjectParent(List<KeyValue> projectParent);
 
         void isCollectSuccess(boolean isSuccess, String s);
     }
 
     public interface IPresenter extends BaseContract.IBasePresenter {
-        void getParentChildren();
+        void getProject(boolean isRefresh, String id, int page);
 
-        void setParentChildren(List<KeyValue> parentList, List<List<KeyValue>> parentChildren);
-
-        void getArticle(boolean isRefresh, int page, String value);
+        void getProjectParent();
 
         void collect(boolean isCollect, String id);
 
         void getResult(boolean isRefresh, Msg msg);
 
         void collectResult(boolean isCollect, Msg msg);
+
+        void projectParentResult(Msg msg);
     }
 
     public interface IModel extends BaseContract.IBaseModel {
-        void getParentChildren(IPresenter iPresenter);
-
-
-        void getArticle(boolean isRefresh, int page, String value, IPresenter iPresenter);
+        void getProject(boolean isRefresh, String id, int page, IPresenter iPresenter);
 
         void collect(boolean isCollect, String id, IPresenter iPresenter);
 
+        void getProjectParent(IPresenter iPresenter);
 
     }
 }

@@ -34,6 +34,7 @@ import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.CommentContainerFragment;
 import com.example.thatnight.wanandroid.view.fragment.CommentFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
+import com.example.thatnight.wanandroid.view.fragment.ProjectFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsContainerFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
 
@@ -51,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CollectFragment mCollectFragment;
     private SettingsContainerFragment mSettingsFragment;
     private CommentContainerFragment mCommentFragment;
+    private ProjectFragment mProjectFragment;
 
     private Fragment mLastFragment;
     private Account mAccount;
@@ -70,7 +72,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 if (LoginContextUtil.getInstance().getUserState().getClass() == LogoutState.class) {
                     startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
-                }else{
+                } else {
                     changeFragmentContent(R.id.nv_menu_settings);
                     mNavigationView.setCheckedItem(R.id.nv_menu_settings);
                     mDrawerLayout.closeDrawer(GravityCompat.START);
@@ -143,6 +145,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     /**
      * 根据pos更改Fragment
+     *
      * @param pos
      */
     private void changeFragmentContent(int pos) {
@@ -159,6 +162,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mCollectFragment = new CollectFragment();
                 }
                 showFragment(mCollectFragment);
+                break;
+            case R.id.nv_menu_project:
+                if (mProjectFragment == null) {
+                    mProjectFragment = new ProjectFragment();
+                }
+                showFragment(mProjectFragment);
                 break;
             case R.id.nv_menu_user:
                 Snackbar.make(mDrawerLayout, "未完待续...", Snackbar.LENGTH_SHORT).show();
@@ -184,8 +193,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             public void onClick(DialogInterface dialog, int which) {
                                 LoginContextUtil.getInstance().setUserState(new LogoutState());
                                 OkHttpCookieJar.resetCookies();
-                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                                onBackPressed();
+                                startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
                             }
                         }).setNegativeButton("否", null).show();
                 break;

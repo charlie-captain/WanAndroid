@@ -70,8 +70,6 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
     @Override
     protected void initView() {
-        mToolbar = mRootView.findViewById(R.id.tb);
-        mToolbar.setTitle("");
         mToolbar.setVisibility(View.VISIBLE);
         setDraw(true);
         setTitle("收藏");

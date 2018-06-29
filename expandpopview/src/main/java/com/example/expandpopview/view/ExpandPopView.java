@@ -331,4 +331,6 @@ public class ExpandPopView extends LinearLayout implements PopupWindow.OnDismiss
         //set the animation
         mPopupWindow.setAnimationStyle(style);
     }
+
+
 }

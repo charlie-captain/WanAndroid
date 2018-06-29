@@ -11,6 +11,11 @@
             android:title="收藏" />
 
         <item
+            android:id="@+id/nv_menu_project"
+            android:icon="@drawable/ic_like_normal"
+            android:title="项目" />
+
+        <item
             android:id="@+id/nv_menu_user"
             android:icon="@drawable/ic_user"
             android:title="我的"

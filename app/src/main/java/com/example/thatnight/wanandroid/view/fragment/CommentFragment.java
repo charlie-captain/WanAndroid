@@ -5,7 +5,6 @@ import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
-import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,7 +17,6 @@ import android.widget.EditText;
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.CommentAdapter;
-import com.example.thatnight.wanandroid.base.BaseContainerFragment;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
@@ -96,7 +94,7 @@ public class CommentFragment extends BaseFragment<CommentContract.IView, Comment
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_comment;
+        return R.layout.fragment_comment;
     }
 
     @Override

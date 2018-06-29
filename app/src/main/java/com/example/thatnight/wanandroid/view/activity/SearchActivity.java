@@ -188,6 +188,9 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
                     mRv.setAdapter(mSearchAdatper);
                     isEditting = false;
                 } else {
+                    if (mTagFlowLayout != null && mTagFlowLayout.getVisibility() == View.VISIBLE) {
+                        mTagFlowLayout.setVisibility(View.GONE);
+                    }
                     mPresenter.search(true, s.toString(), String.valueOf(mPage));
                 }
             }
