@@ -52,8 +52,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private SettingsContainerFragment mSettingsFragment;
     private CommentContainerFragment mCommentFragment;
 
-    private FragmentManager mFragmentManager;
-    private FragmentTransaction mTransaction;
     private Fragment mLastFragment;
     private Account mAccount;
 
@@ -62,8 +60,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
-        //        StatusBarUtil.setTransparent(this);
-        mFragmentManager = getSupportFragmentManager();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dv_main);
         mNavigationView = (NavigationView) findViewById(R.id.nv_main);
         mName = mNavigationView.getHeaderView(0).findViewById(R.id.tv_nv_header_name);
@@ -74,16 +70,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 if (LoginContextUtil.getInstance().getUserState().getClass() == LogoutState.class) {
                     startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
+                }else{
+                    changeFragmentContent(R.id.nv_menu_settings);
+                    mNavigationView.setCheckedItem(R.id.nv_menu_settings);
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
                 }
             }
         });
         initData();
-
-        //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-        //                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
-        //        );
-        //        mDrawerLayout.addDrawerListener(toggle);
-        //        toggle.syncState();
 
         mMainFragment = new MainFragment();
         showFragment(mMainFragment);
@@ -147,6 +141,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /**
+     * 根据pos更改Fragment
+     * @param pos
+     */
     private void changeFragmentContent(int pos) {
         Fragment fragment = null;
         switch (pos) {
@@ -206,24 +204,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (fragment == mLastFragment) {
             return;
         }
-        mTransaction = mFragmentManager.beginTransaction();
-        mTransaction.setCustomAnimations(R.anim.anim_fade_in, R.anim.anim_fade_out);
+        FragmentTransaction transaction = getV4AppTransaction();
         if (!fragment.isAdded()) {
             if (mLastFragment == null) {
-                mTransaction.add(R.id.fl_content, fragment);
+                transaction.add(R.id.fl_content, fragment);
             } else {
-                mTransaction.hide(mLastFragment).add(R.id.fl_content, fragment);
+                transaction.hide(mLastFragment).add(R.id.fl_content, fragment);
             }
         }
         if (mLastFragment == null) {
-            mTransaction.show(fragment).commit();
+            transaction.show(fragment).commit();
         } else {
-            mTransaction.hide(mLastFragment).show(fragment).commit();
+            transaction.hide(mLastFragment).show(fragment).commit();
         }
         mLastFragment = fragment;
-        if (mSettingsFragment != null && mLastFragment == mSettingsFragment &&
-                mSettingsFragment.getFragment() != null &&
-                ((SettingsFragment) mSettingsFragment.getFragment()).isShowAbout()) {
+        if (mSettingsFragment != null && mLastFragment == mSettingsFragment && mSettingsFragment.getFragment() != null && ((SettingsFragment) mSettingsFragment.getFragment()).isShowAbout()) {
             mSettingsFragment.getChildFragmentManager().popBackStackImmediate();
             mSettingsFragment.setTitle("设置");
         }
@@ -232,18 +227,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     @Override
     public void onBackPressed() {
-
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
-        } else if (mSettingsFragment != null && mSettingsFragment.isVisible()
-                &&
-                mSettingsFragment.getChildFragmentManager().getBackStackEntryCount() > 0) {
+        } else if (mSettingsFragment != null && mSettingsFragment.isVisible() && mSettingsFragment.getChildFragmentManager().getBackStackEntryCount() > 0) {
             mSettingsFragment.getChildFragmentManager().popBackStackImmediate();
             mSettingsFragment.setTitle("设置");
         } else {
             ExitUtil.exitCheck(this, mNavigationView);
-//            super.onBackPressed();
-//            overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
         }
     }
 

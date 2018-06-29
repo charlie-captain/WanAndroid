@@ -23,7 +23,7 @@ import com.example.thatnight.wanandroid.mvp.contract.ClassifyContract;
 import com.example.thatnight.wanandroid.mvp.model.ClassifyModel;
 import com.example.thatnight.wanandroid.mvp.presenter.ClassifyPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
-import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.utils.UiUtil;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
@@ -153,7 +153,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
         if (LoginContextUtil.getInstance().getUserState().collect(mActivity)) {
             mIbtnCollect = v;
             mSelectPosition = position;
-            ViewUtil.setSelected(v);
+            UiUtil.setSelected(v);
             mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
         }
     }
@@ -236,14 +236,14 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
                     @Override
                     public void onClick(View v) {
                         if (mIbtnCollect != null) {
-                            ViewUtil.setSelected(mIbtnCollect);
+                            UiUtil.setSelected(mIbtnCollect);
                         }
                         mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
                     }
                 }).show();
         if (!isSuccess) {
             if (mIbtnCollect != null) {
-                ViewUtil.setSelected(mIbtnCollect);
+                UiUtil.setSelected(mIbtnCollect);
             }
         }
     }
@@ -253,7 +253,6 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
                 mPresenter.getArticle(true, 0, mNormalKeyValue.getValue());
-//                mRefreshLayout.autoRefresh();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
@@ -271,13 +270,8 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     @Subscribe
     public void switchToClassify(KeyValue key) {
         if (Constant.SWITCH_TO_CLASSIFY.equals(key.getKey())) {
-            int index = -1;
             for (int i = 0; i < mParentChildList.size(); i++) {
                 if (mParentChildList.get(i) != null) {
-//                    if (mParentChildList.get(i).contains(key.getValue())) {
-//                        index = mParentChildList.get(i).indexOf(key.getValue());
-//                        mExpandPopView.performClick(0, i, index);
-//                    }
                     for (int j = 0; j < mParentChildList.get(i).size(); j++) {
                         if (mParentChildList.get(i).get(j).getKey().toLowerCase().contains(key.getValue().toLowerCase())) {
                             mExpandPopView.performClick(0, i, j);

@@ -131,7 +131,7 @@ public class ClassifyModel extends BaseModel implements ClassifyContract.IModel 
         OkHttpUtil.getInstance().getAsync(Constant.URL_BASE + key, new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
-//                Log.d("jsoup", e.toString());
+                //                Log.d("jsoup", e.toString());
                 CrashReport.postCatchedException(e);
 
             }
@@ -182,7 +182,7 @@ public class ClassifyModel extends BaseModel implements ClassifyContract.IModel 
     @Override
     public void collect(final boolean isCollect, String id, final ClassifyContract.IPresenter iPresenter) {
         if (isCollect) {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + id + "/json", new OkHttpResultCallback() {
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + id + "/json", null, new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
 
@@ -199,9 +199,9 @@ public class ClassifyModel extends BaseModel implements ClassifyContract.IModel 
                     iPresenter.collectResult(isCollect, msg);
                 }
 
-            }, null);
+            });
         } else {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json", null,new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
 
@@ -220,7 +220,7 @@ public class ClassifyModel extends BaseModel implements ClassifyContract.IModel 
 
                 }
 
-            }, null);
+            });
         }
 
     }

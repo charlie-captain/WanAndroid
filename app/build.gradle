@@ -75,9 +75,8 @@ dependencies {
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     implementation 'cn.bingoogolapple:bga-swipebacklayout:1.1.9'
-
 //    implementation 'com.android.support:preference-v7:27.1.1'
     implementation 'com.takisoft.fix:preference-v7:27.1.1.1'
-
     implementation 'com.android.support:support-vector-drawable:27.1.1'
+    implementation 'com.hyman:flowlayout-lib:1.1.2'
 }

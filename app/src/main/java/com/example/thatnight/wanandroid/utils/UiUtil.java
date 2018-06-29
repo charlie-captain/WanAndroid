@@ -8,7 +8,7 @@ import android.view.inputmethod.InputMethodManager;
  * Created by thatnight on 2017.10.31.
  */
 
-public class ViewUtil {
+public class UiUtil {
 
     public static void setSelected(View v) {
         v.setSelected(!v.isSelected());

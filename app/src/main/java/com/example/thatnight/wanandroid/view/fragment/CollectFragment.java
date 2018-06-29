@@ -24,7 +24,7 @@ import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
 import com.example.thatnight.wanandroid.mvp.model.CollectModel;
 import com.example.thatnight.wanandroid.mvp.presenter.CollectPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
-import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.utils.UiUtil;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
@@ -81,8 +81,6 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         mRv.setLayoutManager(new LinearLayoutManager(mActivity, LinearLayoutManager.VERTICAL, false));
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.addItemDecoration(new SpaceItemDecoration(getResources().getDimensionPixelSize(R.dimen.recyclerview_decoration)));
-//        mTouchHelper = new ItemTouchHelper(new HelperCallback(mAdapter));
-//        mTouchHelper.attachToRecyclerView(mRv);
         mRv.setAdapter(mAdapter);
     }
 
@@ -101,7 +99,6 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
             return;
         }
         if (LoginContextUtil.getInstance().getUserState().collect(mActivity)) {
-//            mPresenter.getArticle(true, mPage);
             mRefreshLayout.autoRefresh();
         }
     }
@@ -158,7 +155,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     public void onIbtnClick(View v, int position) {
         mIbtnCollect = v;
         mSelectPosition = position;
-        ViewUtil.setSelected(v);
+        UiUtil.setSelected(v);
         mPresenter.collect(false, String.valueOf(mArticles.get(position).getId()),
                 String.valueOf(mArticles.get(position).getOriginId()));
         mUnCollectArticle = mArticles.get(position);
@@ -207,13 +204,12 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
     @Override
     public void isCollectSuccess(boolean isSuccess, String s) {
-//        showToast(s);
         Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT)
                 .setAction("取消", new View.OnClickListener() {
                     @Override
                     public void onClick(View v) {
                         if (mIbtnCollect != null) {
-                            ViewUtil.setSelected(mIbtnCollect);
+                            UiUtil.setSelected(mIbtnCollect);
                         }
                         if (mUnCollectArticle != null) {
                             mPresenter.collect(true, String.valueOf(mUnCollectArticle.getId()),
@@ -225,7 +221,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
                 }).show();
         if (!isSuccess) {
             if (mIbtnCollect != null) {
-                ViewUtil.setSelected(mIbtnCollect);
+                UiUtil.setSelected(mIbtnCollect);
             }
         } else {
             mPresenter.getArticle(true, 0);

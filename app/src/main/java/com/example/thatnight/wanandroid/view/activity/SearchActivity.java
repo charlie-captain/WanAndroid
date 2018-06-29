@@ -27,6 +27,7 @@ import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.entity.Article;
+import com.example.thatnight.wanandroid.entity.HotKey;
 import com.example.thatnight.wanandroid.mvp.contract.SearchContract;
 import com.example.thatnight.wanandroid.mvp.model.SearchModel;
 import com.example.thatnight.wanandroid.mvp.presenter.SearchPresenter;
@@ -34,19 +35,24 @@ import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.HelperCallback;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
-import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.utils.UiUtil;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+import com.zhy.view.flowlayout.FlowLayout;
+import com.zhy.view.flowlayout.TagAdapter;
+import com.zhy.view.flowlayout.TagFlowLayout;
+
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPresenter>
-        implements SearchContract.IView, View.OnClickListener, OnRefreshListener, OnLoadmoreListener,
-        BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
-        NewArticleRvAdapter.OnArticleItemClickListener {
+/**
+ * 搜索界面
+ */
+public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPresenter> implements SearchContract.IView, View.OnClickListener, OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
     private NewArticleRvAdapter mAdapter;
@@ -62,6 +68,8 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
     private ItemTouchHelper.Callback mItemCallback;
     private boolean isEditting = false;
     private String mKey;
+    private TagFlowLayout mTagFlowLayout;
+    private List<HotKey> mHotKeys;
 
     @Override
     protected Boolean isSetStatusBar() {
@@ -103,6 +111,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
         mRv = $(R.id.rv_search);
         mIbtnClear = $(R.id.tb_search_clear);
         mAdapter = new NewArticleRvAdapter();
+        mTagFlowLayout = $(R.id.layout_tagflow);
 
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.setLayoutManager(new LinearLayoutManager(this));
@@ -120,6 +129,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
             mPresenter.search(false, mKey, String.valueOf(mPage));
             addHistory(mKey);
         }
+        mPresenter.getHotKey();
     }
 
     @Override
@@ -147,7 +157,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (v != null && v.getText() != null) {
                         mPresenter.search(true, v.getText().toString(), String.valueOf(mPage));
-                        ViewUtil.inputSoftWare(false, v);
+                        UiUtil.inputSoftWare(false, v);
                         addHistory(v.getText().toString().trim());
                         return true;
                     }
@@ -170,11 +180,26 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
             @Override
             public void afterTextChanged(Editable s) {
                 if (TextUtils.isEmpty(s)) {
+                    if (mHotKeys != null && mHotKeys.size() > 0) {
+                        mTagFlowLayout.setVisibility(View.VISIBLE);
+                    } else {
+                        mPresenter.getHotKey();
+                    }
                     mRv.setAdapter(mSearchAdatper);
                     isEditting = false;
                 } else {
                     mPresenter.search(true, s.toString(), String.valueOf(mPage));
                 }
+            }
+        });
+        mTagFlowLayout.setOnTagClickListener(new TagFlowLayout.OnTagClickListener() {
+            @Override
+            public boolean onTagClick(View view, int position, FlowLayout parent) {
+                mPage = 0;
+                mSearchView.setText(mHotKeys.get(position).getName());
+                mSearchView.setSelection(mHotKeys.get(position).getName().length());
+                mTagFlowLayout.setVisibility(View.GONE);
+                return false;
             }
         });
     }
@@ -231,21 +256,45 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
 
     @Override
     public void isCollectSuccess(boolean isSuccess, String s) {
-        Snackbar.make(mRv, s, Snackbar.LENGTH_SHORT)
-                .setAction("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mIbtnCollect != null) {
-                            ViewUtil.setSelected(mIbtnCollect);
-                        }
-                        mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
-                    }
-                }).show();
+        Snackbar.make(mRv, s, Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mIbtnCollect != null) {
+                    UiUtil.setSelected(mIbtnCollect);
+                }
+                mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
+            }
+        }).show();
         if (!isSuccess) {
             if (mIbtnCollect != null) {
-                ViewUtil.setSelected(mIbtnCollect);
+                UiUtil.setSelected(mIbtnCollect);
             }
         }
+    }
+
+    @Override
+    public void showHotKey(List<HotKey> hotKeys) {
+        mTagFlowLayout.setVisibility(View.VISIBLE);
+        mHotKeys = hotKeys;
+        mTagFlowLayout.setAdapter(new TagAdapter<HotKey>(hotKeys) {
+
+            @Override
+            public View getView(FlowLayout parent, int position, HotKey hotKey) {
+                TextView textView = (TextView) View.inflate(SearchActivity.this, R.layout.layout_flow_tv, null);
+                textView.setText(hotKey.getName());
+                return textView;
+            }
+
+            @Override
+            public void onSelected(int position, View view) {
+                super.onSelected(position, view);
+            }
+
+            @Override
+            public boolean setSelected(int position, HotKey hotKey) {
+                return super.setSelected(position, hotKey);
+            }
+        });
     }
 
     @Override
@@ -290,12 +339,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = WebViewActivity.newIntent(this,
-                article.getId(),
-                article.getOriginId(),
-                article.getTitle(),
-                article.getLink(),
-                article.isCollect());
+        Intent intent = WebViewActivity.newIntent(this, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
         startActivityForresultAnim(intent, 1);
     }
 
@@ -309,7 +353,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
         if (LoginContextUtil.getInstance().getUserState().collect(this)) {
             mIbtnCollect = v;
             mSelectPosition = position;
-            ViewUtil.setSelected(v);
+            UiUtil.setSelected(v);
             mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
         }
     }

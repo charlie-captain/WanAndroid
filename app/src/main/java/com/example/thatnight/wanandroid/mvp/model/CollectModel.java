@@ -47,7 +47,7 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
     @Override
     public void collect(final boolean isCollect, String id, String originId, final CollectContract.IPresenter iPresenter) {
         if (isCollect) {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + originId + "/json", new OkHttpResultCallback() {
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + originId + "/json", null, new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
                     CrashReport.postCatchedException(e);
@@ -65,11 +65,11 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
                     iPresenter.collectResult(isCollect, msg);
                 }
 
-            }, null);
+            });
         } else {
             Map<String, String> map = new HashMap<>();
             map.put("originId", originId);
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", map, new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
                     CrashReport.postCatchedException(e);
@@ -87,7 +87,7 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
                     iPresenter.collectResult(isCollect, msg);
                 }
 
-            }, map);
+            });
         }
     }
 

@@ -27,6 +27,7 @@ public class Constant {
     public static final String URL_SEARCH = "/article/query/";   //   /0/json?k=?  post
     public static final String URL_LOGIN = "/user/login";
     public static final String URL_REGISTER = "/user/register/";
+    public static final String URL_CHANGE_PWD = "/user/lg/password";
 
     /*
         activity requestcode
@@ -43,5 +44,6 @@ public class Constant {
     public static final String TOP_CLASSIFY = "scroll_top_classify";
     public static final String SWITCH_TO_CLASSIFY = "switch_to_classify";
 
-    public static final String UPDATE_DIALOG = "update_app_1.4.1";
+    public static final String ERROR = "error";
+
 }

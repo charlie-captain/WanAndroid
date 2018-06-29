@@ -31,11 +31,11 @@ public class NewsModel extends BaseModel implements NewsContract.IModel {
             public void onResponse(byte[] bytes) {
                 String response = new String(bytes);
                 if (TextUtils.isEmpty(response)) {
-                    iPresenter.getResult(isRefresh,null);
+                    iPresenter.getResult(isRefresh, null);
                     return;
                 }
                 Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                iPresenter.getResult(isRefresh,msg);
+                iPresenter.getResult(isRefresh, msg);
             }
         });
     }
@@ -43,7 +43,7 @@ public class NewsModel extends BaseModel implements NewsContract.IModel {
     @Override
     public void collect(final boolean isCollect, String id, final NewsContract.IPresenter iPresenter) {
         if (isCollect) {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + id + "/json", new OkHttpResultCallback() {
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + id + "/json", null, new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
 
@@ -53,16 +53,16 @@ public class NewsModel extends BaseModel implements NewsContract.IModel {
                 public void onResponse(byte[] bytes) {
                     String response = new String(bytes);
                     if (TextUtils.isEmpty(response)) {
-                        iPresenter.collectResult(isCollect,null);
+                        iPresenter.collectResult(isCollect, null);
                         return;
                     }
                     Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                    iPresenter.collectResult(isCollect,msg);
+                    iPresenter.collectResult(isCollect, msg);
                 }
 
-            }, null);
+            });
         } else {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json", null, new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
 
@@ -72,15 +72,15 @@ public class NewsModel extends BaseModel implements NewsContract.IModel {
                 public void onResponse(byte[] bytes) {
                     String response = new String(bytes);
                     if (TextUtils.isEmpty(response)) {
-                        iPresenter.collectResult(isCollect,null);
+                        iPresenter.collectResult(isCollect, null);
                         return;
                     }
                     Msg msg = GsonUtil.gsonToBean(response, Msg.class);
 
-                    iPresenter.collectResult(isCollect,msg);
+                    iPresenter.collectResult(isCollect, msg);
                 }
 
-            }, null);
+            });
         }
 
     }

@@ -30,7 +30,7 @@ import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.example.thatnight.wanandroid.utils.ProgressDialogUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
-import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.utils.UiUtil;
 import com.example.thatnight.wanandroid.view.customview.CustomWebView;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -66,6 +66,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
 
     @Override
     protected void initData() {
+        mBGASwipeBackHelper.setIsOnlyTrackingLeftEdge(true);
         Intent extraIntent = getIntent();
         if (extraIntent != null) {
             mId = extraIntent.getIntExtra("id", 0);
@@ -271,7 +272,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         switch (v.getId()) {
             case R.id.fabtn_news:
                 if (LoginContextUtil.getInstance().getUserState().collect(WebViewActivity.this)) {
-                    ViewUtil.setSelected(v);
+                    UiUtil.setSelected(v);
                     if (mOriginId == 0) {
                         mPresenter.get(v.isSelected(), String.valueOf(mId));
                     } else {
@@ -292,7 +293,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
     @Override
     public void isSuccess(boolean isSuccess, String s) {
         if (!isSuccess) {
-            ViewUtil.setSelected(mActionButton);
+            UiUtil.setSelected(mActionButton);
         }
         showToast(s);
     }
@@ -318,7 +319,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
 
     public void getImageUrls() {
 
-        OkHttpUtil.getInstance().getAsync(mLink, new OkHttpResultCallback() {
+        OkHttpUtil.getInstance().getAsync(mLink, null,new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
 
@@ -328,7 +329,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
             public void onResponse(byte[] bytes) {
 
             }
-        }, null);
+        });
 
     }
 

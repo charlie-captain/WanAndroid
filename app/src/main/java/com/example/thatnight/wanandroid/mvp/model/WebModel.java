@@ -27,7 +27,7 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
     @Override
     public void getUrl(final boolean isCollect, String id, final WebContract.IWebPresenter iPresenter) {
         if (isCollect) {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + id + "/json", new OkHttpResultCallback() {
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + id + "/json", null, new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
                     iPresenter.getResult(false, null);
@@ -45,9 +45,9 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
                     iPresenter.getResult(isCollect, msg);
                 }
 
-            }, null);
+            });
         } else {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
+            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json", null, new OkHttpResultCallback() {
                 @Override
                 public void onError(Call call, Exception e) {
                     iPresenter.getResult(false, null);
@@ -64,7 +64,7 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
                     iPresenter.getResult(isCollect, msg);
                 }
 
-            }, null);
+            });
         }
     }
 
@@ -72,7 +72,7 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
     public void getUrl(String id, String originId, final WebContract.IWebPresenter iPresenter) {
         Map<String, String> map = new HashMap<>();
         map.put("originId", originId);
-        OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
+        OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", map, new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
                 iPresenter.getResult(false, null);
@@ -89,7 +89,7 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
                 iPresenter.getResult(false, msg);
             }
 
-        }, map);
+        });
     }
 
 }

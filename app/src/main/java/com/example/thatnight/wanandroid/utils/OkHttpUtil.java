@@ -5,6 +5,8 @@ import android.content.Context;
 import android.os.Handler;
 import android.os.Looper;
 
+import com.example.thatnight.wanandroid.constant.Constant;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
@@ -42,10 +44,7 @@ public class OkHttpUtil {
 
     private OkHttpUtil() {
         mOkHttpClientBuilder = new OkHttpClient.Builder();
-        mOkHttpClientBuilder.cookieJar(new OkHttpCookieJar(mContext))
-                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS);
+        mOkHttpClientBuilder.cookieJar(new OkHttpCookieJar(mContext)).readTimeout(READ_TIMEOUT, TimeUnit.SECONDS).writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS).connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS);
         mOkHttpClient = mOkHttpClientBuilder.build();
         mHandler = new Handler(Looper.getMainLooper());
 
@@ -85,7 +84,7 @@ public class OkHttpUtil {
      * @param okHttpResultCallback
      * @param headers
      */
-    public void getAsync(String url, OkHttpResultCallback okHttpResultCallback, Map<String, String> headers) {
+    public void getAsync(String url, Map<String, String> headers, OkHttpResultCallback okHttpResultCallback) {
         Request request = buildGetRequest(url, headers);
         deliveryResult(okHttpResultCallback, request);
     }
@@ -93,7 +92,7 @@ public class OkHttpUtil {
     /**
      * 异步的post请求
      */
-    public void postAsync(String url, OkHttpResultCallback okHttpResultCallback, Map<String, String> params, List<File> files) {
+    public void postAsync(String url, Map<String, String> params, List<File> files, OkHttpResultCallback okHttpResultCallback) {
         Request request = buildPostRequest(url, params, files);
         deliveryResult(okHttpResultCallback, request);
     }
@@ -101,9 +100,37 @@ public class OkHttpUtil {
     /**
      * 异步的post请求,无文件传输
      */
-    public void postAsync(String url, OkHttpResultCallback okHttpResultCallback, Map<String, String> params) {
+    public void postAsync(String url, Map<String, String> params, OkHttpResultCallback okHttpResultCallback) {
         Request request = buildPostRequest(url, params);
         deliveryResult(okHttpResultCallback, request);
+    }
+
+    /**
+     * 异步的post请求,无文件传输 , 处理重定向
+     */
+    public void postAsync(String url, Map<String, String> params, boolean isRefer, final OkHttpResultCallback okHttpResultCallback) {
+        final Request request = buildPostRequest(url, params);
+        mOkHttpClient.newCall(request).enqueue(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                okHttpResultCallback.onError(call, e);
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                switch (response.code()) {
+                    case 302:
+                        okHttpResultCallback.onResponse(Constant.URL_LOGIN.getBytes());
+                        break;
+                    case 200:
+                        okHttpResultCallback.onResponse(Constant.URL_LOGIN.getBytes());
+                        break;
+                    default:
+                        break;
+                }
+                okHttpResultCallback.onResponse(Constant.ERROR.getBytes());
+            }
+        });
     }
 
     /**
@@ -123,10 +150,7 @@ public class OkHttpUtil {
             }
         }
 
-        return new Request.Builder()
-                .url(url)
-                .headers(headersBuilder.build())
-                .build();
+        return new Request.Builder().url(url).headers(headersBuilder.build()).build();
     }
 
     /**
@@ -142,28 +166,14 @@ public class OkHttpUtil {
             }
         }
         if (files != null) {
-            for (File file :
-                    files) {
+            for (File file : files) {
                 RequestBody requestBody = RequestBody.create(MediaType.parse("multipart/form-data"), file);
                 multipartBodyBuilder.addFormDataPart("file", file.getName(), requestBody);
             }
         }
         MultipartBody multipartBody = multipartBodyBuilder.setType(MultipartBody.FORM).build();
-        ;
-
-//        FormBody.Builder formBodyBuilder = new FormBody.Builder();
-//        if (params != null) {
-//            Set<Map.Entry<String, String>> paramsEntries = params.entrySet();
-//            for (Map.Entry<String, String> entry : paramsEntries) {
-//                formBodyBuilder.add(entry.getKey(), entry.getValue());
-//            }
-//        }
-//        RequestBody requestBody = formBodyBuilder.build();
-        return new Request.Builder()
-                .url(url)
-                //.post(requestBody)
-                .post(multipartBody)
-                .build();
+        return new Request.Builder().url(url)
+                .post(multipartBody).build();
     }
 
 
@@ -187,10 +197,7 @@ public class OkHttpUtil {
             }
         }
         RequestBody requestBody = formBodyBuilder.build();
-        return new Request.Builder()
-                .url(url)
-                .post(requestBody)
-                .build();
+        return new Request.Builder().url(url).post(requestBody).build();
     }
 
 

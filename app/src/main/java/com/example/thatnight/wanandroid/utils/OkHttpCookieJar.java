@@ -12,30 +12,11 @@ import cn.bmob.v3.okhttp3.CookieJar;
 import cn.bmob.v3.okhttp3.HttpUrl;
 
 public class OkHttpCookieJar implements CookieJar {
-//    private static List<Cookie> sCookies;
-//    private final PersistentCookieStore cookieStore;
 
     public OkHttpCookieJar(Context mContext) {
-//        cookieStore = new PersistentCookieStore(mContext);
     }
 
-    //    /**
-//     * 自动管理Cookies
-//     */
-//    @Override
-//    public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-//        if (cookies != null && cookies.size() > 0) {
-//            for (Cookie item : cookies) {
-//                cookieStore.add(url, item);
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public List<Cookie> loadForRequest(HttpUrl url) {
-//        List<Cookie> cookies = cookieStore.get(url);
-//        return cookies;
-//    }
+
     private static HashMap<String, List<Cookie>> cookieStore = new HashMap<String, List<Cookie>>();
 
     @Override
@@ -49,34 +30,6 @@ public class OkHttpCookieJar implements CookieJar {
         return cookies != null ? cookies : new ArrayList<Cookie>();
     }
 
-//    @Override
-//    public void saveFromResponse(HttpUrl url, List<Cookie> cookies) {
-//        if (cookies != null && cookies.size() > 0) {
-//            if (sCookies == null) {
-//                sCookies = cookies;
-//            } else {
-//                sCookies.addAll(cookies);
-//            }
-//        }
-//    }
-//
-//    @Override
-//    public List<Cookie> loadForRequest(HttpUrl url) {
-//        if (null != sCookies) {
-//            return sCookies;
-//        } else {
-//            return new ArrayList<>();
-//        }
-//    }
-
-//    public static void printCookie() {
-//        if (sCookies != null) {
-//
-//            for (int i = 0; i < sCookies.size(); i++) {
-//                Log.e("cc", sCookies.get(i).value());
-//            }
-//        }
-//    }
 
     public static boolean isCookiesNull() {
         if (cookieStore == null) {
