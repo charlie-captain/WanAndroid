@@ -1,7 +1,29 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools">
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  xmlns:tools="http://schemas.android.com/tools">
+
+    <PreferenceCategory  android:title="账号设置" android:key="@string/pref_user">
+
+        <Preference
+            android:key="@string/pref_user_name"
+            android:summary="用户名"
+            android:textColor="@color/textColorPrimary"
+            android:textColorHint="@color/textColorSecondary"
+            android:title="thatnight"/>
+
+        <Preference
+            android:inputType="textPassword"
+            android:key="@string/pref_user_password"
+            android:password="true"
+            android:singleLine="true"
+            android:summary="修改密码"
+            android:textColor="@color/textColorPrimary"
+            android:textColorHint="@color/textColorSecondary"
+            android:title="******"/>
+
+    </PreferenceCategory>
+
     <PreferenceCategory android:title="基本设置">
 
         <ListPreference
@@ -11,55 +33,34 @@
             android:entryValues="@array/list_color_value"
             android:key="theme"
             android:summary="@string/pref_default_value"
-            android:title="主题肤色" />
+            android:title="主题肤色"/>
 
         <SwitchPreference
             android:key="day_light"
-            android:title="夜间模式"
+            android:summaryOff="已关闭"
             android:summaryOn="已开启"
-            android:summaryOff="已关闭" />
+            android:title="夜间模式"/>
 
         <SwitchPreference
             android:key="auto_login"
             android:summary="默认开启"
             android:summaryOff="已关闭"
             android:summaryOn="已开启"
-            android:title="自动登录" />
+            android:title="自动登录"/>
 
 
     </PreferenceCategory>
-
-    <!--<PreferenceCategory android:title="账号设置" android:enabled="false">-->
-
-    <!--<EditTextPreference-->
-    <!--android:key="user_name"-->
-    <!--android:singleLine="true"-->
-    <!--android:summary="修改用户名"-->
-    <!--android:textColor="@color/textColorPrimary"-->
-    <!--android:textColorHint="@color/textColorSecondary"-->
-    <!--android:title="用户名" />-->
-    <!--<EditTextPreference-->
-    <!--android:inputType="textPassword"-->
-    <!--android:key="user_password"-->
-    <!--android:password="true"-->
-    <!--android:singleLine="true"-->
-    <!--android:summary="修改密码"-->
-    <!--android:textColor="@color/textColorPrimary"-->
-    <!--android:textColorHint="@color/textColorSecondary"-->
-    <!--android:title="密码" />-->
-
-    <!--</PreferenceCategory>-->
 
 
     <PreferenceCategory android:title="更多" >
         <PreferenceScreen
             android:key="update"
             android:summary="版本号"
-            android:title="检查更新" />
+            android:title="检查更新"/>
         <PreferenceScreen
             android:key="help"
             android:summary="关于WanAndroid"
-            android:title="关于" />
+            android:title="关于"/>
     </PreferenceCategory>
 
 

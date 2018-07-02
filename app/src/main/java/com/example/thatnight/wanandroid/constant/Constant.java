@@ -12,6 +12,8 @@ public class Constant {
     public static final String URL_COLLECT = "/lg/collect/";
     public static final String URL_UNCOLLECT = "/lg/uncollect_originId/";
     public static final String URL_ARTICLE = "/article/list/";
+    public static final String URL_PROJECT = "/project/tree/json";
+    public static final String URL_PROJECT_LIST = "/project/list/";
 
 
     public static final String URL_ARTICLE_COLLECT = "/lg/collect/list/";
@@ -27,6 +29,7 @@ public class Constant {
     public static final String URL_SEARCH = "/article/query/";   //   /0/json?k=?  post
     public static final String URL_LOGIN = "/user/login";
     public static final String URL_REGISTER = "/user/register/";
+    public static final String URL_CHANGE_PWD = "/user/lg/password";
 
     /*
         activity requestcode
@@ -43,5 +46,8 @@ public class Constant {
     public static final String TOP_CLASSIFY = "scroll_top_classify";
     public static final String SWITCH_TO_CLASSIFY = "switch_to_classify";
 
-    public static final String UPDATE_DIALOG = "update_app_1.4.1";
+    public static final String ERROR = "error";
+    public static final int CODE_SUCCESS = 0;
+
+
 }

@@ -20,19 +20,23 @@ import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Account;
+import com.example.thatnight.wanandroid.utils.DonateUtil;
 import com.example.thatnight.wanandroid.utils.ExitUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
+import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.CommentContainerFragment;
 import com.example.thatnight.wanandroid.view.fragment.CommentFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
+import com.example.thatnight.wanandroid.view.fragment.ProjectFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsContainerFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
 
@@ -50,9 +54,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CollectFragment mCollectFragment;
     private SettingsContainerFragment mSettingsFragment;
     private CommentContainerFragment mCommentFragment;
+    private ProjectFragment mProjectFragment;
 
-    private FragmentManager mFragmentManager;
-    private FragmentTransaction mTransaction;
     private Fragment mLastFragment;
     private Account mAccount;
 
@@ -61,8 +64,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
-        //        StatusBarUtil.setTransparent(this);
-        mFragmentManager = getSupportFragmentManager();
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dv_main);
         mNavigationView = (NavigationView) findViewById(R.id.nv_main);
         mName = mNavigationView.getHeaderView(0).findViewById(R.id.tv_nv_header_name);
@@ -73,29 +74,41 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             public void onClick(View v) {
                 if (LoginContextUtil.getInstance().getUserState().getClass() == LogoutState.class) {
                     startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
+                } else {
+                    changeFragmentContent(R.id.nv_menu_settings);
+                    mNavigationView.setCheckedItem(R.id.nv_menu_settings);
+                    mDrawerLayout.closeDrawer(GravityCompat.START);
                 }
             }
         });
         initData();
-
-        //        ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(
-        //                this, mDrawerLayout, mToolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close
-        //        );
-        //        mDrawerLayout.addDrawerListener(toggle);
-        //        toggle.syncState();
-
-        mMainFragment = new MainFragment();
+        initFragment();
         showFragment(mMainFragment);
         mNavigationView.setCheckedItem(R.id.nv_menu_main);
         showNewDialog();
     }
 
+    /**
+     * 初始化常用类型
+     */
+    private void initFragment() {
+        if (mMainFragment == null) {
+            mMainFragment = new MainFragment();
+        }
+        if (mCollectFragment == null) {
+            mCollectFragment = new CollectFragment();
+        }
+        if (mProjectFragment == null) {
+            mProjectFragment = new ProjectFragment();
+        }
+    }
+
     //显示更新特性
     private void showNewDialog() {
-        boolean isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), Constant.UPDATE_DIALOG, true);
+        boolean isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), BuildConfig.VERSION_NAME, true);
         if (isFirst) {
-            SharePreferenceUtil.put(getApplicationContext(), Constant.UPDATE_DIALOG, false);
-            new AlertDialog.Builder(this).setTitle("更新内容").setMessage("修复登录异常\n修复若干bug\n不更新咯...").setNegativeButton("知道了", null).show();
+            SharePreferenceUtil.put(getApplicationContext(), BuildConfig.VERSION_NAME, false);
+            new AlertDialog.Builder(this).setTitle("更新内容").setMessage(getString(R.string.str_update)).setNegativeButton("知道了", null).show();
         }
 
     }
@@ -146,8 +159,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         return true;
     }
 
+    /**
+     * 根据pos更改Fragment
+     *
+     * @param pos
+     */
     private void changeFragmentContent(int pos) {
-        Fragment fragment = null;
         switch (pos) {
             case R.id.nv_menu_main:
                 if (mMainFragment == null) {
@@ -160,6 +177,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     mCollectFragment = new CollectFragment();
                 }
                 showFragment(mCollectFragment);
+                break;
+            case R.id.nv_menu_project:
+                if (mProjectFragment == null) {
+                    mProjectFragment = new ProjectFragment();
+                }
+                showFragment(mProjectFragment);
                 break;
             case R.id.nv_menu_user:
                 Snackbar.make(mDrawerLayout, "未完待续...", Snackbar.LENGTH_SHORT).show();
@@ -176,6 +199,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 showFragment(mSettingsFragment);
                 break;
+            case R.id.nv_menu_donate:
+                showDonateDialog();
+                break;
             case R.id.nv_menu_exit:
                 new AlertDialog.Builder(this).
                         setTitle("提示").
@@ -185,8 +211,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                             public void onClick(DialogInterface dialog, int which) {
                                 LoginContextUtil.getInstance().setUserState(new LogoutState());
                                 OkHttpCookieJar.resetCookies();
-                                startActivity(new Intent(MainActivity.this, LoginActivity.class));
-                                onBackPressed();
+                                startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
+                                finish();
                             }
                         }).setNegativeButton("否", null).show();
                 break;
@@ -205,21 +231,24 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (fragment == mLastFragment) {
             return;
         }
-        mTransaction = mFragmentManager.beginTransaction();
-        mTransaction.setCustomAnimations(R.anim.anim_fade_in, R.anim.anim_fade_out);
+        FragmentTransaction transaction = getV4AppTransaction();
         if (!fragment.isAdded()) {
             if (mLastFragment == null) {
-                mTransaction.add(R.id.fl_content, fragment);
+                transaction.add(R.id.fl_content, fragment);
             } else {
-                mTransaction.hide(mLastFragment).add(R.id.fl_content, fragment);
+                transaction.hide(mLastFragment).add(R.id.fl_content, fragment);
             }
         }
         if (mLastFragment == null) {
-            mTransaction.show(fragment).commit();
+            transaction.show(fragment).commit();
         } else {
-            mTransaction.hide(mLastFragment).show(fragment).commit();
+            transaction.hide(mLastFragment).show(fragment).commit();
         }
         mLastFragment = fragment;
+        if (mSettingsFragment != null && mLastFragment == mSettingsFragment && mSettingsFragment.getFragment() != null && ((SettingsFragment) mSettingsFragment.getFragment()).isShowAbout()) {
+            mSettingsFragment.getChildFragmentManager().popBackStackImmediate();
+            mSettingsFragment.setTitle("设置");
+        }
     }
 
 
@@ -227,9 +256,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     public void onBackPressed() {
         if (mDrawerLayout.isDrawerOpen(GravityCompat.START)) {
             mDrawerLayout.closeDrawer(GravityCompat.START);
+        } else if (mSettingsFragment != null && mSettingsFragment.isVisible() && mSettingsFragment.getChildFragmentManager().getBackStackEntryCount() > 0) {
+            mSettingsFragment.getChildFragmentManager().popBackStackImmediate();
+            mSettingsFragment.setTitle("设置");
         } else {
-            super.onBackPressed();
-            overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
+            ExitUtil.exitCheck(this, mNavigationView);
         }
     }
 
@@ -264,15 +295,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public boolean onKeyDown(int keyCode, KeyEvent event) {
-        if (keyCode == KeyEvent.KEYCODE_BACK && event.getAction() == KeyEvent.ACTION_DOWN) {
-            ExitUtil.exitCheck(this, mNavigationView);
-            return true;
-        }
-        return super.onKeyDown(keyCode, event);
-    }
-
-    @Override
     protected void onDestroy() {
         EventBus.getDefault().unregister(this);
         super.onDestroy();
@@ -289,5 +311,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public FragmentTransaction getV4AppTransaction() {
         return getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.antor_fade_in, R.animator.antor_fade_out);
+    }
+
+    /**
+     * 显示捐赠窗口
+     */
+    private void showDonateDialog() {
+        new AlertDialog.Builder(this).setItems(new String[]{"支付宝", "微信"}, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    DonateUtil.donateAlipay(MainActivity.this);
+                } else if (which == 1) {
+                    DonateUtil.donateWechat(MainActivity.this);
+                }
+            }
+        }).setNegativeButton("取消", null).show();
     }
 }

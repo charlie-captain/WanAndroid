@@ -8,6 +8,7 @@ import android.widget.Toast;
 import com.example.thatnight.wanandroid.view.activity.MainActivity;
 
 /**
+ * 退出工具类
  * Created by ThatNight on 2017.12.23.
  */
 

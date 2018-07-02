@@ -30,10 +30,6 @@ public class ClassifyContract {
 
         void setParentChildren(List<KeyValue> parentList, List<List<KeyValue>> parentChildren);
 
-        void getChildren(String key);
-
-        void getChildrenResult(List<KeyValue> childList);
-
         void getArticle(boolean isRefresh, int page, String value);
 
         void collect(boolean isCollect, String id);
@@ -46,7 +42,6 @@ public class ClassifyContract {
     public interface IModel extends BaseContract.IBaseModel {
         void getParentChildren(IPresenter iPresenter);
 
-        void getChildren(String key, IPresenter iPresenter);
 
         void getArticle(boolean isRefresh, int page, String value, IPresenter iPresenter);
 

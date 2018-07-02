@@ -11,9 +11,9 @@ import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.entity.Comment;
 
 /**
+ * 评论Adapter
  * Created by ThatNight on 2018.1.7.
  */
-
 public class CommentAdapter extends BaseRecyclerViewAdapter<Comment> {
 
     @Override

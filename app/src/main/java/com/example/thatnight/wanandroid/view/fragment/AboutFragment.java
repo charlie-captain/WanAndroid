@@ -11,9 +11,12 @@ import com.example.thatnight.wanandroid.base.BasePresenter;
 
 import java.util.Calendar;
 
+/**
+ * 关于
+ */
 public class AboutFragment extends BaseFragment {
 
-    private TextView mTvVersion, mTvRight;
+    private TextView mTvVersion, mTvRight, mTvAbout;
 
 
     @Override
@@ -31,9 +34,10 @@ public class AboutFragment extends BaseFragment {
         setTitle("关于");
         mTvRight = (TextView) $(R.id.tv_about_right);
         mTvVersion = (TextView) $(R.id.tv_about_version);
+        mTvAbout = (TextView) $(R.id.tv_about_update);
 
-
-        mTvRight.setText("@2017-"+ Calendar.getInstance().get(Calendar.YEAR));
+        mTvAbout.setText("更新内容：\n" + getString(R.string.str_update));
+        mTvRight.setText("@2017-" + Calendar.getInstance().get(Calendar.YEAR));
         mTvVersion.setText("WanAndroid : " + BuildConfig.VERSION_NAME);
     }
 
@@ -55,7 +59,7 @@ public class AboutFragment extends BaseFragment {
 
     @Override
     public int getLayoutId() {
-        return R.layout.activity_about;
+        return R.layout.fragment_about;
     }
 
     @Override

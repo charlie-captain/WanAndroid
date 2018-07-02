@@ -26,53 +26,36 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
 
     @Override
     public void getUrl(final boolean isCollect, String id, final WebContract.IWebPresenter iPresenter) {
+        String url = "";
         if (isCollect) {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + id + "/json", new OkHttpResultCallback() {
-                @Override
-                public void onError(Call call, Exception e) {
-                    iPresenter.getResult(false, null);
-                    CrashReport.postCatchedException(e);
-                }
-
-                @Override
-                public void onResponse(byte[] bytes) {
-                    String response = new String(bytes);
-                    if (TextUtils.isEmpty(response)) {
-                        iPresenter.getResult(isCollect, null);
-                        return;
-                    }
-                    Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                    iPresenter.getResult(isCollect, msg);
-                }
-
-            }, null);
+            url = Constant.URL_BASE + Constant.URL_COLLECT + id + "/json";
         } else {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
-                @Override
-                public void onError(Call call, Exception e) {
-                    iPresenter.getResult(false, null);
-                }
-
-                @Override
-                public void onResponse(byte[] bytes) {
-                    String response = new String(bytes);
-                    if (TextUtils.isEmpty(response)) {
-                        iPresenter.getResult(isCollect, null);
-                        return;
-                    }
-                    Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                    iPresenter.getResult(isCollect, msg);
-                }
-
-            }, null);
+            url = Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json";
         }
+        OkHttpUtil.getInstance().postAsync(url, null, new OkHttpResultCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+                iPresenter.getResult(isCollect, null);
+            }
+
+            @Override
+            public void onResponse(byte[] bytes) {
+                String response = new String(bytes);
+                if (TextUtils.isEmpty(response)) {
+                    iPresenter.getResult(isCollect, null);
+                    return;
+                }
+                Msg msg = GsonUtil.gsonToBean(response, Msg.class);
+                iPresenter.getResult(isCollect, msg);
+            }
+        });
     }
 
     @Override
     public void getUrl(String id, String originId, final WebContract.IWebPresenter iPresenter) {
         Map<String, String> map = new HashMap<>();
         map.put("originId", originId);
-        OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
+        OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", map, new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
                 iPresenter.getResult(false, null);
@@ -89,7 +72,7 @@ public class WebModel extends BaseModel implements WebContract.IWebModel {
                 iPresenter.getResult(false, msg);
             }
 
-        }, map);
+        });
     }
 
 }

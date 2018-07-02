@@ -16,8 +16,8 @@ android {
         applicationId "com.example.thatnight.wanandroid"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 6
-        versionName "1.4"
+        versionCode 16
+        versionName "1.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true
@@ -66,16 +66,17 @@ dependencies {
     implementation 'com.github.githubwing:DragPhotoView:1.0.2'
     implementation 'com.github.bumptech.glide:glide:4.7.1'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.7.1'
-    implementation 'com.jaeger.statusbarutil:library:1.5.1'
+    implementation 'com.gyf.barlibrary:barlibrary:2.3.0'
     implementation project(':expandpopview')
     implementation 'com.yanzhenjie:permission:1.1.2'
     implementation 'org.greenrobot:eventbus:3.1.1'
     implementation 'cn.bmob.android:bmob-sdk:3.5.9'
-    implementation 'org.jsoup:jsoup:1.11.2'
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:1.5.4'
     releaseImplementation 'com.squareup.leakcanary:leakcanary-android-no-op:1.5.4'
     implementation 'cn.bingoogolapple:bga-swipebacklayout:1.1.9'
-
-//    implementation 'com.android.support:preference-v7:27.1.1'
     implementation 'com.takisoft.fix:preference-v7:27.1.1.1'
+    implementation 'com.android.support:support-vector-drawable:27.1.1'
+    implementation 'com.hyman:flowlayout-lib:1.1.2'
+
+    implementation 'com.github.didikee:AndroidDonate:0.1.0'
 }

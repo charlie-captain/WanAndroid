@@ -34,44 +34,37 @@ public class App extends DefaultApplicationLike {
     public void onCreate() {
         super.onCreate();
 
-        BGASwipeBackHelper.init(getApplication(),null);
+        //右滑返回
+        BGASwipeBackHelper.init(getApplication(), null);
 
-        new Thread(new Runnable() {
+        //检测内存泄漏
+        if (LeakCanary.isInAnalyzerProcess(getApplication())) {
+            return;
+        }
+        LeakCanary.install(getApplication());
+
+        //换肤框架
+        SkinCompatManager.withoutActivity(getApplication()).addInflater(new SkinMaterialViewInflater()).addInflater(new SkinConstraintViewInflater()).loadSkin();
+
+        //x5
+        QbSdk.initX5Environment(getApplication(), new QbSdk.PreInitCallback() {
             @Override
-            public void run() {
-                //检测内存泄漏
-                if (LeakCanary.isInAnalyzerProcess(getApplication())) {
-                    return;
-                }
-                LeakCanary.install(getApplication());
+            public void onCoreInitFinished() {
 
-                //换肤框架
-                SkinCompatManager.withoutActivity(getApplication())
-                        .addInflater(new SkinMaterialViewInflater())
-                        .addInflater(new SkinConstraintViewInflater())
-                        .loadSkin();
-
-                //x5
-                QbSdk.initX5Environment(getApplication(), new QbSdk.PreInitCallback() {
-                    @Override
-                    public void onCoreInitFinished() {
-
-                    }
-
-                    @Override
-                    public void onViewInitFinished(boolean b) {
-
-                    }
-                });
-
-                //Bugly
-                Bugly.init(getApplication(), getApplication().getString(R.string.bugly_appkey), false);
-
-                OkHttpUtil.init(getApplication());
-                //云后台
-                Bmob.initialize(getApplication(), getApplication().getString(R.string.bmob_appkey));
             }
-        }).start();
+
+            @Override
+            public void onViewInitFinished(boolean b) {
+
+            }
+        });
+
+        //Bugly
+        Bugly.init(getApplication(), getApplication().getString(R.string.bugly_appkey), false);
+
+        OkHttpUtil.init(getApplication());
+        //云后台
+        Bmob.initialize(getApplication(), getApplication().getString(R.string.bmob_appkey));
     }
 
     @Override

@@ -30,9 +30,9 @@ import java.util.Arrays;
 import java.util.List;
 
 /**
+ * 主界面
  * Created by thatnight on 2017.10.27.
  */
-
 public class MainFragment extends BaseFragment {
 
     private ViewPager mVpager;

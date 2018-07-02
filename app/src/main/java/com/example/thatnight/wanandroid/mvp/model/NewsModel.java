@@ -3,8 +3,8 @@ package com.example.thatnight.wanandroid.mvp.model;
 import android.text.TextUtils;
 
 import com.example.thatnight.wanandroid.base.BaseModel;
-import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.constant.Constant;
+import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
@@ -31,58 +31,41 @@ public class NewsModel extends BaseModel implements NewsContract.IModel {
             public void onResponse(byte[] bytes) {
                 String response = new String(bytes);
                 if (TextUtils.isEmpty(response)) {
-                    iPresenter.getResult(isRefresh,null);
+                    iPresenter.getResult(isRefresh, null);
                     return;
                 }
                 Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                iPresenter.getResult(isRefresh,msg);
+                iPresenter.getResult(isRefresh, msg);
             }
         });
     }
 
     @Override
     public void collect(final boolean isCollect, String id, final NewsContract.IPresenter iPresenter) {
+        String url = "";
         if (isCollect) {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + id + "/json", new OkHttpResultCallback() {
-                @Override
-                public void onError(Call call, Exception e) {
-
-                }
-
-                @Override
-                public void onResponse(byte[] bytes) {
-                    String response = new String(bytes);
-                    if (TextUtils.isEmpty(response)) {
-                        iPresenter.collectResult(isCollect,null);
-                        return;
-                    }
-                    Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                    iPresenter.collectResult(isCollect,msg);
-                }
-
-            }, null);
+            url = Constant.URL_BASE + Constant.URL_COLLECT + id + "/json";
         } else {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
-                @Override
-                public void onError(Call call, Exception e) {
-
-                }
-
-                @Override
-                public void onResponse(byte[] bytes) {
-                    String response = new String(bytes);
-                    if (TextUtils.isEmpty(response)) {
-                        iPresenter.collectResult(isCollect,null);
-                        return;
-                    }
-                    Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-
-                    iPresenter.collectResult(isCollect,msg);
-                }
-
-            }, null);
+            url = Constant.URL_BASE + Constant.URL_UNCOLLECT + id + "/json";
         }
 
+        OkHttpUtil.getInstance().postAsync(url, null, new OkHttpResultCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+
+            }
+
+            @Override
+            public void onResponse(byte[] bytes) {
+                String response = new String(bytes);
+                if (TextUtils.isEmpty(response)) {
+                    iPresenter.collectResult(isCollect, null);
+                    return;
+                }
+                Msg msg = GsonUtil.gsonToBean(response, Msg.class);
+                iPresenter.collectResult(isCollect, msg);
+            }
+        });
     }
 
 

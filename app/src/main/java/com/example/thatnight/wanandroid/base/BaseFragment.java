@@ -138,7 +138,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         mDrawBtnClickCallback = callback;
     }
 
-    protected void setTitle(String title) {
+    public void setTitle(String title) {
         mTitle = mRootView.findViewById(R.id.tb_title);
         if (mTitle != null) {
             mTitle.setText(title);
@@ -187,7 +187,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         mActivity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 
-    public void startActivityForresultAnim(Intent intent, int code) {
+    public void startActivityForResultAnim(Intent intent, int code) {
         startActivityForResult(intent, code);
         mActivity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }

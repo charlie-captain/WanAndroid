@@ -28,13 +28,16 @@ public abstract class BaseContainerFragment extends BaseFragment {
 
     @Override
     protected void initView() {
-        getSupportFragment();
-        getChildFragmentManager().beginTransaction().setCustomAnimations(R.animator.antor_fade_in, R.animator.antor_fade_out).add(R.id.fl_content, mSupportFragment).commit();
+        getTransaction().add(R.id.fl_content, mSupportFragment).commit();
+    }
+
+    private FragmentTransaction getTransaction() {
+        return getChildFragmentManager().beginTransaction().setCustomAnimations(R.animator.antor_fade_in, R.animator.antor_fade_out);
     }
 
     @Override
     protected void initData(Bundle arguments) {
-
+        getSupportFragment();
     }
 
     @Override

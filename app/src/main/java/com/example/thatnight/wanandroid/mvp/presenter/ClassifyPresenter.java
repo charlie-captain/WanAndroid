@@ -34,19 +34,6 @@ public class ClassifyPresenter extends BasePresenter<ClassifyModel, ClassifyFrag
     }
 
     @Override
-    public void getChildren(String key) {
-        model.getChildren(key, this);
-    }
-
-    @Override
-    public void getChildrenResult(List<KeyValue> childList) {
-        if (view == null) {
-            return;
-        }
-        view.refreshExpandPopView(childList);
-    }
-
-    @Override
     public void getArticle(boolean isRefresh, int page, String value) {
         model.getArticle(isRefresh, page, value, this);
     }
@@ -67,7 +54,6 @@ public class ClassifyPresenter extends BasePresenter<ClassifyModel, ClassifyFrag
         }
         view.isLoading(false);
         if (0 == msg.getErrorCode()) {
-//            Log.d("news", "getResult: " + msg.getData());
             String json = GsonUtil.gsonToJson(msg.getData());
             ArticleData data = GsonUtil.gsonToBean(json, ArticleData.class);
             if (isRefresh) {

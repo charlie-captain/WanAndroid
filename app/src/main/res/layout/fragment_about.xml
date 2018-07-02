@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical"
+    tools:context="com.example.thatnight.wanandroid.view.fragment.AboutFragment">
+
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/circleImageView"
+        android:layout_width="72dp"
+        android:layout_height="72dp"
+        android:layout_below="@+id/tb"
+        android:layout_marginTop="64dp"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="8dp"
+        android:src="@mipmap/ic_launcher_round" />
+
+    <TextView
+        android:id="@+id/tv_about_version"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/circleImageView"
+        android:layout_centerHorizontal="true"
+        android:text="WanAndroid"
+        android:textColor="@color/textColorPrimary"
+        android:textSize="16sp" />
+
+    <TextView
+        android:id="@+id/tv_about_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_about_version"
+        android:layout_centerHorizontal="true"
+        tools:text="更新内容如下:"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/textColorSecondary"
+        android:textSize="14sp" />
+
+
+    <TextView
+        android:id="@+id/tv_about_right"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/tv_rights"
+        android:layout_centerHorizontal="true"
+        android:text="\@2017- "
+        android:textColor="@color/textColorSecondary" />
+
+
+    <TextView
+        android:id="@+id/tv_rights"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:layout_marginBottom="48dp"
+        android:gravity="center"
+        android:text="https://github.com/thatnight\nAll rights reserved."
+        android:textColor="@color/textColorSecondary" />
+</RelativeLayout>

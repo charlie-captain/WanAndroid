@@ -91,6 +91,4 @@ public class PopOneListView extends PopLinearLayout implements IPopListView {
         mOneList.addAll(oneList);
         mListAdapter.setKeyValueList(mOneList);
     }
-
-
 }

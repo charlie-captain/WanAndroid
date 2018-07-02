@@ -46,49 +46,33 @@ public class CollectModel extends BaseModel implements CollectContract.IModel {
 
     @Override
     public void collect(final boolean isCollect, String id, String originId, final CollectContract.IPresenter iPresenter) {
+        String url = "";
+        Map<String, String> map = new HashMap<>();
         if (isCollect) {
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT + originId + "/json", new OkHttpResultCallback() {
-                @Override
-                public void onError(Call call, Exception e) {
-                    CrashReport.postCatchedException(e);
-
-                }
-
-                @Override
-                public void onResponse(byte[] bytes) {
-                    String response = new String(bytes);
-                    if (TextUtils.isEmpty(response)) {
-                        iPresenter.collectResult(isCollect, null);
-                        return;
-                    }
-                    Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                    iPresenter.collectResult(isCollect, msg);
-                }
-
-            }, null);
+            url = Constant.URL_BASE + Constant.URL_COLLECT + originId + "/json";
         } else {
-            Map<String, String> map = new HashMap<>();
             map.put("originId", originId);
-            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json", new OkHttpResultCallback() {
-                @Override
-                public void onError(Call call, Exception e) {
-                    CrashReport.postCatchedException(e);
-
-                }
-
-                @Override
-                public void onResponse(byte[] bytes) {
-                    String response = new String(bytes);
-                    if (TextUtils.isEmpty(response)) {
-                        iPresenter.collectResult(isCollect, null);
-                        return;
-                    }
-                    Msg msg = GsonUtil.gsonToBean(response, Msg.class);
-                    iPresenter.collectResult(isCollect, msg);
-                }
-
-            }, map);
+            url = Constant.URL_BASE + Constant.URL_COLLECT_UNCOLLECT + id + "/json";
         }
+        OkHttpUtil.getInstance().postAsync(url, map, new OkHttpResultCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+                CrashReport.postCatchedException(e);
+
+            }
+
+            @Override
+            public void onResponse(byte[] bytes) {
+                String response = new String(bytes);
+                if (TextUtils.isEmpty(response)) {
+                    iPresenter.collectResult(isCollect, null);
+                    return;
+                }
+                Msg msg = GsonUtil.gsonToBean(response, Msg.class);
+                iPresenter.collectResult(isCollect, msg);
+            }
+
+        });
     }
 
 }

@@ -17,6 +17,7 @@ import skin.support.widget.SkinCompatSupportable;
 import static skin.support.widget.SkinCompatHelper.INVALID_ID;
 
 /**
+ * 可换肤下拉刷新
  * Created by ThatNight on 2017.12.20.
  */
 

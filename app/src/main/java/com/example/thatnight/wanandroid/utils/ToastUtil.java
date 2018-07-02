@@ -1,7 +1,9 @@
 package com.example.thatnight.wanandroid.utils;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.os.Handler;
+import android.os.Looper;
 import android.widget.Toast;
 
 
@@ -11,27 +13,25 @@ import android.widget.Toast;
 
 public class ToastUtil {
     private static Toast sToast;
-    private static Handler sHandler;
-    private static Runnable sRunnable;
+    private static final Handler S_HANDLER = new Handler(Looper.getMainLooper());
 
-    public static void showToast(Context context, String text) {
-        if (sHandler == null) {
-            sHandler = new Handler();
-            sRunnable = new Runnable() {
-                @Override
-                public void run() {
+    public static void showToast(final Context context, final String text) {
+        S_HANDLER.post(new Runnable() {
+            @SuppressLint("ShowToast")
+            @Override
+            public void run() {
+                if (sToast != null) {
                     sToast.cancel();
                 }
-            };
-        }
-        sHandler.removeCallbacks(sRunnable);
-        if (sToast != null) {
-            sToast.setText(text);
-        } else {
-            sToast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-        }
-        sHandler.postDelayed(sRunnable,4000);
-        sToast.show();
+                if (sToast != null) {
+                    sToast.setText(text);
+                } else {
+                    sToast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
+                }
+                sToast.setDuration(Toast.LENGTH_SHORT);
+                sToast.show();
+            }
+        });
     }
 
     public static void showToast(Context context, int resId) {

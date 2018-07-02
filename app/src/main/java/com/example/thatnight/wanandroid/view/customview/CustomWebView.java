@@ -19,9 +19,9 @@ import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 
 /**
+ * 自定义浏览器
  * Created by ThatNight on 2018.1.7.
  */
-
 public class CustomWebView extends WebView {
 
     protected ProgressBar mProgressBar;

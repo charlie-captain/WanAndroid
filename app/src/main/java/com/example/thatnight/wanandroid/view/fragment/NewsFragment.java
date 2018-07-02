@@ -22,7 +22,7 @@ import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
 import com.example.thatnight.wanandroid.mvp.model.NewsModel;
 import com.example.thatnight.wanandroid.mvp.presenter.NewsPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
-import com.example.thatnight.wanandroid.utils.ViewUtil;
+import com.example.thatnight.wanandroid.utils.UiUtil;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
@@ -38,6 +38,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
+ * 最新文章
  * Created by thatnight on 2017.10.27.
  */
 
@@ -89,7 +90,6 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
         if (mArticles != null && mArticles.size() > 0) {
             return;
         }
-//        mPresenter.getArticle(true, mPage);
         mRefreshLayout.autoRefresh();
     }
 
@@ -132,7 +132,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
                 article.getTitle(),
                 article.getLink(),
                 article.isCollect());
-        startActivityForresultAnim(intent, 1);
+        startActivityForResultAnim(intent, 1);
     }
 
     @Override
@@ -146,7 +146,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
         if (LoginContextUtil.getInstance().getUserState().collect(mActivity)) {
             mIbtnCollect = v;
             mSelectPosition = position;
-            ViewUtil.setSelected(v);
+            UiUtil.setSelected(v);
             mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
         }
     }
@@ -200,14 +200,14 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
                     @Override
                     public void onClick(View v) {
                         if (mIbtnCollect != null) {
-                            ViewUtil.setSelected(mIbtnCollect);
+                            UiUtil.setSelected(mIbtnCollect);
                         }
                         mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
                     }
                 }).show();
         if (!isSuccess) {
             if (mIbtnCollect != null) {
-                ViewUtil.setSelected(mIbtnCollect);
+                UiUtil.setSelected(mIbtnCollect);
             }
         }
     }
@@ -217,7 +217,6 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
                 mPresenter.getArticle(true, 0);
-//                mRefreshLayout.autoRefresh();
             }
         }
         super.onActivityResult(requestCode, resultCode, data);

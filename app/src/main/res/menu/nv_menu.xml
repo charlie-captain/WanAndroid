@@ -11,6 +11,11 @@
             android:title="收藏" />
 
         <item
+            android:id="@+id/nv_menu_project"
+            android:icon="@drawable/ic_project"
+            android:title="项目" />
+
+        <item
             android:id="@+id/nv_menu_user"
             android:icon="@drawable/ic_user"
             android:title="我的"
@@ -29,6 +34,13 @@
             android:id="@+id/nv_menu_settings"
             android:icon="@drawable/ic_settings"
             android:title="设置" />
+
+
+        <item
+            android:id="@+id/nv_menu_donate"
+            android:icon="@drawable/ic_donate"
+            android:checkable="false"
+            android:title="捐献" />
 
         <item
             android:id="@+id/nv_menu_exit"

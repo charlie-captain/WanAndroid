@@ -21,6 +21,11 @@ public class LoginPresenter extends BasePresenter<LoginModel, LoginActivity> imp
     }
 
     @Override
+    public void register() {
+        model.register(view.getName(), view.getPassword(), this);
+    }
+
+    @Override
     public void getResult(Msg msg) {
         view.isLoading(false);
         if (msg == null) {
@@ -31,12 +36,12 @@ public class LoginPresenter extends BasePresenter<LoginModel, LoginActivity> imp
             String accountJson = GsonUtil.gsonToJson(msg.getData());
             Account account = GsonUtil.gsonToBean(accountJson, Account.class);
             if (account == null) {
-                view.isSuccess(false, null, "登陆失败 , 程序异常");
+                view.isSuccess(false, null, "error");
             } else {
                 view.isSuccess(true, account, null);
             }
         } else {
-            view.isSuccess(false, null, "登陆失败 , " + msg.getErrorMsg());
+            view.isSuccess(false, null, msg.getErrorMsg().toString());
         }
     }
 }
