@@ -19,7 +19,7 @@
 
 ### 下载地址
 
-- [Wanandroid 1.5](https://www.coolapk.com/apk/169842) -- 酷安市场
+- [Wanandroid 1.6](https://www.coolapk.com/apk/169842) -- 酷安市场
 - [Github-release](https://github.com/thatnight/WanAndroid/releases)
 
  
