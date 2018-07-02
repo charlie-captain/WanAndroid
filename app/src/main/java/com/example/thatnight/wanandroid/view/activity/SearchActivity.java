@@ -44,9 +44,8 @@ import com.zhy.view.flowlayout.FlowLayout;
 import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
-import org.w3c.dom.Text;
-
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -73,7 +72,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
 
     @Override
     protected Boolean isSetStatusBar() {
-        return false;
+        return true;
     }
 
     @Override
@@ -128,8 +127,9 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
             mSearchView.setSelection(mKey.length());
             mPresenter.search(false, mKey, String.valueOf(mPage));
             addHistory(mKey);
+        }else{
+            mPresenter.getHotKey();
         }
-        mPresenter.getHotKey();
     }
 
     @Override
@@ -202,6 +202,8 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
                 mSearchView.setText(mHotKeys.get(position).getName());
                 mSearchView.setSelection(mHotKeys.get(position).getName().length());
                 mTagFlowLayout.setVisibility(View.GONE);
+                //添加到历史
+                addHistory(mHotKeys.get(position).getName());
                 return false;
             }
         });
@@ -217,19 +219,17 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
             mSearchHistory = new ArrayList<>();
         }
         if (mSearchHistory.contains(s)) {
-            return;
+            mSearchHistory.remove(s);
         }
         mSearchHistory.add(s);
+        //反转数组
+        Collections.reverse(mSearchHistory);
         mSearchAdatper.updateData(mSearchHistory);
     }
 
     @Override
     public void isLoading(boolean isLoading) {
-        if (isLoading) {
-            mRefreshLayout.autoRefresh();
-        } else {
-            mRefreshLayout.finishRefresh();
-        }
+
     }
 
     @Override
@@ -250,10 +250,6 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
         if (!isEditting) {
             mRv.setAdapter(mAdapter);
             isEditting = true;
-        }
-        if (!TextUtils.isEmpty(mKey)) {
-            InputMethodManager imm = (InputMethodManager) getSystemService(Context.INPUT_METHOD_SERVICE);
-            imm.hideSoftInputFromWindow(mRv.getWindowToken(), 0);
         }
     }
 
@@ -343,7 +339,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
         Intent intent = WebViewActivity.newIntent(this, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
-        startActivityForresultAnim(intent, 1);
+        startActivityForResultAnim(intent, 1);
     }
 
     @Override
@@ -392,5 +388,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
             }
             SharePreferenceUtil.put(getApplicationContext(), "search_list", GsonUtil.gsonToJson(mSearchHistory));
         }
+        //隐藏输入法
+        UiUtil.inputSoftWare(false, mSearchView);
     }
 }

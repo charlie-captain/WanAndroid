@@ -26,10 +26,12 @@ import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Account;
+import com.example.thatnight.wanandroid.utils.DonateUtil;
 import com.example.thatnight.wanandroid.utils.ExitUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
+import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.CommentContainerFragment;
 import com.example.thatnight.wanandroid.view.fragment.CommentFragment;
@@ -80,11 +82,25 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         });
         initData();
-
-        mMainFragment = new MainFragment();
+        initFragment();
         showFragment(mMainFragment);
         mNavigationView.setCheckedItem(R.id.nv_menu_main);
         showNewDialog();
+    }
+
+    /**
+     * 初始化常用类型
+     */
+    private void initFragment() {
+        if (mMainFragment == null) {
+            mMainFragment = new MainFragment();
+        }
+        if (mCollectFragment == null) {
+            mCollectFragment = new CollectFragment();
+        }
+        if (mProjectFragment == null) {
+            mProjectFragment = new ProjectFragment();
+        }
     }
 
     //显示更新特性
@@ -92,7 +108,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         boolean isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), BuildConfig.VERSION_NAME, true);
         if (isFirst) {
             SharePreferenceUtil.put(getApplicationContext(), BuildConfig.VERSION_NAME, false);
-            new AlertDialog.Builder(this).setTitle("更新内容").setMessage("重构代码\n提高稳定性").setNegativeButton("知道了", null).show();
+            new AlertDialog.Builder(this).setTitle("更新内容").setMessage(getString(R.string.str_update)).setNegativeButton("知道了", null).show();
         }
 
     }
@@ -149,7 +165,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
      * @param pos
      */
     private void changeFragmentContent(int pos) {
-        Fragment fragment = null;
         switch (pos) {
             case R.id.nv_menu_main:
                 if (mMainFragment == null) {
@@ -184,6 +199,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 showFragment(mSettingsFragment);
                 break;
+            case R.id.nv_menu_donate:
+                showDonateDialog();
+                break;
             case R.id.nv_menu_exit:
                 new AlertDialog.Builder(this).
                         setTitle("提示").
@@ -194,6 +212,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 LoginContextUtil.getInstance().setUserState(new LogoutState());
                                 OkHttpCookieJar.resetCookies();
                                 startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
+                                finish();
                             }
                         }).setNegativeButton("否", null).show();
                 break;
@@ -292,5 +311,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     public FragmentTransaction getV4AppTransaction() {
         return getSupportFragmentManager().beginTransaction().setCustomAnimations(R.animator.antor_fade_in, R.animator.antor_fade_out);
+    }
+
+    /**
+     * 显示捐赠窗口
+     */
+    private void showDonateDialog() {
+        new AlertDialog.Builder(this).setItems(new String[]{"支付宝", "微信"}, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (which == 0) {
+                    DonateUtil.donateAlipay(MainActivity.this);
+                } else if (which == 1) {
+                    DonateUtil.donateWechat(MainActivity.this);
+                }
+            }
+        }).setNegativeButton("取消", null).show();
     }
 }

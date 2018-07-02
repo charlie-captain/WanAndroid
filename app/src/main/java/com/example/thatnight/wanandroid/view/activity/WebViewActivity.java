@@ -43,9 +43,7 @@ import cn.bmob.v3.okhttp3.Call;
 import skin.support.SkinCompatManager;
 
 
-public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPresenter> implements View.OnClickListener,
-        WebContract.IWebView,
-        Toolbar.OnMenuItemClickListener {
+public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPresenter> implements View.OnClickListener, WebContract.IWebView, Toolbar.OnMenuItemClickListener {
 
     private CustomWebView mWebView;
     private String mTextTitle, mLink;
@@ -58,6 +56,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
     private ProgressBar mPbar;
     private boolean isNight = false;
     private boolean isFirst = false;
+    public static final int NO_ORIGINID = 0;
 
     @Override
     public int getLayoutId() {
@@ -141,8 +140,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         //过滤html的title
         boolean isHtml = Pattern.matches(".*<em.+?>(.+?)</em>.*", mTextTitle);
         if (isHtml) {
-            String newTitle = mTextTitle.replaceAll("<em.+?>", "")
-                    .replaceAll("</em>", "");
+            String newTitle = mTextTitle.replaceAll("<em.+?>", "").replaceAll("</em>", "");
             setTitle(newTitle);
         } else {
             setTitle(mTextTitle);
@@ -207,22 +205,22 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         // 这段js函数的功能就是，遍历所有的img几点，并添加onclick函数，
         //函数的功能是在图片点击的时候调用本地java接口并传递url过去
         if (mWebView != null) {
-            mWebView.loadUrl("javascript:(function(){" +
-                    "var objs = document.getElementsByTagName(\"img\"); " +
-                    "for(var i=0;i<objs.length;i++)  " +
-                    "{"
-                    + "    objs[i].onclick=function()  " +
-                    "    {  "
-                    + "        imagelistner.openImage(this.src);  " +
-                    "    }  " +
-                    "}" +
-                    "})()");
+            mWebView.loadUrl("javascript:(function(){" + "var objs = document.getElementsByTagName(\"img\"); " + "for(var i=0;i<objs.length;i++)  " + "{" + "    objs[i].onclick=function()  " + "    {  " + "        imagelistner.openImage(this.src);  " + "    }  " + "}" + "})()");
         }
     }
 
-    public static Intent newIntent(Context context,
-                                   int id, int originId,
-                                   String title, String url, boolean isCollect) {
+    /**
+     * 创建实例
+     *
+     * @param context
+     * @param id
+     * @param originId
+     * @param title
+     * @param url
+     * @param isCollect
+     * @return
+     */
+    public static Intent newIntent(Context context, int id, int originId, String title, String url, boolean isCollect) {
         Intent intent = new Intent();
         intent.putExtra("title", title);
         intent.putExtra("id", id);
@@ -231,6 +229,19 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         intent.putExtra("isCollect", isCollect);
         intent.setClass(context, WebViewActivity.class);
         return intent;
+    }
+
+    /**
+     * 创建实例2 不包含originId
+     * @param context
+     * @param id
+     * @param title
+     * @param url
+     * @param isCollect
+     * @return
+     */
+    public static Intent newIntent(Context context, int id, String title, String url, boolean isCollect) {
+        return newIntent(context, id, NO_ORIGINID, title, url, isCollect);
     }
 
     @Override
@@ -273,7 +284,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
             case R.id.fabtn_news:
                 if (LoginContextUtil.getInstance().getUserState().collect(WebViewActivity.this)) {
                     UiUtil.setSelected(v);
-                    if (mOriginId == 0) {
+                    if (mOriginId == NO_ORIGINID) {
                         mPresenter.get(v.isSelected(), String.valueOf(mId));
                     } else {
                         mPresenter.get(String.valueOf(mId), String.valueOf(mOriginId));
@@ -319,7 +330,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
 
     public void getImageUrls() {
 
-        OkHttpUtil.getInstance().getAsync(mLink, null,new OkHttpResultCallback() {
+        OkHttpUtil.getInstance().getAsync(mLink, null, new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
 

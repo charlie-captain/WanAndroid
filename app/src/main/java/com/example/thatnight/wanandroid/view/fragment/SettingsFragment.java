@@ -12,6 +12,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
+import android.support.v7.preference.PreferenceGroup;
 import android.support.v7.preference.PreferenceScreen;
 import android.support.v7.preference.SwitchPreferenceCompat;
 import android.support.v7.widget.RecyclerView;
@@ -25,15 +26,18 @@ import android.widget.ListView;
 
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
+import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 import com.takisoft.fix.support.v7.preference.EditTextPreference;
+import com.takisoft.fix.support.v7.preference.PreferenceCategory;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 import com.tencent.bugly.beta.Beta;
 
@@ -101,26 +105,23 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             mTheme.setSummary(skin);
             mTheme.setValue(skin);
         }
-    }
+        if (LoginContextUtil.getInstance().getUserState() instanceof LoginState) {
+            String userName = SharePreferenceUtil.get(getActivity().getApplicationContext(), "account", "").toString();
+            String userPassword = SharePreferenceUtil.get(getActivity().getApplicationContext(), "password", "").toString();
+            mEtpUserName.setTitle(TextUtils.isEmpty(userName) ? "用户名" : userName);
+            String length = "";
+            for (int i = 0; i < userPassword.length(); i++) {
+                length += "*";
+            }
+            mEtpUserPwd.setTitle(length);
+        } else {
+            mEtpUserName.setTitle("Visitor");
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        String userName = SharePreferenceUtil.get(getActivity().getApplicationContext(), "account", "").toString();
-        String userPassword = SharePreferenceUtil.get(getActivity().getApplicationContext(), "password", "").toString();
-        mEtpUserName.setTitle(TextUtils.isEmpty(userName) ? "用户名" : userName);
-        String length = "";
-        for (int i = 0; i < userPassword.length(); i++) {
-            length += "*";
+            //删掉密码
+            ((PreferenceCategory)(findPreference(getString(R.string.pref_user)))).removePreference(findPreference(getString(R.string.pref_user_password)));
         }
-        mEtpUserPwd.setTitle(length);
-
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
 
     @Override
     public boolean onPreferenceClick(Preference preference) {

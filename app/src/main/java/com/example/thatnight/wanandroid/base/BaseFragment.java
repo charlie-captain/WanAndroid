@@ -187,7 +187,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         mActivity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 
-    public void startActivityForresultAnim(Intent intent, int code) {
+    public void startActivityForResultAnim(Intent intent, int code) {
         startActivityForResult(intent, code);
         mActivity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }

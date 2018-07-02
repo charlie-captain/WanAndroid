@@ -48,7 +48,6 @@ public class ProjectRvAdapter extends BaseRecyclerViewAdapter<ProjectItem> {
         TextView mTitle;
         TextView mAuthor;
         TextView mTime;
-        TextView mType;
         ImageButton mIbLike;
         ImageView mImageView;
         RelativeLayout mItem;
@@ -58,7 +57,6 @@ public class ProjectRvAdapter extends BaseRecyclerViewAdapter<ProjectItem> {
             mTitle = itemView.findViewById(R.id.item_tv_title);
             mAuthor = itemView.findViewById(R.id.item_tv_author);
             mTime = itemView.findViewById(R.id.item_tv_time);
-            mType = itemView.findViewById(R.id.item_tv_type);
             mIbLike = itemView.findViewById(R.id.item_ib_like);
             mItem = itemView.findViewById(R.id.rl_item_news);
             mImageView = itemView.findViewById(R.id.iv_project);
@@ -82,16 +80,7 @@ public class ProjectRvAdapter extends BaseRecyclerViewAdapter<ProjectItem> {
 
             mAuthor.setText(projectItem.getAuthor());
             mTime.setText(projectItem.getNiceDate());
-            mType.setText(projectItem.getChapterName());
             mIbLike.setTag(getLayoutPosition());
-            mType.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    if (mOnIbtnClickListener != null) {
-                        mOnIbtnClickListener.onTypeClick(v, getLayoutPosition());
-                    }
-                }
-            });
             mAuthor.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -134,7 +123,6 @@ public class ProjectRvAdapter extends BaseRecyclerViewAdapter<ProjectItem> {
     public interface OnArticleItemClickListener {
         void onIbtnClick(View v, int position);
 
-        void onTypeClick(View v, int position);
 
         void onAuthorClick(View v, int position);
     }

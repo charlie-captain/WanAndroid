@@ -139,7 +139,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
                 article.getTitle(),
                 article.getLink(),
                 article.isCollect());
-        startActivityForresultAnim(intent, 1);
+        startActivityForResultAnim(intent, 1);
     }
 
     @Override

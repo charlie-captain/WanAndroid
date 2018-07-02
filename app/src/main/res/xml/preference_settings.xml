@@ -3,10 +3,10 @@
                   xmlns:app="http://schemas.android.com/apk/res-auto"
                   xmlns:tools="http://schemas.android.com/tools">
 
-    <PreferenceCategory  android:title="账号设置">
+    <PreferenceCategory  android:title="账号设置" android:key="@string/pref_user">
 
         <Preference
-            android:key="user_name"
+            android:key="@string/pref_user_name"
             android:summary="用户名"
             android:textColor="@color/textColorPrimary"
             android:textColorHint="@color/textColorSecondary"
@@ -14,7 +14,7 @@
 
         <Preference
             android:inputType="textPassword"
-            android:key="user_password"
+            android:key="@string/pref_user_password"
             android:password="true"
             android:singleLine="true"
             android:summary="修改密码"
@@ -52,7 +52,7 @@
     </PreferenceCategory>
 
 
-    <PreferenceCategory android:title="更多">
+    <PreferenceCategory android:title="更多" >
         <PreferenceScreen
             android:key="update"
             android:summary="版本号"

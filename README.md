@@ -19,7 +19,7 @@
 
 ### 下载地址
 
-- [Wanandroid 1.4](https://www.coolapk.com/apk/169842) -- 酷安市场
+- [Wanandroid 1.5](https://www.coolapk.com/apk/169842) -- 酷安市场
 - [Github-release](https://github.com/thatnight/WanAndroid/releases)
 
  
@@ -47,6 +47,7 @@
 - [x] 离线保存用户账号信息，cookies
 - [x] 最新文章，知识体系
 - [ ] 搜索热词
+- [ ] 首页banner
 - [ ] 常用网站
 - [x] 换肤，夜间模式
 - [x] 反馈与帮助
@@ -55,7 +56,11 @@
 --- 
 
 ### 更新版本
-- #### 1.4 
+- #### 1.5
+  - 重构代码,增强稳定性
+  - 更换一些第三方库
+
+- #### 1.4
   - 修复登录异常问题
   
 - #### 1.3.1
@@ -88,3 +93,20 @@
     - 初步功能实现，登录注册
     - 最新文章，知识体系
     - 收藏
+
+### Licenses
+```
+Copyright 2018 thatnight
+
+Licensed under the Apache License, Version 2.0 (the "License");
+you may not use this file except in compliance with the License.
+You may obtain a copy of the License at
+
+    http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software
+distributed under the License is distributed on an "AS IS" BASIS,
+WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+See the License for the specific language governing permissions and
+limitations under the License.
+```

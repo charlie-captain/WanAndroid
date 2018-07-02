@@ -44,11 +44,7 @@ import java.util.List;
  * Created by thatnight on 2017.10.27.
  */
 
-public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPresenter>
-        implements OnRefreshListener,
-        OnLoadmoreListener,
-        BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
-        View.OnClickListener, CollectContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
+public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, View.OnClickListener, CollectContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
 
@@ -57,10 +53,10 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     private NewArticleRvAdapter mAdapter;
     private int mPage;
     private View mIbtnCollect;
-    private int mSelectPosition;
     private Handler mHandler = new Handler();
     private ItemTouchHelper mTouchHelper;
     private Article mUnCollectArticle;
+    public static final int REQUEST_CODE = 1;
 
     @Override
     protected void initData(Bundle arguments) {
@@ -134,13 +130,8 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = WebViewActivity.newIntent(mActivity,
-                article.getId(),
-                article.getOriginId(),
-                article.getTitle(),
-                article.getLink(),
-                true);
-        startActivityForresultAnim(intent, 1);
+        Intent intent = WebViewActivity.newIntent(mActivity, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), true);
+        startActivityForResultAnim(intent, REQUEST_CODE);
     }
 
     @Override
@@ -152,10 +143,8 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     @Override
     public void onIbtnClick(View v, int position) {
         mIbtnCollect = v;
-        mSelectPosition = position;
         UiUtil.setSelected(v);
-        mPresenter.collect(false, String.valueOf(mArticles.get(position).getId()),
-                String.valueOf(mArticles.get(position).getOriginId()));
+        mPresenter.collect(false, String.valueOf(mArticles.get(position).getId()), String.valueOf(mArticles.get(position).getOriginId()));
         mUnCollectArticle = mArticles.get(position);
     }
 
@@ -202,21 +191,19 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
     @Override
     public void isCollectSuccess(boolean isSuccess, String s) {
-        Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT)
-                .setAction("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mIbtnCollect != null) {
-                            UiUtil.setSelected(mIbtnCollect);
-                        }
-                        if (mUnCollectArticle != null) {
-                            mPresenter.collect(true, String.valueOf(mUnCollectArticle.getId()),
-                                    String.valueOf(mUnCollectArticle.getOriginId()));
-                        } else {
-                            Snackbar.make(mRootView, "好像什么东西丢了,我忘了.", Snackbar.LENGTH_SHORT);
-                        }
-                    }
-                }).show();
+        Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mIbtnCollect != null) {
+                    UiUtil.setSelected(mIbtnCollect);
+                }
+                if (mUnCollectArticle != null) {
+                    mPresenter.collect(true, String.valueOf(mUnCollectArticle.getId()), String.valueOf(mUnCollectArticle.getOriginId()));
+                } else {
+                    Snackbar.make(mRootView, "好像什么东西丢了,我忘了.", Snackbar.LENGTH_SHORT);
+                }
+            }
+        }).show();
         if (!isSuccess) {
             if (mIbtnCollect != null) {
                 UiUtil.setSelected(mIbtnCollect);
@@ -229,7 +216,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
-            if (requestCode == 1) {
+            if (requestCode == REQUEST_CODE) {
                 mPresenter.getArticle(true, 0);
             }
         }

@@ -17,7 +17,7 @@ import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 public class LogoutState implements UserState {
     @Override
     public boolean collect(final Context context) {
-        AlertDialog alertDialog = new AlertDialog.Builder(context)
+        new AlertDialog.Builder(context)
                 .setTitle("提示")
                 .setMessage("请先登录")
                 .setPositiveButton("确定", new DialogInterface.OnClickListener() {

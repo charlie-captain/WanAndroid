@@ -30,6 +30,18 @@
         android:textSize="16sp" />
 
     <TextView
+        android:id="@+id/tv_about_update"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tv_about_version"
+        android:layout_centerHorizontal="true"
+        tools:text="更新内容如下:"
+        android:layout_marginTop="8dp"
+        android:textColor="@color/textColorSecondary"
+        android:textSize="14sp" />
+
+
+    <TextView
         android:id="@+id/tv_about_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"

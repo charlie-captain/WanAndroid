@@ -12,6 +12,7 @@ import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.callback.LoginState;
+import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.mvp.contract.LoginContract;
 import com.example.thatnight.wanandroid.mvp.model.LoginModel;
@@ -118,6 +119,7 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
             @Override
             public void onClick(View v) {
                 SharePreferenceUtil.put(getApplicationContext(), "visitor", true);
+                LoginContextUtil.getInstance().setUserState(new LogoutState());
                 startActivityAnim(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
             }

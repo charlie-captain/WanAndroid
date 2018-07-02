@@ -1,7 +1,6 @@
 package com.example.thatnight.wanandroid.base;
 
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -10,9 +9,8 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
-import com.example.thatnight.wanandroid.utils.MyStatusBarUtil;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
-import com.jaeger.library.StatusBarUtil;
+import com.gyf.barlibrary.ImmersionBar;
 
 import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
 import skin.support.app.SkinCompatActivity;
@@ -22,23 +20,22 @@ import skin.support.app.SkinCompatActivity;
  */
 
 
-public abstract class BaseActivity<V extends BaseContract.IBaseView,
-        P extends BasePresenter> extends SkinCompatActivity implements BaseContract.IBaseView  ,BGASwipeBackHelper.Delegate{
+public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends BasePresenter> extends SkinCompatActivity implements BaseContract.IBaseView, BGASwipeBackHelper.Delegate {
 
     protected Toolbar mToolbar;
     protected TextView mTitle;
-    //    protected ImageButton mIbMenu;
     protected boolean mShowBack;
     protected P mPresenter;
 
     protected BGASwipeBackHelper mBGASwipeBackHelper;
+    protected ImmersionBar mImmersionBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         initSwipeBackHelper();
         super.onCreate(savedInstanceState);
         setContentView(getLayoutId());
-//        setStatusBar(isSetStatusBar());
+        setStatusBar(isSetStatusBar());
         mPresenter = getPresenter();
         initPresenter();
         init();
@@ -47,8 +44,8 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
         initListener();
     }
 
-    protected void initSwipeBackHelper(){
-        mBGASwipeBackHelper = new BGASwipeBackHelper(this,this);
+    protected void initSwipeBackHelper() {
+        mBGASwipeBackHelper = new BGASwipeBackHelper(this, this);
         mBGASwipeBackHelper.setIsOnlyTrackingLeftEdge(false);
     }
 
@@ -62,7 +59,8 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
 
     protected void setStatusBar(Boolean isSet) {
         if (isSet) {
-            StatusBarUtil.setTransparent(this);
+            //            mImmersionBar = ImmersionBar.with(this);
+            //            mImmersionBar.init();
         }
     }
 
@@ -113,16 +111,12 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
     private void init() {
         mToolbar = (Toolbar) findViewById(R.id.tb);
         mTitle = (TextView) findViewById(R.id.tb_title);
-//        mIbMenu = (ImageButton) findViewById(R.id.tb_menu);
         if (mToolbar != null) {
             setSupportActionBar(mToolbar);
         }
         if (mTitle != null) {
             getSupportActionBar().setDisplayShowTitleEnabled(false);
         }
-//        if (mIbMenu != null) {
-//            mIbMenu.setVisibility(View.GONE);
-//        }
         mShowBack = false;
     }
 
@@ -154,8 +148,12 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
         if (mPresenter != null) {
             mPresenter.detachView();
         }
-
-
+        if (mImmersionBar != null) {
+            mImmersionBar.destroy();
+        }
+        if (mBGASwipeBackHelper != null) {
+            mBGASwipeBackHelper = null;
+        }
     }
 
 
@@ -178,13 +176,6 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
         }
     }
 
-    protected void setIbMenu(int res) {
-//        if (mIbMenu != null) {
-//            mIbMenu.setImageResource(res);
-//            mIbMenu.setVisibility(View.VISIBLE);
-//        }
-    }
-
     protected <T extends View> T $(int resId) {
         return (T) findViewById(resId);
     }
@@ -193,27 +184,32 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView,
         ToastUtil.showToast(this, s);
     }
 
-    public void startActivityAnim(Context context, Class activity) {
-        startActivity(new Intent(context, activity));
-        overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
-    }
 
+    /**
+     * 带启动动画
+     *
+     * @param intent
+     */
     public void startActivityAnim(Intent intent) {
         startActivity(intent);
         overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 
-    public void startActivityForresultAnim(Intent intent, int code) {
+    /**
+     * @param intent
+     * @param code
+     */
+    public void startActivityForResultAnim(Intent intent, int code) {
         startActivityForResult(intent, code);
         overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 
     @Override
     public void onBackPressed() {
-        if(mBGASwipeBackHelper.isSliding()){
+        if (mBGASwipeBackHelper.isSliding()) {
             return;
         }
-        mBGASwipeBackHelper.backward();
+        mBGASwipeBackHelper.swipeBackward();
 
         super.onBackPressed();
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
