@@ -3,6 +3,7 @@ package com.example.thatnight.wanandroid.view.fragment;
 
 import android.app.Dialog;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -29,10 +30,13 @@ import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.ArticleCommentAdapter;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.base.TinkerApp;
+import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.entity.ArticleComment;
 import com.example.thatnight.wanandroid.utils.AccountUtil;
+import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
+import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 
 import java.util.List;
 
@@ -75,7 +79,7 @@ public class CommentBottomDialogFragment extends DialogFragment implements BaseR
 
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState) {
-        Dialog dialog  = new Dialog(getActivity(),R.style.style_dialog);
+        Dialog dialog = new Dialog(getActivity(), R.style.style_dialog);
         Window window = dialog.getWindow();
         window.setGravity(Gravity.BOTTOM);
         window.getDecorView().setPadding(0, 0, 0, 0);
@@ -182,7 +186,6 @@ public class CommentBottomDialogFragment extends DialogFragment implements BaseR
     @Override
     public void onStart() {
         super.onStart();
-        //        mBehavior.setState(BottomSheetBehavior.STATE_EXPANDED);
     }
 
 
@@ -190,6 +193,10 @@ public class CommentBottomDialogFragment extends DialogFragment implements BaseR
      * 显示输入窗口
      */
     private void showEditView() {
+        if (LoginContextUtil.getInstance().getUserState() instanceof LogoutState) {
+            startActivity(new Intent(getActivity(), LoginActivity.class));
+            return;
+        }
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
         builder.setTitle("评论");
         builder.setCancelable(false);
@@ -202,6 +209,9 @@ public class CommentBottomDialogFragment extends DialogFragment implements BaseR
             public void onClick(DialogInterface dialog, int which) {
                 if (!TextUtils.isEmpty(editText.getText().toString())) {
                     ArticleComment comment = new ArticleComment();
+                    if (AccountUtil.getBmobAccount() == null) {
+                        return;
+                    }
                     comment.setAccount(AccountUtil.getBmobAccount());
                     comment.setArticleId(mArticle.getId());
                     comment.setContent(editText.getText().toString().trim());

@@ -108,7 +108,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         mPsHelp = (PreferenceScreen) findPreference(getString(R.string.pref_help));
         mPsUpdate = (PreferenceScreen) findPreference(getString(R.string.pref_update));
         mTheme = (ListPreference) findPreference(getString(R.string.pref_theme));
-        mIconPreference= (IconPreference) findPreference(getString(R.string.pref_user_icon));
+        mIconPreference = (IconPreference) findPreference(getString(R.string.pref_user_icon));
 
         initData();
 
@@ -153,7 +153,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             ((PreferenceCategory) (findPreference(getString(R.string.pref_user)))).removePreference(findPreference(getString(R.string.pref_user_password)));
         }
 
-        if (AccountUtil.getBmobAccount().getIcon() != null) {
+        if (AccountUtil.getBmobAccount() != null && AccountUtil.getBmobAccount().getIcon() != null) {
             mIconPreference.setIconUrl(AccountUtil.getBmobAccount().getIcon().getUrl());
         }
     }
@@ -277,13 +277,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                     break;
                 case 1:
                     SkinCompatManager.getInstance().loadSkin("green", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
-                    SharePreferenceUtil.getInstance().putString( "skin", "green");
-                    SharePreferenceUtil.getInstance().putString( "skin_cn", "酷安绿");
+                    SharePreferenceUtil.getInstance().putString("skin", "green");
+                    SharePreferenceUtil.getInstance().putString("skin_cn", "酷安绿");
                     break;
                 case 2:
                     SkinCompatManager.getInstance().loadSkin("blue", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
-                    SharePreferenceUtil.getInstance().putString( "skin", "blue");
-                    SharePreferenceUtil.getInstance().putString( "skin_cn", "知乎蓝");
+                    SharePreferenceUtil.getInstance().putString("skin", "blue");
+                    SharePreferenceUtil.getInstance().putString("skin_cn", "知乎蓝");
                     break;
                 default:
                     break;
@@ -319,8 +319,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                         @Override
                         public void onSuccess(File file) {
                             final BmobFile mBmobFile = new BmobFile(file);
-                            BmobUser.loginByAccount(
-                                    AccountUtil.getAccount().getUsername(),AccountUtil.getAccount().getPassword(),new LogInListener<BmobAccount>() {
+                            BmobUser.loginByAccount(AccountUtil.getAccount().getUsername(), AccountUtil.getAccount().getPassword(), new LogInListener<BmobAccount>() {
                                 @Override
                                 public void done(final BmobAccount account, BmobException e) {
                                     mBmobFile.upload(new UploadFileListener() {

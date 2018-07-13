@@ -47,8 +47,10 @@ import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 
+import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.FetchUserInfoListener;
+import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.SaveListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDrawBtnClickCallback {
@@ -130,17 +132,34 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             SharePreferenceUtil.getInstance().putBoolean(getString(R.string.sp_auto_login), true);
             mName.setText(mAccount.getUsername());
             if (AccountUtil.getBmobAccount() == null) {
-                //初始化Bmob
-                BmobAccount bmobAccount = new BmobAccount();
-                bmobAccount.setUsername(mAccount.getUsername());
-                bmobAccount.setPassword(mAccount.getPassword());
-                bmobAccount.setId(mAccount.getId());
-                bmobAccount.setNickName(mAccount.getUsername());
-                bmobAccount.signUp(new SaveListener<BmobAccount>() {
+                BmobUser.loginByAccount(mAccount.getUsername(), mAccount.getPassword(), new LogInListener<BmobAccount>() {
                     @Override
-                    public void done(final BmobAccount account1, BmobException e) {
+                    public void done(BmobAccount account, BmobException e) {
                         if (e == null) {
-                            Log.d("bmob", "done: ");
+                            updateIcon();
+                        } else {
+                            //初始化Bmob
+                            BmobAccount bmobAccount = new BmobAccount();
+                            bmobAccount.setUsername(mAccount.getUsername());
+                            bmobAccount.setPassword(mAccount.getPassword());
+                            bmobAccount.setId(mAccount.getId());
+                            bmobAccount.setNickName(mAccount.getUsername());
+                            bmobAccount.signUp(new SaveListener<BmobAccount>() {
+                                @Override
+                                public void done(final BmobAccount account1, BmobException e) {
+                                    if (e == null) {
+                                        Log.d("bmob", "done: ");
+                                        BmobUser.loginByAccount(mAccount.getUsername(), mAccount.getPassword(), new LogInListener<BmobAccount>() {
+                                            @Override
+                                            public void done(BmobAccount account, BmobException e) {
+                                                if (e == null) {
+                                                    updateIcon();
+                                                }
+                                            }
+                                        });
+                                    }
+                                }
+                            });
                         }
                     }
                 });
@@ -167,7 +186,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             }
         }
 
-        if (AccountUtil.getBmobAccount()!=null&&AccountUtil.getBmobAccount().getIcon() != null) {
+        updateIcon();
+    }
+
+    private void updateIcon() {
+        if (AccountUtil.getBmobAccount() != null && AccountUtil.getBmobAccount().getIcon() != null) {
             Glide.with(this).load(AccountUtil.getBmobAccount().getIcon().getUrl()).into(mIcon);
         }
     }
