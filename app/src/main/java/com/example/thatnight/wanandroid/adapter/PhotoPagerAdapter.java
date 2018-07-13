@@ -10,6 +10,7 @@ import android.view.ViewGroup;
 import com.bumptech.glide.Glide;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
+import com.github.chrisbanes.photoview.PhotoView;
 import com.wingsofts.dragphotoview.DragPhotoView;
 
 import java.util.List;
@@ -45,7 +46,7 @@ public class PhotoPagerAdapter<T> extends PagerAdapter {
     @Override
     public Object instantiateItem(ViewGroup container, final int position) {
         View view = mInflater.inflate(R.layout.viewpager_details_photo, null);
-        final DragPhotoView photoView = (DragPhotoView) view.findViewById(R.id.pv_details_photo);
+        PhotoView photoView = view.findViewById(R.id.pv_details_photo);
         // TODO: 2017.5.22 变形问题解决: 不使用动画特效
         Glide.with(mContext).load(mList.get(position)).into(photoView);
         photoView.setOnLongClickListener(new View.OnLongClickListener() {
@@ -63,9 +64,16 @@ public class PhotoPagerAdapter<T> extends PagerAdapter {
 //                ((BaseActivity) mContext).finish();
 //            }
 //        });
-        photoView.setOnExitListener(new DragPhotoView.OnExitListener() {
+//        photoView.setOnExitListener(new DragPhotoView.OnExitListener() {
+//            @Override
+//            public void onExit(DragPhotoView dragPhotoView, float v, float v1, float v2, float v3) {
+//                ((BaseActivity) mContext).finish();
+//            }
+//        });
+
+        photoView.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onExit(DragPhotoView dragPhotoView, float v, float v1, float v2, float v3) {
+            public void onClick(View v) {
                 ((BaseActivity) mContext).finish();
             }
         });

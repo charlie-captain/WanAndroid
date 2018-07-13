@@ -44,7 +44,8 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
         TextView mTime;
         TextView mType;
         ImageButton mIbLike;
-        RelativeLayout mItem;
+        ImageButton mIbComment;
+
 
         public NewsHolder(View itemView) {
             super(itemView);
@@ -53,7 +54,7 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
             mTime = itemView.findViewById(R.id.item_tv_time);
             mType = itemView.findViewById(R.id.item_tv_type);
             mIbLike = itemView.findViewById(R.id.item_ib_like);
-            mItem = itemView.findViewById(R.id.rl_item_news);
+            mIbComment = itemView.findViewById(R.id.item_ibtn_comment);
 
         }
 
@@ -64,8 +65,7 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
             boolean isHtml = Pattern.matches(".*<em.+?>(.+?)</em>.*", article.getTitle());
             if (isHtml) {
                 String textColor = "#FF4081";
-                String newTitle = article.getTitle().replaceAll("<em.+?>", "<font color=\"" + textColor + "\">")
-                        .replaceAll("</em>", "</font>");
+                String newTitle = article.getTitle().replaceAll("<em.+?>", "<font color=\"" + textColor + "\">").replaceAll("</em>", "</font>");
                 mTitle.setText(Html.fromHtml(newTitle));
             } else {
                 mTitle.setText(article.getTitle());
@@ -88,6 +88,14 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
                 public void onClick(View v) {
                     if (mOnIbtnClickListener != null) {
                         mOnIbtnClickListener.onAuthorClick(v, getLayoutPosition());
+                    }
+                }
+            });
+            mIbComment.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    if (mOnIbtnClickListener != null) {
+                        mOnIbtnClickListener.onCommentClick(v,getLayoutPosition());
                     }
                 }
             });
@@ -139,6 +147,8 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
         void onTypeClick(View v, int position);
 
         void onAuthorClick(View v, int position);
+
+        void onCommentClick(View v, int position);
     }
 
 

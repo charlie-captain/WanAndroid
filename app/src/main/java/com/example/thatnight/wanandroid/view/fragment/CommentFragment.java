@@ -167,7 +167,7 @@ public class CommentFragment extends BaseFragment<CommentContract.IView, Comment
                     if (!TextUtils.isEmpty(editText.getText().toString())) {
                         Comment comment = new Comment();
                         comment.setPhoneName("PHONE: " + SystemUtil.getDeviceBrand());
-                        String userName = String.valueOf(SharePreferenceUtil.get(getActivity(), "account", "null"));
+                        String userName = String.valueOf(SharePreferenceUtil.getInstance().getString( "account", "null"));
                         if ("null".equals(userName)) {
                             userName = "游客" + SystemUtil.getSystemModel() + SystemUtil.getDeviceBrand();
                         }

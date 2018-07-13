@@ -3,6 +3,8 @@ package com.example.thatnight.wanandroid.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.thatnight.wanandroid.base.TinkerApp;
+
 /**
  * Created by thatnight on 2017.11.2.
  */
@@ -18,81 +20,95 @@ public class SharePreferenceUtil {
         return InstanceHolder.sInstance;
     }
 
-
+    public SharePreferenceUtil() {
+        sSp = TinkerApp.getApplication().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        sEditor = sSp.edit();
+    }
 
     static class InstanceHolder {
         private static final SharePreferenceUtil sInstance = new SharePreferenceUtil();
     }
 
-    public static void put(Context context, String key, Object o) {
-        put(context, FILE_NAME, key, o);
+
+    public  int getInt(String key, int value) {
+        return sSp.getInt(key, value);
     }
 
-    public static void put(Context context, String spName, String key, Object o) {
-        initSp(context, spName);
-        initEditor();
-        if (o instanceof String) {
-            sEditor.putString(key, (String) o);
-        } else if (o instanceof Integer) {
-            sEditor.putInt(key, (Integer) o);
-        } else if (o instanceof Boolean) {
-            sEditor.putBoolean(key, (Boolean) o);
-        } else if (o instanceof Float) {
-            sEditor.putFloat(key, (Float) o);
-        } else if (o instanceof Long) {
-            sEditor.putLong(key, (Long) o);
+    public  boolean getBoolean(String key, boolean value) {
+        return sSp.getBoolean(key, value);
+    }
+
+    public  String getString(String key, String value) {
+
+        return sSp.getString(key, value);
+
+    }
+
+    public long getLong(String key, long value) {
+        return sSp.getLong(key, value);
+    }
+
+
+
+    public  boolean putInt(String key, int params) {
+        try {
+            sEditor.putInt(key, params);
+            sEditor.commit();
+            return true;
+        } catch (Exception e) {
+
         }
-        sEditor.apply();
+        return false;
     }
 
-    private static void initEditor() {
-        sEditor = sSp.edit();
-    }
+    public boolean putString(String key, String params) {
+        try {
+            sEditor.putString(key, params);
+            sEditor.commit();
+            return true;
+        } catch (Exception e) {
 
-    private static void initSp(Context context, String spName) {
-        if (sSp == null) {
-            sSp = context.getSharedPreferences(spName, Context.MODE_PRIVATE);
         }
+        return false;
+
     }
 
-    public static Object get(Context context, String key, Object o) {
-        return get(context, FILE_NAME, key, o);
-    }
+    public  boolean putBoolean(String key, boolean params) {
+        try {
+            sEditor.putBoolean(key, params);
+            sEditor.commit();
+            return true;
+        } catch (Exception e) {
 
-    public static Object get(Context context, String spName, String key, Object o) {
-        initSp(context, spName);
-        if (o instanceof String) {
-            return sSp.getString(key, (String) o);
-        } else if (o instanceof Integer) {
-            return sSp.getInt(key, (Integer) o);
-        } else if (o instanceof Boolean) {
-            return sSp.getBoolean(key, (Boolean) o);
-        } else if (o instanceof Float) {
-            return sSp.getFloat(key, (Float) o);
-        } else if (o instanceof Long) {
-            return sSp.getLong(key, (Long) o);
         }
-        return null;
+        return false;
     }
 
-    public static void remove(Context context, String key) {
-        remove(context, FILE_NAME, key);
+    public  boolean putLong(String key, long params) {
+        try {
+            sEditor.putLong(key, params);
+            sEditor.commit();
+            return true;
+        } catch (Exception e) {
+
+        }
+        return false;
     }
 
-    public static void remove(Context context, String spName, String key) {
-        initSp(context, spName);
-        initEditor();
+    public  void remove( String key) {
+        remove(FILE_NAME, key);
+    }
+
+    public  void remove(String spName, String key) {
         sEditor.remove(key);
         sEditor.apply();
     }
 
-    public static void clear(Context context) {
-        clear(context, FILE_NAME);
+    public  void clear() {
+        clear(FILE_NAME);
     }
 
-    private static void clear(Context context, String fileName) {
-        initSp(context, fileName);
-        initEditor();
+    private  void clear(String fileName) {
         sEditor.clear();
         sEditor.apply();
     }

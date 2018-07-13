@@ -4,6 +4,7 @@ package com.example.thatnight.wanandroid.view.fragment;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v14.preference.SwitchPreference;
@@ -23,12 +24,17 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.base.TinkerApp;
 import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.constant.Constant;
+import com.example.thatnight.wanandroid.entity.BmobAccount;
 import com.example.thatnight.wanandroid.entity.Msg;
+import com.example.thatnight.wanandroid.utils.AccountUtil;
+import com.example.thatnight.wanandroid.utils.GlideEngine;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
@@ -36,16 +42,32 @@ import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.example.thatnight.wanandroid.view.activity.LoginActivity;
+import com.example.thatnight.wanandroid.view.customview.IconPreference;
+import com.huantansheng.easyphotos.EasyPhotos;
 import com.takisoft.fix.support.v7.preference.EditTextPreference;
 import com.takisoft.fix.support.v7.preference.PreferenceCategory;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 import com.tencent.bugly.beta.Beta;
 
+import org.greenrobot.eventbus.EventBus;
+
+import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import cn.bmob.v3.BmobUser;
+import cn.bmob.v3.datatype.BmobFile;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.LogInListener;
+import cn.bmob.v3.listener.SaveListener;
+import cn.bmob.v3.listener.UpdateListener;
+import cn.bmob.v3.listener.UploadFileListener;
 import cn.bmob.v3.okhttp3.Call;
 import skin.support.SkinCompatManager;
+import top.zibin.luban.Luban;
+import top.zibin.luban.OnCompressListener;
+
+import static android.app.Activity.RESULT_OK;
 
 /**
  * 设置界面
@@ -59,6 +81,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private PreferenceScreen mPsHelp, mPsUpdate;
     private ListPreference mTheme;
     private AboutFragment mAboutFragment;
+    private IconPreference mIconPreference;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -85,14 +108,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         mPsHelp = (PreferenceScreen) findPreference(getString(R.string.pref_help));
         mPsUpdate = (PreferenceScreen) findPreference(getString(R.string.pref_update));
         mTheme = (ListPreference) findPreference(getString(R.string.pref_theme));
+        mIconPreference= (IconPreference) findPreference(getString(R.string.pref_user_icon));
 
-        boolean isAutoLogin = (boolean) SharePreferenceUtil.get(getActivity().getApplicationContext(), getString(R.string.sp_auto_login), true);
-        if (isAutoLogin) {
-            mSpAutoLogin.setChecked(true);
-        } else {
-            mSpAutoLogin.setChecked(false);
-        }
-        mPsUpdate.setSummary("版本号 " + BuildConfig.VERSION_NAME);
+        initData();
+
         mPsUpdate.setOnPreferenceClickListener(this);
         mPsHelp.setOnPreferenceClickListener(this);
         mTheme.setOnPreferenceChangeListener(this);
@@ -100,14 +119,27 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         mSpAutoLogin.setOnPreferenceClickListener(this);
         mEtpUserName.setOnPreferenceClickListener(this);
         mEtpUserPwd.setOnPreferenceClickListener(this);
-        String skin = (String) SharePreferenceUtil.get(getActivity().getApplicationContext(), "skin_cn", "");
+        mIconPreference.setOnPreferenceClickListener(this);
+    }
+
+    private void initData() {
+
+        boolean isAutoLogin = (boolean) SharePreferenceUtil.getInstance().getBoolean(getString(R.string.sp_auto_login), true);
+        if (isAutoLogin) {
+            mSpAutoLogin.setChecked(true);
+        } else {
+            mSpAutoLogin.setChecked(false);
+        }
+        mPsUpdate.setSummary("版本号 " + BuildConfig.VERSION_NAME);
+
+        String skin = (String) SharePreferenceUtil.getInstance().getString("skin_cn", "");
         if (!TextUtils.isEmpty(skin)) {
             mTheme.setSummary(skin);
             mTheme.setValue(skin);
         }
         if (LoginContextUtil.getInstance().getUserState() instanceof LoginState) {
-            String userName = SharePreferenceUtil.get(getActivity().getApplicationContext(), "account", "").toString();
-            String userPassword = SharePreferenceUtil.get(getActivity().getApplicationContext(), "password", "").toString();
+            String userName = SharePreferenceUtil.getInstance().getString("account", "").toString();
+            String userPassword = SharePreferenceUtil.getInstance().getString("password", "").toString();
             mEtpUserName.setTitle(TextUtils.isEmpty(userName) ? "用户名" : userName);
             String length = "";
             for (int i = 0; i < userPassword.length(); i++) {
@@ -118,13 +150,22 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             mEtpUserName.setTitle("Visitor");
 
             //删掉密码
-            ((PreferenceCategory)(findPreference(getString(R.string.pref_user)))).removePreference(findPreference(getString(R.string.pref_user_password)));
+            ((PreferenceCategory) (findPreference(getString(R.string.pref_user)))).removePreference(findPreference(getString(R.string.pref_user_password)));
+        }
+
+        if (AccountUtil.getBmobAccount().getIcon() != null) {
+            mIconPreference.setIconUrl(AccountUtil.getBmobAccount().getIcon().getUrl());
         }
     }
 
 
     @Override
     public boolean onPreferenceClick(Preference preference) {
+
+        if (mIconPreference == preference) {
+            EasyPhotos.createAlbum(getActivity(), true, GlideEngine.getInstance()).setFileProviderAuthority("android.support.v4.content.FileProvider").start(5);
+        }
+
         if (mEtpUserName == preference) {
             ToastUtil.showToast(getActivity(), "用户名不支持更改!");
         }
@@ -179,7 +220,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
             } else {
-                String skinName = (String) SharePreferenceUtil.get(getActivity().getApplicationContext(), "skin", "");
+                String skinName = (String) SharePreferenceUtil.getInstance().getString("skin", "");
                 if (!TextUtils.isEmpty(skinName)) {
                     SkinCompatManager.getInstance().loadSkin(skinName, SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
                 } else {
@@ -191,9 +232,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         //自动登录
         if (mSpAutoLogin == preference) {
             if (mSpAutoLogin.isChecked()) {
-                SharePreferenceUtil.put(getActivity().getApplicationContext(), getString(R.string.sp_auto_login), true);
+                SharePreferenceUtil.getInstance().putBoolean(getString(R.string.sp_auto_login), true);
             } else {
-                SharePreferenceUtil.put(getActivity().getApplicationContext(), getString(R.string.sp_auto_login), false);
+                SharePreferenceUtil.getInstance().putBoolean(getString(R.string.sp_auto_login), false);
             }
         }
 
@@ -231,18 +272,18 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             switch (selectedId) {
                 case 0:
                     SkinCompatManager.getInstance().restoreDefaultTheme();
-                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin", "");
-                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin_cn", "安卓蓝");
+                    SharePreferenceUtil.getInstance().putString("skin", "");
+                    SharePreferenceUtil.getInstance().putString("skin_cn", "安卓蓝");
                     break;
                 case 1:
                     SkinCompatManager.getInstance().loadSkin("green", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
-                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin", "green");
-                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin_cn", "酷安绿");
+                    SharePreferenceUtil.getInstance().putString( "skin", "green");
+                    SharePreferenceUtil.getInstance().putString( "skin_cn", "酷安绿");
                     break;
                 case 2:
                     SkinCompatManager.getInstance().loadSkin("blue", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
-                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin", "blue");
-                    SharePreferenceUtil.put(getActivity().getApplicationContext(), "skin_cn", "知乎蓝");
+                    SharePreferenceUtil.getInstance().putString( "skin", "blue");
+                    SharePreferenceUtil.getInstance().putString( "skin_cn", "知乎蓝");
                     break;
                 default:
                     break;
@@ -260,5 +301,60 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     public boolean isShowAbout() {
         return mAboutFragment != null && mAboutFragment.isVisible();
+    }
+
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == 5) {
+            final String filePath = data.getStringArrayListExtra(EasyPhotos.RESULT_PATHS).get(0);
+            Luban.with(TinkerApp.getApplication()).
+                    load(filePath).
+                    ignoreBy(100).
+                    setCompressListener(new OnCompressListener() {
+                        @Override
+                        public void onStart() {
+
+                        }
+
+                        @Override
+                        public void onSuccess(File file) {
+                            final BmobFile mBmobFile = new BmobFile(file);
+                            BmobUser.loginByAccount(
+                                    AccountUtil.getAccount().getUsername(),AccountUtil.getAccount().getPassword(),new LogInListener<BmobAccount>() {
+                                @Override
+                                public void done(final BmobAccount account, BmobException e) {
+                                    mBmobFile.upload(new UploadFileListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            if (e == null) {
+                                                account.setIcon(mBmobFile);
+                                                account.update(account.getObjectId(), new UpdateListener() {
+                                                    @Override
+                                                    public void done(BmobException e) {
+                                                        if (e == null) {
+                                                            Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
+                                                            mIconPreference.setIconUrl(filePath);
+                                                        } else {
+                                                            Toast.makeText(getActivity().getApplicationContext(), "更新失败, " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                        }
+                                                    }
+                                                });
+                                            } else {
+                                                Toast.makeText(getActivity().getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
+                                            }
+                                        }
+                                    });
+                                }
+                            });
+
+                        }
+
+                        @Override
+                        public void onError(Throwable e) {
+                            Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                        }
+                    }).launch();
+        }
+        super.onActivityResult(requestCode, resultCode, data);
     }
 }

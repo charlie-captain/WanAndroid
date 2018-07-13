@@ -5,6 +5,11 @@
 
     <PreferenceCategory  android:title="账号设置" android:key="@string/pref_user">
 
+        <com.example.thatnight.wanandroid.view.customview.IconPreference
+            android:key="@string/pref_user_icon"
+            android:summary="更换头像"
+            android:title="头像" />
+
         <Preference
             android:key="@string/pref_user_name"
             android:summary="用户名"

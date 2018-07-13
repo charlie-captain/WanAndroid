@@ -1,23 +1,23 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/itemBackgroundColor"
-    >
+>
 
     <RelativeLayout
         android:id="@+id/rl_item_news"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/selectableItemBackground"
-        android:paddingTop="16dp"
         android:paddingBottom="16dp"
-        android:paddingStart="8dp"
         android:paddingEnd="8dp"
-        >
+        android:paddingStart="8dp"
+        android:paddingTop="16dp"
+    >
 
         <TextView
             android:id="@+id/item_tv_title"
@@ -39,11 +39,11 @@
             android:layout_below="@+id/item_tv_title"
             android:layout_marginStart="8dp"
             android:layout_marginTop="8dp"
-            android:textColor="@color/textColor_type"
             android:layout_toEndOf="@+id/item_ib_like"
             android:text="作者:"
+            android:textColor="@color/textColor_type"
             android:textSize="13sp"
-            />
+        />
 
         <TextView
             android:id="@+id/item_tv_type"
@@ -51,24 +51,24 @@
             android:layout_height="wrap_content"
             android:layout_alignBaseline="@+id/item_tv_author"
             android:layout_marginStart="16dp"
-            android:textColor="@color/textColor_type"
             android:layout_toEndOf="@+id/item_tv_author"
             android:text="分类"
+            android:textColor="@color/textColor_type"
             android:textSize="13sp"
-            />
+        />
 
 
         <TextView
             android:id="@+id/item_tv_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textColor="@color/textColorSecondary"
             android:layout_alignBaseline="@id/item_tv_author"
             android:layout_marginStart="16dp"
             android:layout_toEndOf="@+id/item_tv_type"
             android:text="时间: 2017-02-12"
+            android:textColor="@color/textColorSecondary"
             android:textSize="12sp"
-            />
+        />
 
         <ImageButton
             android:id="@+id/item_ib_like"
@@ -78,7 +78,19 @@
             android:layout_centerVertical="true"
             android:background="?attr/selectableItemBackgroundBorderless"
             app:srcCompat="@drawable/selector_like"
-            />
+        />
+
+        <ImageButton
+            android:id="@+id/item_ibtn_comment" android:layout_width="18dp" android:layout_height="18dp"
+
+            android:layout_alignParentRight="true" android:layout_alignTop="@+id/item_tv_author"
+
+            android:layout_marginLeft="8dp"
+
+            android:layout_marginRight="8dp" android:background="?attr/selectableItemBackgroundBorderless"
+            android:scaleType="centerCrop"
+            android:src="@drawable/ic_comment"/>
+
     </RelativeLayout>
 
 

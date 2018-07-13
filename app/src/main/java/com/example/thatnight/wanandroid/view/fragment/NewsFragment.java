@@ -42,11 +42,7 @@ import java.util.List;
  * Created by thatnight on 2017.10.27.
  */
 
-public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter>
-        implements OnRefreshListener,
-        OnLoadmoreListener,
-        BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
-        View.OnClickListener, NewsContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
+public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, View.OnClickListener, NewsContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
 
@@ -57,6 +53,10 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     private View mIbtnCollect;
     private int mSelectPosition;
     private Handler mHandler = new Handler();
+    /**
+     * 评论窗口
+     */
+    private CommentBottomDialogFragment mBottomDialogFragment;
 
     @Override
     protected void initData(Bundle arguments) {
@@ -126,12 +126,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = WebViewActivity.newIntent(mActivity,
-                article.getId(),
-                article.getOriginId(),
-                article.getTitle(),
-                article.getLink(),
-                article.isCollect());
+        Intent intent = WebViewActivity.newIntent(mActivity, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
         startActivityForResultAnim(intent, 1);
     }
 
@@ -161,6 +156,13 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     @Override
     public void onAuthorClick(View v, int position) {
         startActivityAnim(SearchActivity.newIntent(mActivity, mArticles.get(position).getAuthor()));
+    }
+
+    @Override
+    public void onCommentClick(View v, int position) {
+       CommentBottomDialogFragment
+               .newInstance(mArticles.get(position))
+               .show(getChildFragmentManager(), "comment");
     }
 
     @Override
@@ -194,17 +196,16 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
 
     @Override
     public void isCollectSuccess(boolean isSuccess, String s) {
-//        showToast(s);
-        Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT)
-                .setAction("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mIbtnCollect != null) {
-                            UiUtil.setSelected(mIbtnCollect);
-                        }
-                        mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
-                    }
-                }).show();
+        //        showToast(s);
+        Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mIbtnCollect != null) {
+                    UiUtil.setSelected(mIbtnCollect);
+                }
+                mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
+            }
+        }).show();
         if (!isSuccess) {
             if (mIbtnCollect != null) {
                 UiUtil.setSelected(mIbtnCollect);

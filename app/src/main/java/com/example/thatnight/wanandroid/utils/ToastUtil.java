@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.example.thatnight.wanandroid.base.TinkerApp;
+
 
 /**
  * Created by thatnight on 2017.11.2.
@@ -33,6 +35,26 @@ public class ToastUtil {
             }
         });
     }
+
+    public static void showToast( final String text) {
+        S_HANDLER.post(new Runnable() {
+            @SuppressLint("ShowToast")
+            @Override
+            public void run() {
+                if (sToast != null) {
+                    sToast.cancel();
+                }
+                if (sToast != null) {
+                    sToast.setText(text);
+                } else {
+                    sToast = Toast.makeText(TinkerApp.getApplication(), text, Toast.LENGTH_SHORT);
+                }
+                sToast.setDuration(Toast.LENGTH_SHORT);
+                sToast.show();
+            }
+        });
+    }
+
 
     public static void showToast(Context context, int resId) {
         showToast(context, context.getResources().getString(resId));

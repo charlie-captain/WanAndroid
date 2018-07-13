@@ -95,7 +95,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
     protected void initData() {
         mKey = getIntent().getStringExtra("key");
         mArticles = new ArrayList<>();
-        String history = (String) SharePreferenceUtil.get(getApplicationContext(), "search_list", "");
+        String history = (String) SharePreferenceUtil.getInstance().getString("search_list", "");
         if (!TextUtils.isEmpty(history)) {
             mSearchHistory = GsonUtil.gsonToList(history, String.class);
         }
@@ -127,7 +127,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
             mSearchView.setSelection(mKey.length());
             mPresenter.search(false, mKey, String.valueOf(mPage));
             addHistory(mKey);
-        }else{
+        } else {
             mPresenter.getHotKey();
         }
     }
@@ -368,6 +368,11 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
     }
 
     @Override
+    public void onCommentClick(View v, int position) {
+
+    }
+
+    @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
@@ -386,7 +391,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
             if (mSearchAdatper != null) {
                 mSearchHistory = mSearchAdatper.getData();
             }
-            SharePreferenceUtil.put(getApplicationContext(), "search_list", GsonUtil.gsonToJson(mSearchHistory));
+            SharePreferenceUtil.getInstance().getString("search_list", GsonUtil.gsonToJson(mSearchHistory));
         }
         //隐藏输入法
         UiUtil.inputSoftWare(false, mSearchView);

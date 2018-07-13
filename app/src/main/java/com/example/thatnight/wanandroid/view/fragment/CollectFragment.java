@@ -161,6 +161,13 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     }
 
     @Override
+    public void onCommentClick(View v, int position) {
+        CommentBottomDialogFragment
+                .newInstance(mArticles.get(position))
+                .show(getChildFragmentManager(), "comment");
+    }
+
+    @Override
     public void onClick(View v) {
 
     }

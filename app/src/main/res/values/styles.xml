@@ -73,4 +73,10 @@
         <item name="android:textColor">@color/colorPrimary</item>
     </style>
 
+    <style name="style_dialog" parent="android:style/Theme.Dialog">
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:windowIsFloating">true</item>
+        <item name="android:windowContentOverlay">@null</item>
+    </style>
+
 </resources>

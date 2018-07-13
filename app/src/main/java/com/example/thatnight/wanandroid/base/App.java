@@ -6,7 +6,9 @@ import android.content.Intent;
 import android.support.multidex.MultiDex;
 
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
+import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
@@ -65,6 +67,8 @@ public class App extends DefaultApplicationLike {
         OkHttpUtil.init(getApplication());
         //云后台
         Bmob.initialize(getApplication(), getApplication().getString(R.string.bmob_appkey));
+        //cookie
+        OkHttpCookieJar.initCookies();
     }
 
     @Override
@@ -73,6 +77,8 @@ public class App extends DefaultApplicationLike {
         MultiDex.install(base);
         Beta.installTinker(this);
     }
+
+
 
 
 }

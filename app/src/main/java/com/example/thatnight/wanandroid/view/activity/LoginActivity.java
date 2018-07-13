@@ -58,8 +58,8 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
         mBtnLogin = $(R.id.btn_login);
         mVisitor = $(R.id.tv_visitor);
 
-        String userName = SharePreferenceUtil.get(getApplicationContext(), "account", "").toString();
-        String password = SharePreferenceUtil.get(getApplicationContext(), "password", "").toString();
+        String userName = SharePreferenceUtil.getInstance().getString("account", "");
+        String password = SharePreferenceUtil.getInstance().getString("password", "");
         if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password)) {
             mName.setText(userName);
             mName.setSelection(userName.length());
@@ -118,7 +118,7 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
         mVisitor.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                SharePreferenceUtil.put(getApplicationContext(), "visitor", true);
+                SharePreferenceUtil.getInstance().putBoolean("visitor", true);
                 LoginContextUtil.getInstance().setUserState(new LogoutState());
                 startActivityAnim(new Intent(LoginActivity.this, MainActivity.class));
                 finish();
@@ -155,9 +155,6 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
     @Override
     public void isSuccess(boolean isSuccess, Account dataBean, String s) {
         if (isSuccess) {
-            SharePreferenceUtil.put(getApplicationContext(), "visitor", false);
-            OkHttpCookieJar.saveCookies(getApplicationContext());
-            LoginContextUtil.getInstance().setUserState(new LoginState());
             Intent intent = new Intent();
             intent.setClass(this, MainActivity.class);
             intent.putExtra("account", dataBean);

@@ -74,7 +74,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
             mLink = extraIntent.getStringExtra("url");
             isCollect = extraIntent.getBooleanExtra("isCollect", false);
         }
-        isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), "webview_update", false);
+        isFirst = (boolean) SharePreferenceUtil.getInstance().getBoolean( "webview_update", false);
 
     }
 
@@ -103,7 +103,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         //点击标题置顶
         if (!isFirst) {
             Snackbar.make(mWebLayout, "单击标题 , 页面将滚动到顶部哦!", Snackbar.LENGTH_LONG).show();
-            SharePreferenceUtil.put(getApplicationContext(), "webview_update", true);
+            SharePreferenceUtil.getInstance().putBoolean("webview_update", true);
         }
 
         mWebLayout.addView(mWebView);

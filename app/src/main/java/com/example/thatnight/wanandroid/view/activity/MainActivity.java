@@ -14,18 +14,22 @@ import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.bumptech.glide.Glide;
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Account;
+import com.example.thatnight.wanandroid.entity.BmobAccount;
+import com.example.thatnight.wanandroid.utils.AccountUtil;
 import com.example.thatnight.wanandroid.utils.DonateUtil;
 import com.example.thatnight.wanandroid.utils.ExitUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
@@ -42,6 +46,10 @@ import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.FetchUserInfoListener;
+import cn.bmob.v3.listener.SaveListener;
 
 public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDrawBtnClickCallback {
 
@@ -105,9 +113,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     //显示更新特性
     private void showNewDialog() {
-        boolean isFirst = (boolean) SharePreferenceUtil.get(getApplicationContext(), BuildConfig.VERSION_NAME, true);
+        boolean isFirst = (boolean) SharePreferenceUtil.getInstance().getBoolean(BuildConfig.VERSION_NAME, true);
         if (isFirst) {
-            SharePreferenceUtil.put(getApplicationContext(), BuildConfig.VERSION_NAME, false);
+            SharePreferenceUtil.getInstance().putBoolean(BuildConfig.VERSION_NAME, false);
             new AlertDialog.Builder(this).setTitle("更新内容").setMessage(getString(R.string.str_update)).setNegativeButton("知道了", null).show();
         }
 
@@ -118,22 +126,49 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         //如果通过传值登录
         if (mAccount != null) {
-            SharePreferenceUtil.put(getApplicationContext(), "account", mAccount.getUsername());
-            SharePreferenceUtil.put(getApplicationContext(), "password", mAccount.getPassword());
-            SharePreferenceUtil.put(getApplicationContext(), getString(R.string.sp_auto_login), true);
+            AccountUtil.saveAccount(mAccount);
+            SharePreferenceUtil.getInstance().putBoolean(getString(R.string.sp_auto_login), true);
             mName.setText(mAccount.getUsername());
+            if (AccountUtil.getBmobAccount() == null) {
+                //初始化Bmob
+                BmobAccount bmobAccount = new BmobAccount();
+                bmobAccount.setUsername(mAccount.getUsername());
+                bmobAccount.setPassword(mAccount.getPassword());
+                bmobAccount.setId(mAccount.getId());
+                bmobAccount.setNickName(mAccount.getUsername());
+                bmobAccount.signUp(new SaveListener<BmobAccount>() {
+                    @Override
+                    public void done(final BmobAccount account1, BmobException e) {
+                        if (e == null) {
+                            Log.d("bmob", "done: ");
+                        }
+                    }
+                });
+            } else {
+                //拉取最新数据
+                BmobAccount.fetchUserJsonInfo(new FetchUserInfoListener<String>() {
+                    @Override
+                    public void done(String s, BmobException e) {
+
+                    }
+                });
+            }
         } else {        //判断是否游客
-            boolean isVisitor = (boolean) SharePreferenceUtil.get(getApplicationContext(), "visitor", false);
+            boolean isVisitor = SharePreferenceUtil.getInstance().getBoolean("visitor", false);
             if (isVisitor) {
                 mName.setText("Visitor");
             } else {    //否则设置已登陆
-                String userName = (String) SharePreferenceUtil.get(getApplicationContext(), "account", "");
+                String userName = SharePreferenceUtil.getInstance().getString("account", "");
                 if (!TextUtils.isEmpty(userName)) {
                     mName.setText(userName);
                 } else {
                     mName.setText("error");
                 }
             }
+        }
+
+        if (AccountUtil.getBmobAccount()!=null&&AccountUtil.getBmobAccount().getIcon() != null) {
+            Glide.with(this).load(AccountUtil.getBmobAccount().getIcon().getUrl()).into(mIcon);
         }
     }
 
@@ -142,9 +177,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onNewIntent(intent);
         mAccount = intent.getParcelableExtra("account");
         if (mAccount != null) {
-            SharePreferenceUtil.put(getApplicationContext(), "account", mAccount.getUsername());
-            SharePreferenceUtil.put(getApplicationContext(), "password", mAccount.getPassword());
-            SharePreferenceUtil.put(getApplicationContext(), getString(R.string.sp_auto_login), true);
+            AccountUtil.saveAccount(mAccount);
+            SharePreferenceUtil.getInstance().putBoolean(getString(R.string.sp_auto_login), true);
             mName.setText(mAccount.getUsername());
             EventBus.getDefault().post("refresh");
         }
@@ -276,14 +310,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (data != null) {
                     mAccount = data.getParcelableExtra("account");
                     if (mAccount != null) {
-                        SharePreferenceUtil.put(getApplicationContext(), "account", mAccount.getUsername());
-                        SharePreferenceUtil.put(getApplicationContext(), "password", mAccount.getPassword());
+                        SharePreferenceUtil.getInstance().putString("account", mAccount.getUsername());
+                        SharePreferenceUtil.getInstance().putString("password", mAccount.getPassword());
                         mName.setText(mAccount.getUsername());
                     }
                 }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+        if (mSettingsFragment != null && mSettingsFragment.getFragment() != null) {
+            mSettingsFragment.getFragment().onActivityResult(requestCode, resultCode, data);
+        }
     }
 
     @Subscribe

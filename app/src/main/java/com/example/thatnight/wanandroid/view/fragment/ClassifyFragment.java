@@ -169,6 +169,13 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     }
 
     @Override
+    public void onCommentClick(View v, int position) {
+        CommentBottomDialogFragment
+                .newInstance(mArticles.get(position))
+                .show(getChildFragmentManager(), "comment");
+    }
+
+    @Override
     public void isLoading(boolean isLoading) {
         if (isLoading) {
             mRefreshLayout.autoRefresh();

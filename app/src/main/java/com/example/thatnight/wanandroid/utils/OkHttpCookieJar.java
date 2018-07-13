@@ -46,16 +46,15 @@ public class OkHttpCookieJar implements CookieJar {
         return cookieStore.get("www.wanandroid.com");
     }
 
-    public static void saveCookies(Context context) {
+    public static void saveCookies() {
         if (!OkHttpCookieJar.isCookiesNull()) {
-            SharePreferenceUtil.put(context, "cookies",
+            SharePreferenceUtil.getInstance().putString("cookies",
                     GsonUtil.gsonToJson(OkHttpCookieJar.getWanAndroidCookies()));
         }
     }
 
-    public static void initCookies(Context context) {
-        String cookies = (String) SharePreferenceUtil.get(context, "cookies", "");
-
+    public static void initCookies() {
+        String cookies =  SharePreferenceUtil.getInstance().getString("cookies", "");
         if (!TextUtils.isEmpty(cookies)) {
             List<Cookie> list = GsonUtil.gsonToList(cookies, Cookie.class);
             cookieStore.put("www.wanandroid.com", list);
