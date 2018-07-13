@@ -7,6 +7,7 @@ import android.text.TextUtils;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.LoginState;
+import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.utils.AccountUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
@@ -18,15 +19,14 @@ public class LaunchActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        String name = (String) SharePreferenceUtil.getInstance().getString("account", "");
-        String password = (String) SharePreferenceUtil.getInstance().getString("password", "");
+        Account account = AccountUtil.getAccount();
 
-        boolean autologin = (Boolean) SharePreferenceUtil.getInstance().getBoolean(getString(R.string.sp_auto_login), true);
-        if (TextUtils.isEmpty(name) && TextUtils.isEmpty(password) || !autologin) {
+        boolean autologin = SharePreferenceUtil.getInstance().getBoolean(getString(R.string.sp_auto_login), true);
+        if (account == null || !autologin) {
             SharePreferenceUtil.getInstance().putBoolean("visitor", true);
             startActivityAnim(MainActivity.class);
         } else {
-            if (AccountUtil.getAccount() == null) {
+            if (AccountUtil.getAccount() == null ||AccountUtil.getBmobAccount()==null) {
                 //初始化bmob账号
                 startActivityAnim(LoginActivity.class);
                 return;
@@ -35,7 +35,6 @@ public class LaunchActivity extends AppCompatActivity {
             SharePreferenceUtil.getInstance().putBoolean("visitor", false);
             startActivityAnim(MainActivity.class);
         }
-
         finish();
     }
 

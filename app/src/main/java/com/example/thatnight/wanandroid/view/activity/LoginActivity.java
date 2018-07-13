@@ -17,6 +17,7 @@ import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.mvp.contract.LoginContract;
 import com.example.thatnight.wanandroid.mvp.model.LoginModel;
 import com.example.thatnight.wanandroid.mvp.presenter.LoginPresenter;
+import com.example.thatnight.wanandroid.utils.AccountUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
@@ -58,9 +59,11 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
         mBtnLogin = $(R.id.btn_login);
         mVisitor = $(R.id.tv_visitor);
 
-        String userName = SharePreferenceUtil.getInstance().getString("account", "");
-        String password = SharePreferenceUtil.getInstance().getString("password", "");
-        if (!TextUtils.isEmpty(userName) && !TextUtils.isEmpty(password)) {
+        Account account = AccountUtil.getAccount();
+
+        if (account != null) {
+            String userName = account.getUsername();
+            String password = account.getPassword();
             mName.setText(userName);
             mName.setSelection(userName.length());
             mPwd.setText(password);

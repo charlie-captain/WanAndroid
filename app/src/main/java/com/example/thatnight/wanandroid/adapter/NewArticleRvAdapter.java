@@ -3,6 +3,7 @@ package com.example.thatnight.wanandroid.adapter;
 import android.support.v7.widget.RecyclerView;
 import android.text.Html;
 import android.util.SparseBooleanArray;
+import android.util.SparseIntArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,8 +14,13 @@ import android.widget.TextView;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.entity.Article;
+import com.example.thatnight.wanandroid.entity.ArticleComment;
 
 ;import java.util.regex.Pattern;
+
+import cn.bmob.v3.BmobQuery;
+import cn.bmob.v3.exception.BmobException;
+import cn.bmob.v3.listener.CountListener;
 
 /**
  * 最新文章Adapter
@@ -25,6 +31,7 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
 
     private OnArticleItemClickListener mOnIbtnClickListener;
     private SparseBooleanArray mSelectArray = new SparseBooleanArray();
+    private SparseIntArray mCommentArray = new SparseIntArray();
 
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
@@ -43,6 +50,7 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
         TextView mAuthor;
         TextView mTime;
         TextView mType;
+        TextView mComment;
         ImageButton mIbLike;
         ImageButton mIbComment;
 
@@ -53,6 +61,7 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
             mAuthor = itemView.findViewById(R.id.item_tv_author);
             mTime = itemView.findViewById(R.id.item_tv_time);
             mType = itemView.findViewById(R.id.item_tv_type);
+            mComment = itemView.findViewById(R.id.item_tv_comment);
             mIbLike = itemView.findViewById(R.id.item_ib_like);
             mIbComment = itemView.findViewById(R.id.item_ibtn_comment);
 
@@ -95,10 +104,25 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
                 @Override
                 public void onClick(View v) {
                     if (mOnIbtnClickListener != null) {
-                        mOnIbtnClickListener.onCommentClick(v,getLayoutPosition());
+                        mOnIbtnClickListener.onCommentClick(v, getLayoutPosition());
                     }
                 }
             });
+
+
+            BmobQuery<ArticleComment> query = new BmobQuery<>();
+            query.addWhereEqualTo("articleId", article.getId());
+            query.count(ArticleComment.class, new CountListener() {
+                @Override
+                public void done(Integer integer, BmobException e) {
+                    if (e == null) {
+                        mCommentArray.put(getLayoutPosition(), integer);
+                        mComment.setText(String.valueOf(integer));
+                    }
+                }
+            });
+
+            mComment.setText(String.valueOf(mCommentArray.get(getLayoutPosition())));
 
             if (article.getOriginId() <= 0) {      //最新文章
                 if (article.isCollect()) {

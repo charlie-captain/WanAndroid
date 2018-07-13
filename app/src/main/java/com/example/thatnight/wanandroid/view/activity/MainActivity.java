@@ -177,16 +177,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             if (isVisitor) {
                 mName.setText("Visitor");
             } else {    //否则设置已登陆
-                String userName = SharePreferenceUtil.getInstance().getString("account", "");
-                if (!TextUtils.isEmpty(userName)) {
-                    mName.setText(userName);
+                Account account = AccountUtil.getAccount();
+                if (account != null) {
+                    mName.setText(account.getUsername());
+                    updateIcon();
                 } else {
                     mName.setText("error");
                 }
             }
         }
-
-        updateIcon();
     }
 
     private void updateIcon() {

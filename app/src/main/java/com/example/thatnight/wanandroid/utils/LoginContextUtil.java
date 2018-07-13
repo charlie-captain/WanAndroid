@@ -2,6 +2,7 @@ package com.example.thatnight.wanandroid.utils;
 
 import android.content.Context;
 
+import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.callback.UserState;
 
@@ -48,4 +49,7 @@ public class LoginContextUtil {
         return mHasContext;
     }
 
+    public boolean isLogin(){
+        return getInstance().getUserState() instanceof LoginState;
+    }
 }

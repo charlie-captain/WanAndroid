@@ -1,10 +1,8 @@
 package com.example.thatnight.wanandroid.view.fragment;
 
 
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v14.preference.SwitchPreference;
@@ -13,17 +11,12 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.ListPreference;
 import android.support.v7.preference.Preference;
-import android.support.v7.preference.PreferenceGroup;
 import android.support.v7.preference.PreferenceScreen;
-import android.support.v7.preference.SwitchPreferenceCompat;
-import android.support.v7.widget.RecyclerView;
 import android.text.TextUtils;
-import android.view.ContextThemeWrapper;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.thatnight.wanandroid.BuildConfig;
@@ -31,11 +24,10 @@ import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.TinkerApp;
 import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.constant.Constant;
+import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.entity.BmobAccount;
-import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.utils.AccountUtil;
 import com.example.thatnight.wanandroid.utils.GlideEngine;
-import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
@@ -44,12 +36,9 @@ import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 import com.example.thatnight.wanandroid.view.customview.IconPreference;
 import com.huantansheng.easyphotos.EasyPhotos;
-import com.takisoft.fix.support.v7.preference.EditTextPreference;
 import com.takisoft.fix.support.v7.preference.PreferenceCategory;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 import com.tencent.bugly.beta.Beta;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.HashMap;
@@ -59,13 +48,13 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
-import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import cn.bmob.v3.okhttp3.Call;
 import skin.support.SkinCompatManager;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
+
 
 import static android.app.Activity.RESULT_OK;
 
@@ -137,9 +126,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             mTheme.setSummary(skin);
             mTheme.setValue(skin);
         }
-        if (LoginContextUtil.getInstance().getUserState() instanceof LoginState) {
-            String userName = SharePreferenceUtil.getInstance().getString("account", "").toString();
-            String userPassword = SharePreferenceUtil.getInstance().getString("password", "").toString();
+        if (LoginContextUtil.getInstance().isLogin()) {
+            Account account = AccountUtil.getAccount();
+            if (account == null) {
+                return;
+            }
+            String userName = account.getUsername();
+            String userPassword = account.getPassword();
             mEtpUserName.setTitle(TextUtils.isEmpty(userName) ? "用户名" : userName);
             String length = "";
             for (int i = 0; i < userPassword.length(); i++) {
@@ -153,7 +146,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             ((PreferenceCategory) (findPreference(getString(R.string.pref_user)))).removePreference(findPreference(getString(R.string.pref_user_password)));
         }
 
-        if (AccountUtil.getBmobAccount() != null && AccountUtil.getBmobAccount().getIcon() != null) {
+        if (LoginContextUtil.getInstance().isLogin() && AccountUtil.getBmobAccount() != null && AccountUtil.getBmobAccount().getIcon() != null) {
             mIconPreference.setIconUrl(AccountUtil.getBmobAccount().getIcon().getUrl());
         }
     }
@@ -163,7 +156,12 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public boolean onPreferenceClick(Preference preference) {
 
         if (mIconPreference == preference) {
-            EasyPhotos.createAlbum(getActivity(), true, GlideEngine.getInstance()).setFileProviderAuthority("android.support.v4.content.FileProvider").start(5);
+            if (!LoginContextUtil.getInstance().isLogin()) {
+                ToastUtil.showToast("请先登录!");
+            } else {
+                EasyPhotos.createAlbum(getActivity(), true, GlideEngine.getInstance())
+                        .setFileProviderAuthority("android.support.v4.content.FileProvider").start(5);
+            }
         }
 
         if (mEtpUserName == preference) {
