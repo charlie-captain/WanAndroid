@@ -19,7 +19,7 @@
 
 ### 下载地址
 
-- [Wanandroid 1.6](https://www.coolapk.com/apk/169842) -- 酷安市场
+- [Wanandroid 1.7](https://www.coolapk.com/apk/169842) -- 酷安市场
 - [Github-release](https://github.com/thatnight/WanAndroid/releases)
 
  
@@ -47,6 +47,8 @@
 - [x] 离线保存用户账号信息，cookies
 - [x] 最新文章，知识体系
 - [x] 搜索热词
+- [x] 用户头像
+- [x] 评论文章(beta)
 - [ ] 首页banner
 - [ ] 常用网站
 - [x] 换肤，夜间模式
@@ -56,6 +58,11 @@
 --- 
 
 ### 更新版本
+- #### 1.7
+  - 新增 用户头像
+  - 新增 评论(beta)
+  - 修复 已知问题
+  
 - #### 1.6
   - 新增项目Item
   - 新增捐赠
