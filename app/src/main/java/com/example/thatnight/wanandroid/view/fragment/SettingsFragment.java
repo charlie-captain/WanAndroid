@@ -34,11 +34,14 @@ import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.example.thatnight.wanandroid.view.activity.LoginActivity;
+import com.example.thatnight.wanandroid.view.activity.PhotoActivity;
 import com.example.thatnight.wanandroid.view.customview.IconPreference;
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.takisoft.fix.support.v7.preference.PreferenceCategory;
 import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 import com.tencent.bugly.beta.Beta;
+
+import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
 import java.util.HashMap;
@@ -76,7 +79,6 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
         getListView().setBackgroundColor(ContextCompat.getColor(inflater.getContext(), R.color.background));
-
         return view;
     }
 
@@ -121,7 +123,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
         mPsUpdate.setSummary("版本号 " + BuildConfig.VERSION_NAME);
 
-        String skin = (String) SharePreferenceUtil.getInstance().getString("skin_cn", "");
+        String skin = (String) SharePreferenceUtil.getInstance().optString("skin_cn");
         if (!TextUtils.isEmpty(skin)) {
             mTheme.setSummary(skin);
             mTheme.setValue(skin);
@@ -159,8 +161,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             if (!LoginContextUtil.getInstance().isLogin()) {
                 ToastUtil.showToast("请先登录!");
             } else {
-                EasyPhotos.createAlbum(getActivity(), true, GlideEngine.getInstance())
-                        .setFileProviderAuthority("android.support.v4.content.FileProvider").start(5);
+                EasyPhotos.createAlbum(getActivity(), true, GlideEngine.getInstance()).setFileProviderAuthority("android.support.v4.content.FileProvider").start(5);
             }
         }
 
@@ -218,7 +219,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
 
             } else {
-                String skinName = (String) SharePreferenceUtil.getInstance().getString("skin", "");
+                String skinName = (String) SharePreferenceUtil.getInstance().optString("skin");
                 if (!TextUtils.isEmpty(skinName)) {
                     SkinCompatManager.getInstance().loadSkin(skinName, SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
                 } else {
@@ -311,12 +312,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                     setCompressListener(new OnCompressListener() {
                         @Override
                         public void onStart() {
-
+                            ToastUtil.showToast("正在处理中...");
                         }
 
                         @Override
                         public void onSuccess(File file) {
                             final BmobFile mBmobFile = new BmobFile(file);
+                            //需登录才能更新
                             BmobUser.loginByAccount(AccountUtil.getAccount().getUsername(), AccountUtil.getAccount().getPassword(), new LogInListener<BmobAccount>() {
                                 @Override
                                 public void done(final BmobAccount account, BmobException e) {
@@ -329,15 +331,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                                                     @Override
                                                     public void done(BmobException e) {
                                                         if (e == null) {
-                                                            Toast.makeText(getActivity().getApplicationContext(), "更新成功", Toast.LENGTH_SHORT).show();
+                                                            ToastUtil.showToast("更新成功");
                                                             mIconPreference.setIconUrl(filePath);
+                                                            EventBus.getDefault().post(Constant.REFRESH);
                                                         } else {
-                                                            Toast.makeText(getActivity().getApplicationContext(), "更新失败, " + e.getMessage(), Toast.LENGTH_SHORT).show();
+                                                            ToastUtil.showToast("更新失败, " + e.getMessage());
                                                         }
                                                     }
                                                 });
                                             } else {
-                                                Toast.makeText(getActivity().getApplicationContext(), "上传失败", Toast.LENGTH_SHORT).show();
+                                                ToastUtil.showToast("上传失败");
                                             }
                                         }
                                     });
@@ -348,7 +351,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
                         @Override
                         public void onError(Throwable e) {
-                            Toast.makeText(getActivity().getApplicationContext(), e.getMessage(), Toast.LENGTH_SHORT).show();
+                            ToastUtil.showToast(e.getMessage());
                         }
                     }).launch();
         }

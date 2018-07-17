@@ -53,7 +53,7 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends B
 
     private void initPresenter() {
         if (mPresenter != null) {
-            mPresenter.attachView(initModel(), this);
+            mPresenter.attachView(this);
         }
     }
 
@@ -180,6 +180,7 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends B
         return (T) findViewById(resId);
     }
 
+    @Override
     public void showToast(String s) {
         ToastUtil.showToast(this, s);
     }
@@ -214,4 +215,5 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends B
         super.onBackPressed();
         overridePendingTransition(R.anim.anim_right_in, R.anim.anim_right_out);
     }
+
 }

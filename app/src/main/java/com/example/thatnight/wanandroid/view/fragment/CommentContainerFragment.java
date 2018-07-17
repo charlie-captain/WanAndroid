@@ -16,10 +16,6 @@ import com.example.thatnight.wanandroid.base.BasePresenter;
  * author: thatnight
  */
 public class CommentContainerFragment extends BaseContainerFragment {
-    @Override
-    protected BaseModel initModel() {
-        return null;
-    }
 
     @Override
     protected BasePresenter getPresenter() {

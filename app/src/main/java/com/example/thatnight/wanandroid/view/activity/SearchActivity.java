@@ -12,10 +12,10 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.TextView;
@@ -35,7 +35,7 @@ import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.HelperCallback;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
-import com.example.thatnight.wanandroid.utils.UiUtil;
+import com.example.thatnight.wanandroid.utils.UiHelper;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -45,6 +45,7 @@ import com.zhy.view.flowlayout.TagAdapter;
 import com.zhy.view.flowlayout.TagFlowLayout;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
 
@@ -95,7 +96,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
     protected void initData() {
         mKey = getIntent().getStringExtra("key");
         mArticles = new ArrayList<>();
-        String history = (String) SharePreferenceUtil.getInstance().getString("search_list", "");
+        String history = SharePreferenceUtil.getInstance().optString("search_list");
         if (!TextUtils.isEmpty(history)) {
             mSearchHistory = GsonUtil.gsonToList(history, String.class);
         }
@@ -139,6 +140,8 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
             public void onItemClick(int pos) {
                 mSearchView.setText(mSearchHistory.get(pos));
                 mSearchView.setSelection(mSearchHistory.get(pos).length());
+                addHistory(mSearchHistory.get(pos));
+                UiHelper.inputSoftWare(false, mSearchView);
             }
 
             @Override
@@ -157,7 +160,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
                 if (actionId == EditorInfo.IME_ACTION_SEARCH) {
                     if (v != null && v.getText() != null) {
                         mPresenter.search(true, v.getText().toString(), String.valueOf(mPage));
-                        UiUtil.inputSoftWare(false, v);
+                        UiHelper.inputSoftWare(false, v);
                         addHistory(v.getText().toString().trim());
                         return true;
                     }
@@ -235,40 +238,6 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
     @Override
     public int getLayoutId() {
         return R.layout.activity_search;
-    }
-
-    @Override
-    public void showArticles(boolean isRefresh, List<Article> articles) {
-        if (isRefresh) {
-            mRefreshLayout.finishRefresh(true);
-            mArticles.clear();
-        } else {
-            mRefreshLayout.finishLoadmore(true);
-        }
-        mArticles.addAll(articles);
-        mAdapter.updateData(mArticles);
-        if (!isEditting) {
-            mRv.setAdapter(mAdapter);
-            isEditting = true;
-        }
-    }
-
-    @Override
-    public void isCollectSuccess(boolean isSuccess, String s) {
-        Snackbar.make(mRv, s, Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mIbtnCollect != null) {
-                    UiUtil.setSelected(mIbtnCollect);
-                }
-                mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
-            }
-        }).show();
-        if (!isSuccess) {
-            if (mIbtnCollect != null) {
-                UiUtil.setSelected(mIbtnCollect);
-            }
-        }
     }
 
     @Override
@@ -352,8 +321,8 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
         if (LoginContextUtil.getInstance().getUserState().collect(this)) {
             mIbtnCollect = v;
             mSelectPosition = position;
-            UiUtil.setSelected(v);
-            mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
+            UiHelper.setSelected(v);
+            mPresenter.collect(v.isSelected(), mArticles.get(position).getId());
         }
     }
 
@@ -384,6 +353,29 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
         super.onActivityResult(requestCode, resultCode, data);
     }
 
+
+    @Override
+    public void onSwipeBackLayoutExecuted() {
+        super.onSwipeBackLayoutExecuted();
+
+    }
+
+    @Override
+    public void onSwipeBackLayoutSlide(float slideOffset) {
+        super.onSwipeBackLayoutSlide(slideOffset);
+        if (slideOffset >= 0.8) {
+            //隐藏输入法
+            UiHelper.inputSoftWare(false, mSearchView);
+        } else if (slideOffset == 0) {
+            UiHelper.inputSoftWare(true, mSearchView);
+        }
+    }
+
+    @Override
+    public void onSwipeBackLayoutCancel() {
+        super.onSwipeBackLayoutCancel();
+    }
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
@@ -391,9 +383,47 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
             if (mSearchAdatper != null) {
                 mSearchHistory = mSearchAdatper.getData();
             }
-            SharePreferenceUtil.getInstance().getString("search_list", GsonUtil.gsonToJson(mSearchHistory));
+            SharePreferenceUtil.getInstance().putString("search_list", GsonUtil.gsonToJson(mSearchHistory));
         }
-        //隐藏输入法
-        UiUtil.inputSoftWare(false, mSearchView);
+    }
+
+    @Override
+    public void onCollect(boolean isSuccess, String s) {
+        Snackbar.make(mRv, s, Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mIbtnCollect != null) {
+                    UiHelper.setSelected(mIbtnCollect);
+                }
+                mPresenter.collect(mIbtnCollect.isSelected(), mArticles.get(mSelectPosition).getId());
+            }
+        }).show();
+        if (!isSuccess) {
+            if (mIbtnCollect != null) {
+                UiHelper.setSelected(mIbtnCollect);
+            }
+        }
+    }
+
+    @Override
+    public <T> void refreshData(List<T> datas) {
+        mRefreshLayout.finishRefresh(true);
+        mArticles = (List<Article>) datas;
+        mAdapter.updateData(mArticles);
+        if (!isEditting) {
+            mRv.setAdapter(mAdapter);
+            isEditting = true;
+        }
+    }
+
+    @Override
+    public <T> void loadmoreData(List<T> datas) {
+        mRefreshLayout.finishLoadmore(true);
+        mArticles.addAll((Collection<? extends Article>) datas);
+        mAdapter.updateData(mArticles);
+        if (!isEditting) {
+            mRv.setAdapter(mAdapter);
+            isEditting = true;
+        }
     }
 }

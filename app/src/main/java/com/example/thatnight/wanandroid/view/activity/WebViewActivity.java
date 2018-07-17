@@ -1,11 +1,13 @@
 package com.example.thatnight.wanandroid.view.activity;
 
+import android.app.Instrumentation;
 import android.content.ClipData;
 import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.net.Uri;
+import android.os.SystemClock;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v4.widget.NestedScrollView;
@@ -15,6 +17,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.FrameLayout;
@@ -30,7 +33,7 @@ import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.example.thatnight.wanandroid.utils.ProgressDialogUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
-import com.example.thatnight.wanandroid.utils.UiUtil;
+import com.example.thatnight.wanandroid.utils.UiHelper;
 import com.example.thatnight.wanandroid.view.customview.CustomWebView;
 import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
@@ -50,7 +53,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
     private int mId, mOriginId;
     private boolean isCollect;
     private FloatingActionButton mActionButton;
-    private NestedScrollView mNestedScrollView;
+    //    private NestedScrollView mNestedScrollView;
     private ArrayList<String> mPhotoList;
     private FrameLayout mWebLayout;
     private ProgressBar mPbar;
@@ -74,7 +77,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
             mLink = extraIntent.getStringExtra("url");
             isCollect = extraIntent.getBooleanExtra("isCollect", false);
         }
-        isFirst = (boolean) SharePreferenceUtil.getInstance().getBoolean( "webview_update", false);
+        isFirst = (boolean) SharePreferenceUtil.getInstance().getBoolean("webview_update", false);
 
     }
 
@@ -96,15 +99,15 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
     @Override
     protected void initView() {
         mShowBack = true;
-        mNestedScrollView = $(R.id.nsv_webview);
+        //        mNestedScrollView = $(R.id.nsv_webview);
         mWebLayout = $(R.id.fl_web);
         mActionButton = $(R.id.fabtn_news);
         mWebView = new CustomWebView(getApplicationContext());
         //点击标题置顶
-        if (!isFirst) {
-            Snackbar.make(mWebLayout, "单击标题 , 页面将滚动到顶部哦!", Snackbar.LENGTH_LONG).show();
-            SharePreferenceUtil.getInstance().putBoolean("webview_update", true);
-        }
+//        if (!isFirst) {
+//            Snackbar.make(mWebLayout, "单击标题 , 页面将滚动到顶部哦!", Snackbar.LENGTH_LONG).show();
+//            SharePreferenceUtil.getInstance().putBoolean("webview_update", true);
+//        }
 
         mWebLayout.addView(mWebView);
         if ("night".equals(SkinCompatManager.getInstance().getCurSkinName())) {
@@ -122,9 +125,16 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
 
         mWebView.clearCache(true);
         WebSettings settings = mWebView.getSettings();
+        //支持缩放
+        settings.setSupportZoom(true);
+        settings.setBuiltInZoomControls(true);
+        settings.setDisplayZoomControls(false);
+
         settings.setJavaScriptCanOpenWindowsAutomatically(false);
         settings.setJavaScriptEnabled(true);
+        //缓存
         settings.setAppCacheEnabled(true);
+
         settings.setDatabaseEnabled(true);
         settings.setDomStorageEnabled(true);
 
@@ -190,12 +200,13 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         mTitle.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mNestedScrollView.post(new Runnable() {
-                    @Override
-                    public void run() {
-                        mNestedScrollView.scrollTo(0, 0);
-                    }
-                });
+                //                mNestedScrollView.post(new Runnable() {
+                //                    @Override
+                //                    public void run() {
+                //                        mNestedScrollView.scrollTo(0, 0);
+                //                    }
+                //                });
+
             }
         });
         mActionButton.setOnClickListener(this);
@@ -233,6 +244,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
 
     /**
      * 创建实例2 不包含originId
+     *
      * @param context
      * @param id
      * @param title
@@ -283,7 +295,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         switch (v.getId()) {
             case R.id.fabtn_news:
                 if (LoginContextUtil.getInstance().getUserState().collect(WebViewActivity.this)) {
-                    UiUtil.setSelected(v);
+                    UiHelper.setSelected(v);
                     if (mOriginId == NO_ORIGINID) {
                         mPresenter.get(v.isSelected(), String.valueOf(mId));
                     } else {
@@ -304,7 +316,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
     @Override
     public void isSuccess(boolean isSuccess, String s) {
         if (!isSuccess) {
-            UiUtil.setSelected(mActionButton);
+            UiHelper.setSelected(mActionButton);
         }
         showToast(s);
     }

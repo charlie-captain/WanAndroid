@@ -70,25 +70,21 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
 
     private void initPresenter() {
         if (mPresenter != null) {
-            mPresenter.attachView(initModel(), this);
+            mPresenter.attachView(this);
         }
     }
 
-    protected abstract BaseModel initModel();
-
     protected abstract P getPresenter();
 
-
     @Override
-    public void setUserVisibleHint(boolean isVisibleToUser) {
-        super.setUserVisibleHint(isVisibleToUser);
-        if (getUserVisibleHint()) {
-            mIsVisible = true;
+    public void onHiddenChanged(boolean hidden) {
+        super.onHiddenChanged(hidden);
+        if(hidden){
+            mIsVisible=false;
+        }else{
+            mIsVisible=true;
             onVisibleToUser();
-        } else {
-            mIsVisible = false;
         }
-        Log.d("onlazy", getContext() + "   " + isVisibleToUser);
     }
 
     private void onVisibleToUser() {
@@ -167,6 +163,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         }
     }
 
+    @Override
     public void showToast(String s) {
         ToastUtil.showToast(mActivity, s);
     }

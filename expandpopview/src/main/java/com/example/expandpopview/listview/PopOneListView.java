@@ -30,6 +30,7 @@ public class PopOneListView extends PopLinearLayout implements IPopListView {
     private PopViewAdapter mListAdapter;
     private OnOneListCallback mCallBack;
     private OnPopViewListener mOnPopViewListener;
+    private int mSelectedPosition = 0;
 
 
     public PopOneListView(Context context) {
@@ -56,6 +57,7 @@ public class PopOneListView extends PopLinearLayout implements IPopListView {
             @Override
             public void onItemClick(PopViewAdapter adapter, int pos) {
                 mListAdapter.setSelectPosition(pos);
+                mSelectedPosition = pos;
                 if (mCallBack != null) {
                     mCallBack.returnKeyValue(pos, mOneList.get(pos));
                 }
@@ -78,6 +80,11 @@ public class PopOneListView extends PopLinearLayout implements IPopListView {
     @Override
     public void setPopViewListener(OnPopViewListener listener) {
         mOnPopViewListener = listener;
+    }
+
+    @Override
+    public KeyValue getSelected() {
+        return mOneList.get(mSelectedPosition);
     }
 
 

@@ -10,7 +10,7 @@ public class CollectArticleData {
 
 
     /**
-     * datas : [{"id":1485,"title":"Android中图片压缩分析（上）","chapterId":86,"chapterName":"图片处理","envelopePic":null,"link":"https://mp.weixin.qq.com/s/QZ-XTsO7WnNvpnbr3DWQmg","author":"QQ音乐技术团队","origin":null,"publishTime":1509611122000,"zan":0,"desc":null,"visible":0,"niceDate":"2小时前","courseId":13,"collect":false}]
+     * datas : [{"id":1485,"title":"Android中图片压缩分析（上）","chapterId":86,"chapterName":"图片处理","envelopePic":null,"link":"https://mp.weixin.qq.com/s/QZ-XTsO7WnNvpnbr3DWQmg","author":"QQ音乐技术团队","origin":null,"publishTime":1509611122000,"zan":0,"desc":null,"visible":0,"niceDate":"2小时前","courseId":13,"onCollect":false}]
      * offset : 0
      * size : 20
      * total : 771

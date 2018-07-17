@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.res.TypedArray;
 import android.graphics.Color;
 import android.support.annotation.Nullable;
+import android.text.Layout;
 import android.util.AttributeSet;
 import android.util.TypedValue;
 import android.view.LayoutInflater;
@@ -35,7 +36,7 @@ import java.util.Map;
  */
 
 public class ExpandPopView extends LinearLayout implements PopupWindow.OnDismissListener, OnPopViewListener {
-    protected List<RelativeLayout> mViews;
+    protected List<LinearLayout> mViews;
     protected ToggleButton mTbSelected;
     protected FixedPopupWindow mPopupWindow;
     protected Context mContext;
@@ -81,25 +82,16 @@ public class ExpandPopView extends LinearLayout implements PopupWindow.OnDismiss
         mTbtnBackground = a.getResourceId(R.styleable.ExpandPopView_tab_togglebtn_bg, -1);
         mTbtnBackgroundColor = a.getColor(R.styleable.ExpandPopView_tab_togglebtn_bg_color, Color.WHITE);
 
-        mTbtnTextSize = a.getDimensionPixelSize(R.styleable.ExpandPopView_tab_togglebtn_text_size, (int) TypedValue.applyDimension(
-                TypedValue.COMPLEX_UNIT_SP,
-                14,
-                getResources().getDisplayMetrics()));
+        mTbtnTextSize = a.getDimensionPixelSize(R.styleable.ExpandPopView_tab_togglebtn_text_size, (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 14, getResources().getDisplayMetrics()));
 
         mTbtnTextColor = a.getColor(R.styleable.ExpandPopView_tab_togglebtn_text_color, Color.BLACK);
 
-        mPopViewBackgroundColor = a.getColor(R.styleable.ExpandPopView_tab_pop_bg_color,
-                Color.parseColor("#b0000000"));
+        mPopViewBackgroundColor = a.getColor(R.styleable.ExpandPopView_tab_pop_bg_color, Color.parseColor("#b0000000"));
 
-        mPopViewTextSize = a.getDimensionPixelSize(R.styleable.ExpandPopView_tab_pop_text_size,
-                mTbtnTextSize - (int) TypedValue.applyDimension(
-                        TypedValue.COMPLEX_UNIT_SP,
-                        1,
-                        getResources().getDisplayMetrics()));
+        mPopViewTextSize = a.getDimensionPixelSize(R.styleable.ExpandPopView_tab_pop_text_size, mTbtnTextSize - (int) TypedValue.applyDimension(TypedValue.COMPLEX_UNIT_SP, 1, getResources().getDisplayMetrics()));
 
         mPopViewTextColor = a.getColor(R.styleable.ExpandPopView_tab_pop_text_color, Color.BLACK);
-        mPopViewTextColorSelected = a.getColor(R.styleable.ExpandPopView_tab_pop_text_color_selected,
-                0);
+        mPopViewTextColorSelected = a.getColor(R.styleable.ExpandPopView_tab_pop_text_color_selected, 0);
         a.recycle();
         mDisplayWidth = ((Activity) mContext).getWindowManager().getDefaultDisplay().getWidth();
         mDisplayHeight = ((Activity) mContext).getWindowManager().getDefaultDisplay().getHeight();
@@ -130,9 +122,7 @@ public class ExpandPopView extends LinearLayout implements PopupWindow.OnDismiss
      * @param parentList
      * @param parentChild
      */
-    public void addItemToExpandTab(String title, List<KeyValue> parentList,
-                                   List<List<KeyValue>> parentChild,
-                                   OnTwoListCallback callback) {
+    public void addItemToExpandTab(String title, List<KeyValue> parentList, List<List<KeyValue>> parentChild, OnTwoListCallback callback) {
         PopTwoListView twoListView = new PopTwoListView(mContext);
         twoListView.setData(parentList, parentChild);
         twoListView.setCallback(callback);
@@ -169,10 +159,10 @@ public class ExpandPopView extends LinearLayout implements PopupWindow.OnDismiss
         });
         addView(tBtn);
         mToggleButtons.add(tBtn);
-        RelativeLayout popContainerView = new RelativeLayout(mContext);
-        RelativeLayout.LayoutParams rl = new RelativeLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT,
-                (int) (mDisplayHeight * 0.6));
-        popContainerView.addView(tabItemView, rl);
+        LinearLayout popContainerView = new LinearLayout(mContext);
+        popContainerView.setOrientation(LinearLayout.HORIZONTAL);
+        LinearLayout.LayoutParams ll = new LinearLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, (int) (mDisplayHeight * 0.6));
+        popContainerView.addView(tabItemView, ll);
         popContainerView.setOnClickListener(new OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -204,16 +194,30 @@ public class ExpandPopView extends LinearLayout implements PopupWindow.OnDismiss
      * @param childList
      * @param parentChildren
      */
-    public void setItemData(int tabPosition, List<KeyValue> parentList,
-                            List<KeyValue> childList,
-                            List<List<KeyValue>> parentChildren) {
+    public void setItemData(int tabPosition, List<KeyValue> parentList, List<KeyValue> childList, List<List<KeyValue>> parentChildren) {
         if (TYPE_TWO == mTypeList.get(tabPosition)) {
             mTwoListMap.get(tabPosition).setData(parentList, childList, parentChildren);
         }
     }
 
-    public void refreshItemChildrenData(int tabPosition,
-                                        List<KeyValue> childList) {
+    /**
+     * getSelected
+     *
+     * @return
+     */
+    public KeyValue getSelectedKeyValue(int togglePosition) {
+        if (mToggleButtons == null || mToggleButtons.isEmpty()) {
+            return null;
+        }
+        if (TYPE_ONE == mTypeList.get(togglePosition)) {
+            return mOneListMap.get(togglePosition).getSelected();
+        } else if (TYPE_TWO == mTypeList.get(togglePosition)) {
+            return mTwoListMap.get(togglePosition).getSelected();
+        }
+        return null;
+    }
+
+    public void refreshItemChildrenData(int tabPosition, List<KeyValue> childList) {
         if (TYPE_TWO == mTypeList.get(tabPosition)) {
             mTwoListMap.get(tabPosition).setData(null, childList, null);
         }
@@ -235,8 +239,7 @@ public class ExpandPopView extends LinearLayout implements PopupWindow.OnDismiss
 
     private void expandPopView() {
         if (mPopupWindow == null) {
-            mPopupWindow = new FixedPopupWindow(mViews.get(mSelectPosition), WindowManager.LayoutParams.MATCH_PARENT,
-                    WindowManager.LayoutParams.MATCH_PARENT);
+            mPopupWindow = new FixedPopupWindow(mViews.get(mSelectPosition), WindowManager.LayoutParams.MATCH_PARENT, WindowManager.LayoutParams.MATCH_PARENT);
             mPopupWindow.setFocusable(false);
             mPopupWindow.setOutsideTouchable(true);
             mPopupWindow.setOnDismissListener(this);

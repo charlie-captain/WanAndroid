@@ -23,7 +23,7 @@ import com.example.thatnight.wanandroid.mvp.contract.ClassifyContract;
 import com.example.thatnight.wanandroid.mvp.model.ClassifyModel;
 import com.example.thatnight.wanandroid.mvp.presenter.ClassifyPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
-import com.example.thatnight.wanandroid.utils.UiUtil;
+import com.example.thatnight.wanandroid.utils.UiHelper;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
@@ -36,18 +36,16 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
  * 分类页面
+ *
  * @author thatnight
  * @date 2017.10.27
  */
-public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, ClassifyPresenter>
-        implements OnRefreshListener,
-        OnLoadmoreListener,
-        BaseRecyclerViewAdapter.OnClickRecyclerViewListener,
-        ClassifyContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
+public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, ClassifyPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, ClassifyContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
     private RecyclerView mRv;
@@ -103,11 +101,6 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     }
 
     @Override
-    protected BaseModel initModel() {
-        return new ClassifyModel();
-    }
-
-    @Override
     protected ClassifyPresenter getPresenter() {
         return new ClassifyPresenter();
     }
@@ -133,12 +126,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = WebViewActivity.newIntent(mActivity,
-                article.getId(),
-                article.getOriginId(),
-                article.getTitle(),
-                article.getLink(),
-                article.isCollect());
+        Intent intent = WebViewActivity.newIntent(mActivity, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
         startActivityForResultAnim(intent, 1);
     }
 
@@ -153,8 +141,8 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
         if (LoginContextUtil.getInstance().getUserState().collect(mActivity)) {
             mIbtnCollect = v;
             mSelectPosition = position;
-            UiUtil.setSelected(v);
-            mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
+            UiHelper.setSelected(v);
+            mPresenter.collect(v.isSelected(),mArticles.get(position).getId());
         }
     }
 
@@ -170,9 +158,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
 
     @Override
     public void onCommentClick(View v, int position) {
-        CommentBottomDialogFragment
-                .newInstance(mArticles.get(position))
-                .show(getChildFragmentManager(), "comment");
+        CommentBottomDialogFragment.newInstance(mArticles.get(position)).show(getChildFragmentManager(), "comment");
     }
 
     @Override
@@ -183,6 +169,39 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
             mRefreshLayout.finishRefresh();
         }
     }
+
+    @Override
+    public void onCollect(boolean isCollect, String result) {
+        Snackbar.make(mRootView, result, Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mIbtnCollect != null) {
+                    UiHelper.setSelected(mIbtnCollect);
+                }
+                mPresenter.collect(mIbtnCollect.isSelected(),mArticles.get(mSelectPosition).getId());
+            }
+        }).show();
+        if (!isCollect) {
+            if (mIbtnCollect != null) {
+                UiHelper.setSelected(mIbtnCollect);
+            }
+        }
+    }
+
+    @Override
+    public <T> void refreshData(List<T> datas) {
+        mArticles.clear();
+        mArticles.addAll((Collection<? extends Article>) datas);
+        mAdapter.updateData(mArticles);
+    }
+
+    @Override
+    public <T> void loadmoreData(List<T> datas) {
+        mRefreshLayout.finishLoadmore();
+        mArticles.addAll((Collection<? extends Article>) datas);
+        mAdapter.appendData(datas);
+    }
+
 
     @Override
     public void setExpandPopView(List<KeyValue> parentList, List<List<KeyValue>> parentChildrenList) {
@@ -223,39 +242,6 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     }
 
     @Override
-    public void refreshHtml(List<Article> articles) {
-        mArticles.clear();
-        mArticles.addAll(articles);
-        mAdapter.updateData(mArticles);
-    }
-
-    @Override
-    public void loadMoreHtml(List<Article> articles) {
-        mRefreshLayout.finishLoadmore();
-        mArticles.addAll(articles);
-        mAdapter.appendData(articles);
-    }
-
-    @Override
-    public void isCollectSuccess(boolean isSuccess, String s) {
-        Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT)
-                .setAction("取消", new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mIbtnCollect != null) {
-                            UiUtil.setSelected(mIbtnCollect);
-                        }
-                        mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
-                    }
-                }).show();
-        if (!isSuccess) {
-            if (mIbtnCollect != null) {
-                UiUtil.setSelected(mIbtnCollect);
-            }
-        }
-    }
-
-    @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
@@ -266,16 +252,21 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshLayout(String requestCode) {
-        if (Constant.REFRESH.equals(requestCode)) {
-            mRefreshLayout.autoRefresh();
-        } else if (Constant.TOP_CLASSIFY.equals(requestCode)) {
-            mRv.smoothScrollToPosition(0);
+    public void onEvent(String requestCode) {
+        switch (requestCode) {
+            case Constant.REFRESH_NEWS:
+                mRefreshLayout.autoRefresh();
+                break;
+            case Constant.TOP_CLASSIFY:
+                mRv.smoothScrollToPosition(0);
+                break;
+            default:
+                break;
         }
     }
 
-    @Subscribe
-    public void switchToClassify(KeyValue key) {
+    @Subscribe(threadMode = ThreadMode.BACKGROUND)
+    public void onEvent(KeyValue key) {
         if (Constant.SWITCH_TO_CLASSIFY.equals(key.getKey())) {
             for (int i = 0; i < mParentChildList.size(); i++) {
                 if (mParentChildList.get(i) != null) {

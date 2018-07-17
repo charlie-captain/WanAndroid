@@ -22,7 +22,7 @@ public class AccountUtil {
     }
 
     public static Account getAccount() {
-        String json = SharePreferenceUtil.getInstance().getString(KEY_ACCOUNT, null);
+        String json = SharePreferenceUtil.getInstance().optString(KEY_ACCOUNT);
         if (json == null) {
             return null;
         }

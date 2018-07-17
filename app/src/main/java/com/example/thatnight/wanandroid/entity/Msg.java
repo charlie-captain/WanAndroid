@@ -1,5 +1,7 @@
 package com.example.thatnight.wanandroid.entity;
 
+import com.example.thatnight.wanandroid.constant.Constant;
+
 /**
  * Created by thatnight on 2017.11.2.
  */
@@ -16,6 +18,17 @@ public class Msg {
     private int errorCode;
     private Object errorMsg;
     private Object data;
+    private Object data2;
+
+    public Msg() {
+    }
+
+    public Msg(int errorCode, Object errorMsg, Object data) {
+        this.errorCode = errorCode;
+        this.errorMsg = errorMsg;
+        this.data = data;
+    }
+
 
     public int getErrorCode() {
         return errorCode;
@@ -39,5 +52,13 @@ public class Msg {
 
     public void setData(Object data) {
         this.data = data;
+    }
+
+    public Object getData2() {
+        return data2;
+    }
+
+    public void setData2(Object data2) {
+        this.data2 = data2;
     }
 }

@@ -200,4 +200,9 @@ public class PopTwoListView extends PopLinearLayout implements IPopListView {
     public void setPopViewListener(OnPopViewListener listener) {
         mOnPopViewListener = listener;
     }
+
+    @Override
+    public KeyValue getSelected() {
+        return mChildList.get(mChildPosition);
+    }
 }

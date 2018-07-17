@@ -42,13 +42,15 @@ public class Constant {
      */
     public static final String REFRESH = "refresh";
     public static final String REFRESH_NEWS = "refresh_news";
+    public static final String REFRESH_COLLECT = "refresh_collect";
     public static final String TOP_NEWS = "scroll_top_news";
     public static final String TOP_CLASSIFY = "scroll_top_classify";
     public static final String SWITCH_TO_CLASSIFY = "switch_to_classify";
 
     public static final String ERROR = "error";
     public static final int CODE_SUCCESS = 0;
+    public static final int CODE_ERROR = -1;
 
 
-
+    public static final String STRING_ERROR = "服务器出现错误!";
 }

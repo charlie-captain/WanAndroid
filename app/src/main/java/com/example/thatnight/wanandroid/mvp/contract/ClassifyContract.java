@@ -2,6 +2,9 @@ package com.example.thatnight.wanandroid.mvp.contract;
 
 import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.base.BaseContract;
+import com.example.thatnight.wanandroid.base.BaseFuncView;
+import com.example.thatnight.wanandroid.callback.MvpBooleanCallback;
+import com.example.thatnight.wanandroid.callback.MvpCallback;
 import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.entity.Msg;
 
@@ -12,41 +15,21 @@ import java.util.List;
  */
 
 public class ClassifyContract {
-    public interface IView extends BaseContract.IBaseView {
+    public interface IView extends BaseFuncView {
 
         void setExpandPopView(List<KeyValue> parentList, List<List<KeyValue>> parentChildrenList);
 
         void refreshExpandPopView(List<KeyValue> childrenList);
-
-        void refreshHtml(List<Article> articles);
-
-        void loadMoreHtml(List<Article> articles);
-
-        void isCollectSuccess(boolean isSuccess, String s);
     }
 
     public interface IPresenter extends BaseContract.IBasePresenter {
         void getParentChildren();
 
-        void setParentChildren(List<KeyValue> parentList, List<List<KeyValue>> parentChildren);
-
         void getArticle(boolean isRefresh, int page, String value);
-
-        void collect(boolean isCollect, String id);
-
-        void getResult(boolean isRefresh, Msg msg);
-
-        void collectResult(boolean isCollect, Msg msg);
     }
 
     public interface IModel extends BaseContract.IBaseModel {
-        void getParentChildren(IPresenter iPresenter);
-
-
-        void getArticle(boolean isRefresh, int page, String value, IPresenter iPresenter);
-
-        void collect(boolean isCollect, String id, IPresenter iPresenter);
-
+        void getParentChildren(MvpCallback callback);
 
     }
 }

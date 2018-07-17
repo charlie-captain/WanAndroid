@@ -43,11 +43,6 @@ public class MainFragment extends BaseFragment {
     private FragmentAdapter mAdapter;
 
     @Override
-    protected BaseModel initModel() {
-        return null;
-    }
-
-    @Override
     protected BasePresenter getPresenter() {
         return null;
     }

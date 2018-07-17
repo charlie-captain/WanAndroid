@@ -7,6 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.entity.ArticleComment;
@@ -53,7 +54,8 @@ public class ArticleCommentAdapter extends BaseRecyclerViewAdapter<ArticleCommen
                 return;
             }
             if (comment.getAccount().getIcon() != null) {
-                Glide.with(mIcon).load(comment.getAccount().getIcon().getUrl()).into(mIcon);
+                RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_launcher_round);
+                Glide.with(mIcon).load(comment.getAccount().getIcon().getUrl()).apply(requestOptions).into(mIcon);
             }
             mUserName.setText(comment.getAccount().getNickName());
             mDateTime.setText(DateUtil.dateFormatDays(comment.getCreatedAt()));

@@ -10,14 +10,19 @@ import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
  * Created by thatnight on 2017.11.1.
  */
 
-public class WebPresenter extends BasePresenter<WebModel, WebViewActivity> implements WebContract.IWebPresenter {
+public class WebPresenter extends BasePresenter<WebViewActivity> implements WebContract.IWebPresenter {
 
+    protected WebModel mWebModel;
+
+    public WebPresenter() {
+        mWebModel = new WebModel();
+    }
 
     @Override
     public void get(boolean isCollect, String id) {
         if (view != null) {
             view.isLoading(true);
-            model.getUrl(isCollect, id, this);
+            mWebModel.getUrl(isCollect, id, this);
         }
     }
 
@@ -25,7 +30,7 @@ public class WebPresenter extends BasePresenter<WebModel, WebViewActivity> imple
     public void get(String id, String originId) {
         if (view != null) {
             view.isLoading(true);
-            model.getUrl(id, originId, this);
+            mWebModel.getUrl(id, originId, this);
         }
     }
 

@@ -8,6 +8,7 @@ import android.os.Build;
 import android.support.annotation.NonNull;
 import android.support.v4.view.ViewPager;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -22,6 +23,7 @@ import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BasePresenter;
 import com.example.thatnight.wanandroid.utils.ImageUtil;
+import com.huantansheng.easyphotos.utils.String.StringUtils;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
 import com.yanzhenjie.permission.PermissionListener;
@@ -35,6 +37,7 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
     private PhotoPagerAdapter mPagerAdapter;
     private List<T> mPhotoList;
     private String mImgUrl;
+    private Uri mImgUri;
     private int mIndex = 0;
     private int mSize = 0;
     private View mImageView;
@@ -53,9 +56,17 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
     }
 
 
-    public static <T> Intent newIntent(Context context, String imgUrl) {
+    public static Intent newIntent(Context context, String imgUrl) {
         Intent intent = new Intent(context, PhotoActivity.class);
         intent.putExtra("img_url", imgUrl);
+        return intent;
+    }
+
+    public static Intent newIntent(Context context, Uri uri) {
+        Intent intent = new Intent(context, PhotoActivity.class);
+        Bundle bundle = new Bundle();
+        bundle.putParcelable("img_uri", uri);
+        intent.putExtras(bundle);
         return intent;
     }
 
@@ -64,9 +75,7 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
     protected void initData() {
         if (Build.VERSION.SDK_INT >= 19) {
             View decorView = getWindow().getDecorView();
-            int option = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION
-                    | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN
-                    | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
+            int option = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
             decorView.setSystemUiVisibility(option);
         }
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
@@ -76,7 +85,12 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
         if (mPhotoList == null) {
             mPhotoList = (List<T>) new ArrayList<String>();
             mImgUrl = getIntent().getStringExtra("img_url");
-            mPhotoList.add((T) mImgUrl);
+            mImgUri = getIntent().getParcelableExtra("img_uri");
+            if (!TextUtils.isEmpty(mImgUrl)) {
+                mPhotoList.add((T) mImgUrl);
+            } else if (mImgUri != null) {
+                mPhotoList.add((T) mImgUri);
+            }
         }
         mSize = mPhotoList.size();
         mPagerAdapter = new PhotoPagerAdapter(this, mPhotoList, this);
@@ -146,8 +160,7 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
         mImageView = view;
         if (mLongClickDialog == null) {
             mLongClickDialog = new Dialog(this, R.style.DialogShareTheme);
-            LinearLayout root = (LinearLayout) LayoutInflater.from(this).inflate(
-                    R.layout.dialog_photo_longclick, null);
+            LinearLayout root = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.dialog_photo_longclick, null);
             //初始化视图
             root.findViewById(R.id.btn_dialog_save).setOnClickListener(this);
             root.findViewById(R.id.btn_dialog_share).setOnClickListener(this);
@@ -155,7 +168,7 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
             mLongClickDialog.setContentView(root);
             Window dialogWindow = mLongClickDialog.getWindow();
             dialogWindow.setGravity(Gravity.BOTTOM);
-//        dialogWindow.setWindowAnimations(R.style.dialogstyle); // 添加动画
+            //        dialogWindow.setWindowAnimations(R.style.dialogstyle); // 添加动画
             WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
             lp.x = 0; // 新位置X坐标
             lp.y = 0; // 新位置Y坐标
@@ -176,11 +189,7 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
     @Override
     public void onClick(View v) {
         if (R.id.btn_dialog_cancel != v.getId()) {
-            AndPermission.with(this)
-                    .requestCode(100)
-                    .permission(Permission.STORAGE)
-                    .callback(mPermissionListener)
-                    .start();
+            AndPermission.with(this).requestCode(100).permission(Permission.STORAGE).callback(mPermissionListener).start();
         }
         switch (v.getId()) {
             case R.id.btn_dialog_share:

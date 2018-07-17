@@ -14,7 +14,7 @@ public class ProjectItem {
      * author : dsbGenius
      * chapterId : 294
      * chapterName : 完整项目
-     * collect : false
+     * onCollect : false
      * courseId : 13
      * desc : SketchBoard是一个可涂鸦、绘图、添加文字、图像（可旋转缩放）、背景的Fragment，其中主要由SketchView利用matrix完成所有图形绘制操作。
      * envelopePic : http://www.wanandroid.com/blogimgs/cec73ace-7d33-4a93-88e0-26319b4ec831.png

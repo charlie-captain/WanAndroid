@@ -3,7 +3,6 @@ package com.example.thatnight.wanandroid.mvp.presenter;
 import com.example.thatnight.wanandroid.base.BasePresenter;
 import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.entity.Account;
-import com.example.thatnight.wanandroid.entity.BmobAccount;
 import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.LoginContract;
 import com.example.thatnight.wanandroid.mvp.model.LoginModel;
@@ -14,25 +13,27 @@ import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 
-import cn.bmob.v3.BmobUser;
-import cn.bmob.v3.exception.BmobException;
-import cn.bmob.v3.listener.SaveListener;
-
 /**
  * Created by thatnight on 2017.11.1.
  */
 
-public class LoginPresenter extends BasePresenter<LoginModel, LoginActivity> implements LoginContract.ILoginPresenter {
+public class LoginPresenter extends BasePresenter<LoginActivity> implements LoginContract.ILoginPresenter {
 
+    private LoginModel mLoginModel;
+
+    public LoginPresenter() {
+        mLoginModel = new LoginModel();
+        
+    }
 
     @Override
     public void login() {
-        model.login(view.getName(), view.getPassword(), this);
+        mLoginModel.login(view.getName(), view.getPassword(), this);
     }
 
     @Override
     public void register() {
-        model.register(view.getName(), view.getPassword(), this);
+        mLoginModel.register(view.getName(), view.getPassword(), this);
     }
 
     @Override

@@ -9,4 +9,5 @@ import com.example.expandpopview.entity.KeyValue;
 public interface OnOneListCallback {
 
     void returnKeyValue(int pos, KeyValue keyValue);
+
 }

@@ -7,21 +7,19 @@ import android.support.annotation.NonNull;
 import android.support.design.widget.NavigationView;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
-import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.text.TextUtils;
 import android.util.Log;
-import android.view.KeyEvent;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.LogoutState;
@@ -35,10 +33,8 @@ import com.example.thatnight.wanandroid.utils.ExitUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
-import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.CommentContainerFragment;
-import com.example.thatnight.wanandroid.view.fragment.CommentFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
 import com.example.thatnight.wanandroid.view.fragment.ProjectFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsContainerFragment;
@@ -68,6 +64,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private Fragment mLastFragment;
     private Account mAccount;
+    public static final String INTENT_ACCOUNT = "account";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -124,7 +121,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void initData() {
-        mAccount = getIntent().getParcelableExtra("account");
+        mAccount = getIntent().getParcelableExtra(INTENT_ACCOUNT);
 
         //如果通过传值登录
         if (mAccount != null) {
@@ -136,7 +133,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                     @Override
                     public void done(BmobAccount account, BmobException e) {
                         if (e == null) {
-                            updateIcon();
+                            refreshIcon();
                         } else {
                             //初始化Bmob
                             BmobAccount bmobAccount = new BmobAccount();
@@ -153,7 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                             @Override
                                             public void done(BmobAccount account, BmobException e) {
                                                 if (e == null) {
-                                                    updateIcon();
+                                                    refreshIcon();
                                                 }
                                             }
                                         });
@@ -180,7 +177,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 Account account = AccountUtil.getAccount();
                 if (account != null) {
                     mName.setText(account.getUsername());
-                    updateIcon();
+                    refreshIcon();
                 } else {
                     mName.setText("error");
                 }
@@ -188,22 +185,21 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-    private void updateIcon() {
+    /**
+     * 更新用户头像
+     */
+    private void refreshIcon() {
         if (AccountUtil.getBmobAccount() != null && AccountUtil.getBmobAccount().getIcon() != null) {
-            Glide.with(this).load(AccountUtil.getBmobAccount().getIcon().getUrl()).into(mIcon);
+            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_launcher_round);
+            Glide.with(this).load(AccountUtil.getBmobAccount().getIcon().getUrl()).apply(requestOptions).into(mIcon);
         }
     }
 
     @Override
     protected void onNewIntent(Intent intent) {
         super.onNewIntent(intent);
-        mAccount = intent.getParcelableExtra("account");
-        if (mAccount != null) {
-            AccountUtil.saveAccount(mAccount);
-            SharePreferenceUtil.getInstance().putBoolean(getString(R.string.sp_auto_login), true);
-            mName.setText(mAccount.getUsername());
-            EventBus.getDefault().post("refresh");
-        }
+        initData();
+        EventBus.getDefault().post(Constant.REFRESH_NEWS);
     }
 
 
@@ -346,10 +342,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Subscribe
-    public void switchToClassify(String requestCode) {
-        if (Constant.SWITCH_TO_CLASSIFY.equals(requestCode)) {
-            mNavigationView.setCheckedItem(R.id.nv_menu_main);
-            changeFragmentContent(R.id.nv_menu_main);
+    public void onEvent(String requestCode) {
+        switch (requestCode) {
+            case Constant.SWITCH_TO_CLASSIFY:
+                mNavigationView.setCheckedItem(R.id.nv_menu_main);
+                changeFragmentContent(R.id.nv_menu_main);
+                break;
+            case Constant.REFRESH:
+                refreshIcon();
+                break;
+            default:
+                break;
         }
     }
 

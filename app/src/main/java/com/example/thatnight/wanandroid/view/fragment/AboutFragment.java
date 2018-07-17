@@ -10,6 +10,7 @@ import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BasePresenter;
 
 import java.util.Calendar;
+import java.util.List;
 
 /**
  * 关于
@@ -17,12 +18,6 @@ import java.util.Calendar;
 public class AboutFragment extends BaseFragment {
 
     private TextView mTvVersion, mTvRight, mTvAbout;
-
-
-    @Override
-    protected BaseModel initModel() {
-        return null;
-    }
 
     @Override
     protected BasePresenter getPresenter() {
@@ -66,4 +61,6 @@ public class AboutFragment extends BaseFragment {
     public void isLoading(boolean isLoading) {
 
     }
+
+
 }

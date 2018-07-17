@@ -54,7 +54,7 @@ public class OkHttpCookieJar implements CookieJar {
     }
 
     public static void initCookies() {
-        String cookies =  SharePreferenceUtil.getInstance().getString("cookies", "");
+        String cookies =  SharePreferenceUtil.getInstance().optString("cookies");
         if (!TextUtils.isEmpty(cookies)) {
             List<Cookie> list = GsonUtil.gsonToList(cookies, Cookie.class);
             cookieStore.put("www.wanandroid.com", list);

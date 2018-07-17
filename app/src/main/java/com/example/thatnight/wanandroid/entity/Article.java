@@ -24,7 +24,7 @@ public class Article implements Parcelable {
      * visible : 0
      * niceDate : 2小时前
      * courseId : 13
-     * collect : false
+     * onCollect : false
      */
 
     private int originId;
@@ -195,13 +195,10 @@ public class Article implements Parcelable {
         dest.writeString(this.title);
         dest.writeInt(this.chapterId);
         dest.writeString(this.chapterName);
-        dest.writeParcelable((Parcelable) this.envelopePic, flags);
         dest.writeString(this.link);
         dest.writeString(this.author);
-        dest.writeParcelable((Parcelable) this.origin, flags);
         dest.writeLong(this.publishTime);
         dest.writeInt(this.zan);
-        dest.writeParcelable((Parcelable) this.desc, flags);
         dest.writeInt(this.visible);
         dest.writeString(this.niceDate);
         dest.writeInt(this.courseId);
@@ -218,13 +215,10 @@ public class Article implements Parcelable {
         this.title = in.readString();
         this.chapterId = in.readInt();
         this.chapterName = in.readString();
-        this.envelopePic = in.readParcelable(Object.class.getClassLoader());
         this.link = in.readString();
         this.author = in.readString();
-        this.origin = in.readParcelable(Object.class.getClassLoader());
         this.publishTime = in.readLong();
         this.zan = in.readInt();
-        this.desc = in.readParcelable(Object.class.getClassLoader());
         this.visible = in.readInt();
         this.niceDate = in.readString();
         this.courseId = in.readInt();

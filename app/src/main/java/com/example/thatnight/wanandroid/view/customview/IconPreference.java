@@ -11,7 +11,9 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
+import com.bumptech.glide.request.RequestOptions;
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.view.activity.PhotoActivity;
 
 public class IconPreference extends Preference {
 
@@ -63,6 +65,8 @@ public class IconPreference extends Preference {
             public void onClick(View v) {
                 if(mOnClickListener!=null){
                     mOnClickListener.onClick(v);
+                }else{
+                    getContext().startActivity(PhotoActivity.newIntent(getContext(),iconUrl));
                 }
             }
         });
@@ -104,7 +108,8 @@ public class IconPreference extends Preference {
     public void setIconUrl(String url) {
         iconUrl = url;
         if (mViewHolder != null) {
-            Glide.with(mViewHolder.mImageView.getContext()).load(url).into(mViewHolder.mImageView);
+            RequestOptions requestOptions = new RequestOptions().placeholder(R.drawable.ic_launcher_round);
+            Glide.with(mViewHolder.mImageView.getContext()).load(url).apply(requestOptions).into(mViewHolder.mImageView);
         }
         notifyChanged();
     }

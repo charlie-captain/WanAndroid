@@ -36,6 +36,7 @@ import com.example.thatnight.wanandroid.entity.ArticleComment;
 import com.example.thatnight.wanandroid.utils.AccountUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
+import com.example.thatnight.wanandroid.utils.UiHelper;
 import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 
 import java.util.List;
@@ -156,7 +157,6 @@ public class CommentBottomDialogFragment extends DialogFragment implements BaseR
             public void done(List<ArticleComment> list, BmobException e) {
                 if (e == null) {
                     if (list != null && list.isEmpty()) {
-                        Toast.makeText(TinkerApp.getApplication(), "暂无评论!", Toast.LENGTH_SHORT).show();
                         mRecyclerView.setVisibility(View.GONE);
                         return;
                     }
@@ -231,5 +231,11 @@ public class CommentBottomDialogFragment extends DialogFragment implements BaseR
                 }
             }
         }).setNegativeButton("取消", null).show();
+        editText.postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                UiHelper.inputSoftWare(true,editText);
+            }
+        },300);
     }
 }

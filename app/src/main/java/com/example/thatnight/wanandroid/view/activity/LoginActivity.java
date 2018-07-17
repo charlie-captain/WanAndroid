@@ -11,7 +11,6 @@ import com.example.animbutton.AnimButton;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
-import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.callback.LogoutState;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.mvp.contract.LoginContract;
@@ -19,12 +18,13 @@ import com.example.thatnight.wanandroid.mvp.model.LoginModel;
 import com.example.thatnight.wanandroid.mvp.presenter.LoginPresenter;
 import com.example.thatnight.wanandroid.utils.AccountUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
-import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
-import com.example.thatnight.wanandroid.utils.UiUtil;
+import com.example.thatnight.wanandroid.utils.UiHelper;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
+
+import java.util.List;
 
 /**
  * 登录界面
@@ -68,7 +68,7 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
             mName.setSelection(userName.length());
             mPwd.setText(password);
             mPwd.setSelection(password.length());
-            UiUtil.inputSoftWare(false, mPwd);
+            UiHelper.inputSoftWare(false, mPwd);
         }
     }
 
@@ -77,7 +77,7 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
         mBtnLogin.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                UiUtil.inputSoftWare(false, v);
+                UiHelper.inputSoftWare(false, v);
                 if (TextUtils.isEmpty(getName()) || TextUtils.isEmpty(getPassword())) {
                     Snackbar.make(mBtnLogin, "账号或密码不能为空", Snackbar.LENGTH_SHORT).show();
                     mBtnLogin.errorAnimation();
@@ -144,6 +144,7 @@ public class LoginActivity extends BaseActivity<LoginContract.ILoginView, LoginP
     public void isLoading(boolean isLoading) {
 
     }
+
 
     @Override
     public String getName() {

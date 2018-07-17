@@ -18,12 +18,12 @@ import com.example.thatnight.wanandroid.adapter.ProjectRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
-import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.entity.ProjectItem;
 import com.example.thatnight.wanandroid.mvp.contract.ProjectContract;
 import com.example.thatnight.wanandroid.mvp.model.ProjectModel;
 import com.example.thatnight.wanandroid.mvp.presenter.ProjectPresenter;
-import com.example.thatnight.wanandroid.utils.UiUtil;
+import com.example.thatnight.wanandroid.utils.LoginContextUtil;
+import com.example.thatnight.wanandroid.utils.UiHelper;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SkinExpandPopView;
@@ -31,6 +31,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -57,11 +58,6 @@ public class ProjectFragment extends BaseFragment<ProjectContract.IView, Project
     private View mIbtnCollect;
     private ProjectItem mUnCollectProject;
 
-
-    @Override
-    protected BaseModel initModel() {
-        return new ProjectModel();
-    }
 
     @Override
     protected ProjectPresenter getPresenter() {
@@ -111,9 +107,11 @@ public class ProjectFragment extends BaseFragment<ProjectContract.IView, Project
 
     @Override
     protected void onLazyLoad() {
-        if (mProjectsParent == null) {
-            mPresenter.getProjectParent();
+        if (mProjectItems != null && mProjectsParent != null) {
+            return;
         }
+
+        mPresenter.getProjectParent();
     }
 
 
@@ -123,18 +121,42 @@ public class ProjectFragment extends BaseFragment<ProjectContract.IView, Project
     }
 
     @Override
-    public void refresh(List<ProjectItem> articles) {
-        mProjectItems = articles;
+    public void onCollect(boolean isCollect, String result) {
+        Snackbar.make(mRootView, result, Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (mIbtnCollect != null) {
+                    UiHelper.setSelected(mIbtnCollect);
+                }
+                if (mUnCollectProject != null) {
+                    mPresenter.collect(true, mUnCollectProject.getId());
+                } else {
+                    Snackbar.make(mRootView, "好像什么东西丢了,我忘了.", Snackbar.LENGTH_SHORT);
+                }
+            }
+        }).show();
+        if (!isCollect) {
+            if (mIbtnCollect != null) {
+                UiHelper.setSelected(mIbtnCollect);
+            }
+        } else {
+            //            mRefreshLayout.autoRefresh();
+        }
+    }
+
+    @Override
+    public <T> void refreshData(List<T> datas) {
+        mProjectItems = (List<ProjectItem>) datas;
         mProjectRvAdapter.updateData(mProjectItems);
         mRefreshLayout.finishRefresh();
     }
 
     @Override
-    public void loadMore(List<ProjectItem> articles) {
+    public <T> void loadmoreData(List<T> datas) {
         if (mProjectItems == null) {
-            mProjectItems = articles;
+            mProjectItems = (List<ProjectItem>) datas;
         } else {
-            mProjectItems.addAll(articles);
+            mProjectItems.addAll((Collection<? extends ProjectItem>) datas);
         }
         mProjectRvAdapter.updateData(mProjectItems);
         mRefreshLayout.finishLoadmore();
@@ -158,39 +180,23 @@ public class ProjectFragment extends BaseFragment<ProjectContract.IView, Project
     }
 
     @Override
-    public void isCollectSuccess(boolean isSuccess, String s) {
-        Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                if (mIbtnCollect != null) {
-                    UiUtil.setSelected(mIbtnCollect);
-                }
-                if (mUnCollectProject != null) {
-                    mPresenter.collect(true, String.valueOf(mUnCollectProject.getId()));
-                } else {
-                    Snackbar.make(mRootView, "好像什么东西丢了,我忘了.", Snackbar.LENGTH_SHORT);
-                }
-            }
-        }).show();
-        if (!isSuccess) {
-            if (mIbtnCollect != null) {
-                UiUtil.setSelected(mIbtnCollect);
-            }
-        } else {
-//            mRefreshLayout.autoRefresh();
-        }
-    }
-
-    @Override
     public void onRefresh(RefreshLayout refreshlayout) {
+        if (mSkinExpandPopView.getSelectedKeyValue(0) == null) {
+            mRefreshLayout.finishRefresh();
+            return;
+        }
         mPage = 1;
-        mPresenter.getProject(true, mProjectsParent.get(mSelectPosition).getValue(), mPage);
+        mPresenter.getProject(true, mSkinExpandPopView.getSelectedKeyValue(0).getValue(), mPage);
     }
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
+        if (mSkinExpandPopView.getSelectedKeyValue(0) == null) {
+            mRefreshLayout.finishLoadmore();
+            return;
+        }
         mPage++;
-        mPresenter.getProject(false, mProjectsParent.get(mSelectPosition).getValue(), mPage);
+        mPresenter.getProject(false, mSkinExpandPopView.getSelectedKeyValue(0).getValue(), mPage);
     }
 
     @Override
@@ -207,10 +213,12 @@ public class ProjectFragment extends BaseFragment<ProjectContract.IView, Project
 
     @Override
     public void onIbtnClick(View v, int position) {
-        mIbtnCollect = v;
-        UiUtil.setSelected(v);
-        mPresenter.collect(v.isSelected(), String.valueOf(mProjectItems.get(position).getId()));
-        mUnCollectProject = mProjectItems.get(position);
+        if (LoginContextUtil.getInstance().getUserState().collect(getActivity())) {
+            mIbtnCollect = v;
+            UiHelper.setSelected(v);
+            mPresenter.collect(v.isSelected(), mProjectItems.get(position).getId());
+            mUnCollectProject = mProjectItems.get(position);
+        }
     }
 
     @Override

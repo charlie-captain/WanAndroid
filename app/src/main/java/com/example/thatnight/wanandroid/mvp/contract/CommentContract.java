@@ -1,6 +1,8 @@
 package com.example.thatnight.wanandroid.mvp.contract;
 
 import com.example.thatnight.wanandroid.base.BaseContract;
+import com.example.thatnight.wanandroid.callback.MvpBooleanCallback;
+import com.example.thatnight.wanandroid.callback.MvpCallback;
 import com.example.thatnight.wanandroid.entity.Comment;
 
 import java.util.List;
@@ -19,23 +21,14 @@ public class CommentContract {
     }
 
     public interface IModel extends BaseContract.IBaseModel {
-        interface OnCommentListener {
-            void success(boolean isRefresh, List<Comment> comments);
 
-            void error(String error);
-        }
+        void addComment(Comment comment, MvpCallback callback);
 
-        interface OnAddCommentListener {
-            void isSuccess( boolean isSuccess, String error);
-        }
-
-        void addComment(Comment comment, OnAddCommentListener onAddCommentListener);
-
-        void getComment(boolean isRefresh, int page, OnCommentListener onCommentListener);
+        void getComment(boolean isRefresh, int page, MvpBooleanCallback callback);
     }
 
     public interface IPresenter extends BaseContract.IBasePresenter {
-        void getComment(boolean isRefresh,int page);
+        void getComment(boolean isRefresh, int page);
 
         void addComment(Comment comment);
 

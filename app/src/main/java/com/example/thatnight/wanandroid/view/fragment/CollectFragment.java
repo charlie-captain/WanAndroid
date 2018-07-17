@@ -1,6 +1,7 @@
 package com.example.thatnight.wanandroid.view.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,16 +16,14 @@ import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
-import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.mvp.contract.CollectContract;
-import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
-import com.example.thatnight.wanandroid.mvp.model.CollectModel;
 import com.example.thatnight.wanandroid.mvp.presenter.CollectPresenter;
+import com.example.thatnight.wanandroid.utils.AccountUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
-import com.example.thatnight.wanandroid.utils.UiUtil;
+import com.example.thatnight.wanandroid.utils.UiHelper;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
@@ -37,6 +36,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -44,7 +44,7 @@ import java.util.List;
  * Created by thatnight on 2017.10.27.
  */
 
-public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, View.OnClickListener, CollectContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
+public class CollectFragment extends BaseFragment<CollectContract.IView, CollectPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, View.OnClickListener, CollectContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
 
@@ -99,11 +99,6 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
 
     @Override
-    protected BaseModel initModel() {
-        return new CollectModel();
-    }
-
-    @Override
     protected CollectPresenter getPresenter() {
         return new CollectPresenter();
     }
@@ -117,13 +112,13 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
         mPage = 0;
-        mPresenter.getArticle(true, mPage);
+        mPresenter.getCollectArticle(true, mPage);
     }
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
         mPage += 1;
-        mPresenter.getArticle(false, mPage);
+        mPresenter.getCollectArticle(false, mPage);
     }
 
 
@@ -143,8 +138,8 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
     @Override
     public void onIbtnClick(View v, int position) {
         mIbtnCollect = v;
-        UiUtil.setSelected(v);
-        mPresenter.collect(false, String.valueOf(mArticles.get(position).getId()), String.valueOf(mArticles.get(position).getOriginId()));
+        UiHelper.setSelected(v);
+        mPresenter.collectParent(false, mArticles.get(position).getId(), mArticles.get(position).getOriginId());
         mUnCollectArticle = mArticles.get(position);
     }
 
@@ -162,9 +157,7 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
 
     @Override
     public void onCommentClick(View v, int position) {
-        CommentBottomDialogFragment
-                .newInstance(mArticles.get(position))
-                .show(getChildFragmentManager(), "comment");
+        CommentBottomDialogFragment.newInstance(mArticles.get(position)).show(getChildFragmentManager(), "comment");
     }
 
     @Override
@@ -181,31 +174,16 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         }
     }
 
-
     @Override
-    public void refreshHtml(List<Article> articles) {
-        mArticles.clear();
-        mArticles.addAll(articles);
-        mAdapter.updateData(mArticles);
-    }
-
-    @Override
-    public void loadMoreHtml(List<Article> articles) {
-        mRefreshLayout.finishLoadmore();
-        mArticles.addAll(articles);
-        mAdapter.appendData(articles);
-    }
-
-    @Override
-    public void isCollectSuccess(boolean isSuccess, String s) {
+    public void onCollect(boolean isSuccess, String s) {
         Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mIbtnCollect != null) {
-                    UiUtil.setSelected(mIbtnCollect);
+                    UiHelper.setSelected(mIbtnCollect);
                 }
                 if (mUnCollectArticle != null) {
-                    mPresenter.collect(true, String.valueOf(mUnCollectArticle.getId()), String.valueOf(mUnCollectArticle.getOriginId()));
+                    mPresenter.collectParent(true, mUnCollectArticle.getId(), mUnCollectArticle.getOriginId());
                 } else {
                     Snackbar.make(mRootView, "好像什么东西丢了,我忘了.", Snackbar.LENGTH_SHORT);
                 }
@@ -213,27 +191,46 @@ public class CollectFragment extends BaseFragment<NewsContract.IView, CollectPre
         }).show();
         if (!isSuccess) {
             if (mIbtnCollect != null) {
-                UiUtil.setSelected(mIbtnCollect);
+                UiHelper.setSelected(mIbtnCollect);
             }
         } else {
-            mPresenter.getArticle(true, 0);
+            mRefreshLayout.autoRefresh();
         }
+    }
+
+    @Override
+    public <T> void refreshData(List<T> datas) {
+        mArticles.clear();
+        mArticles.addAll((Collection<? extends Article>) datas);
+        mAdapter.updateData(mArticles);
+    }
+
+    @Override
+    public <T> void loadmoreData(List<T> datas) {
+        mRefreshLayout.finishLoadmore();
+        mArticles.addAll((Collection<? extends Article>) datas);
+        mAdapter.appendData(datas);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
-                mPresenter.getArticle(true, 0);
+                mPresenter.getCollectArticle(true, 0);
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshLayout(String requestCode) {
-        if (Constant.REFRESH.equals(requestCode)) {
-            mRefreshLayout.autoRefresh();
+    public void onEvent(String requestCode) {
+        switch (requestCode) {
+            case Constant.REFRESH_NEWS:
+            case Constant.REFRESH_COLLECT:
+                mRefreshLayout.autoRefresh();
+                break;
+            default:
+                break;
         }
     }
 

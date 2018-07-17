@@ -2,6 +2,9 @@ package com.example.thatnight.wanandroid.mvp.contract;
 
 import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.base.BaseContract;
+import com.example.thatnight.wanandroid.base.BaseFuncView;
+import com.example.thatnight.wanandroid.callback.MvpBooleanCallback;
+import com.example.thatnight.wanandroid.callback.MvpCallback;
 import com.example.thatnight.wanandroid.entity.Article;
 import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.entity.Project;
@@ -14,37 +17,20 @@ import java.util.List;
  */
 
 public class ProjectContract {
-    public interface IView extends BaseContract.IBaseView {
-
-        void refresh(List<ProjectItem> articles);
-
-        void loadMore(List<ProjectItem> articles);
+    public interface IView extends BaseContract.IBaseView, BaseFuncView {
 
         void setProjectParent(List<KeyValue> projectParent);
-
-        void isCollectSuccess(boolean isSuccess, String s);
     }
 
     public interface IPresenter extends BaseContract.IBasePresenter {
         void getProject(boolean isRefresh, String id, int page);
 
         void getProjectParent();
-
-        void collect(boolean isCollect, String id);
-
-        void getResult(boolean isRefresh, Msg msg);
-
-        void collectResult(boolean isCollect, Msg msg);
-
-        void projectParentResult(Msg msg);
     }
 
     public interface IModel extends BaseContract.IBaseModel {
-        void getProject(boolean isRefresh, String id, int page, IPresenter iPresenter);
+        void getProject(boolean isRefresh, String id, int page, MvpBooleanCallback callback);
 
-        void collect(boolean isCollect, String id, IPresenter iPresenter);
-
-        void getProjectParent(IPresenter iPresenter);
-
+        void getProjectParent(MvpCallback callback);
     }
 }

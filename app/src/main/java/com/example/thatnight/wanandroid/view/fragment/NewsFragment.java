@@ -13,16 +13,16 @@ import android.view.View;
 import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
+import com.example.thatnight.wanandroid.base.BaseContract;
 import com.example.thatnight.wanandroid.base.BaseFragment;
-import com.example.thatnight.wanandroid.base.BaseModel;
+import com.example.thatnight.wanandroid.base.BaseFuncView;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
-import com.example.thatnight.wanandroid.mvp.contract.NewsContract;
-import com.example.thatnight.wanandroid.mvp.model.NewsModel;
-import com.example.thatnight.wanandroid.mvp.presenter.NewsPresenter;
+import com.example.thatnight.wanandroid.mvp.contract.BaseFuncContract;
+import com.example.thatnight.wanandroid.mvp.presenter.BaseFuncPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
-import com.example.thatnight.wanandroid.utils.UiUtil;
+import com.example.thatnight.wanandroid.utils.UiHelper;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
@@ -35,6 +35,7 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -42,7 +43,7 @@ import java.util.List;
  * Created by thatnight on 2017.10.27.
  */
 
-public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, View.OnClickListener, NewsContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
+public class NewsFragment extends BaseFragment<BaseFuncContract.IView, BaseFuncPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, View.OnClickListener, BaseFuncContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
 
@@ -93,15 +94,9 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
         mRefreshLayout.autoRefresh();
     }
 
-
     @Override
-    protected BaseModel initModel() {
-        return new NewsModel();
-    }
-
-    @Override
-    protected NewsPresenter getPresenter() {
-        return new NewsPresenter();
+    protected BaseFuncPresenter<BaseFuncView> getPresenter() {
+        return new BaseFuncPresenter<>();
     }
 
     @Override
@@ -141,8 +136,8 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
         if (LoginContextUtil.getInstance().getUserState().collect(mActivity)) {
             mIbtnCollect = v;
             mSelectPosition = position;
-            UiUtil.setSelected(v);
-            mPresenter.collect(v.isSelected(), String.valueOf(mArticles.get(position).getId()));
+            UiHelper.setSelected(v);
+            mPresenter.collect(v.isSelected(), mArticles.get(position).getId());
         }
     }
 
@@ -150,7 +145,6 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
     public void onTypeClick(View v, int position) {
         KeyValue keyValue = new KeyValue(Constant.SWITCH_TO_CLASSIFY, mArticles.get(position).getChapterName());
         EventBus.getDefault().post(keyValue);
-
     }
 
     @Override
@@ -160,9 +154,7 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
 
     @Override
     public void onCommentClick(View v, int position) {
-       CommentBottomDialogFragment
-               .newInstance(mArticles.get(position))
-               .show(getChildFragmentManager(), "comment");
+        CommentBottomDialogFragment.newInstance(mArticles.get(position)).show(getChildFragmentManager(), "comment");
     }
 
     @Override
@@ -179,39 +171,40 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
         }
     }
 
-
     @Override
-    public void refreshHtml(List<Article> articles) {
-        mArticles.clear();
-        mArticles.addAll(articles);
-        mAdapter.updateData(mArticles);
-    }
-
-    @Override
-    public void loadMoreHtml(List<Article> articles) {
-        mRefreshLayout.finishLoadmore();
-        mArticles.addAll(articles);
-        mAdapter.appendData(articles);
-    }
-
-    @Override
-    public void isCollectSuccess(boolean isSuccess, String s) {
-        //        showToast(s);
+    public void onCollect(boolean isSuccess, String s) {
         Snackbar.make(mRootView, s, Snackbar.LENGTH_SHORT).setAction("取消", new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 if (mIbtnCollect != null) {
-                    UiUtil.setSelected(mIbtnCollect);
+                    UiHelper.setSelected(mIbtnCollect);
                 }
-                mPresenter.collect(mIbtnCollect.isSelected(), String.valueOf(mArticles.get(mSelectPosition).getId()));
+                mPresenter.collect(mIbtnCollect.isSelected(), mArticles.get(mSelectPosition).getId());
             }
         }).show();
         if (!isSuccess) {
             if (mIbtnCollect != null) {
-                UiUtil.setSelected(mIbtnCollect);
+                UiHelper.setSelected(mIbtnCollect);
             }
         }
     }
+
+    @Override
+    public <T> void refreshData(List<T> datas) {
+        mArticles.clear();
+        mArticles.addAll((Collection<? extends Article>) datas);
+        mAdapter.updateData(mArticles);
+    }
+
+    @Override
+    public <T> void loadmoreData(List<T> datas) {
+
+
+        mRefreshLayout.finishLoadmore();
+        mArticles.addAll((Collection<? extends Article>) datas);
+        mAdapter.appendData(datas);
+    }
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -225,11 +218,16 @@ public class NewsFragment extends BaseFragment<NewsContract.IView, NewsPresenter
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void refreshLayout(String requestCode) {
-        if (Constant.REFRESH.equals(requestCode) | Constant.REFRESH_NEWS.equals(requestCode)) {
-            mRefreshLayout.autoRefresh();
-        } else if (Constant.TOP_NEWS.equals(requestCode)) {
-            mRv.smoothScrollToPosition(0);
+    public void onEvent(String requestCode) {
+        switch (requestCode) {
+            case Constant.REFRESH_NEWS:
+                mRefreshLayout.autoRefresh();
+                break;
+            case Constant.TOP_NEWS:
+                mRv.smoothScrollToPosition(0);
+                break;
+            default:
+                break;
         }
     }
 

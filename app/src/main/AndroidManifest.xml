@@ -59,7 +59,8 @@
             android:theme="@android:style/Theme.Translucent" />
         <activity
             android:name=".view.activity.PhotoActivity"
-            android:theme="@style/TransParentTheme" />
+            android:theme="@style/TransParentTheme"
+        android:launchMode="singleTop"/>
         <activity android:name=".view.activity.SearchActivity" />
     </application>
 
