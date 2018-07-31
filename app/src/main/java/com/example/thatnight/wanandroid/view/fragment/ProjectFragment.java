@@ -18,6 +18,8 @@ import com.example.thatnight.wanandroid.adapter.ProjectRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
+import com.example.thatnight.wanandroid.constant.Constant;
+import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.entity.ProjectItem;
 import com.example.thatnight.wanandroid.mvp.contract.ProjectContract;
 import com.example.thatnight.wanandroid.mvp.model.ProjectModel;
@@ -30,6 +32,8 @@ import com.example.thatnight.wanandroid.view.customview.SkinExpandPopView;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import org.greenrobot.eventbus.Subscribe;
 
 import java.util.Collection;
 import java.util.List;
@@ -66,7 +70,7 @@ public class ProjectFragment extends BaseFragment<ProjectContract.IView, Project
 
     @Override
     protected int getLayoutId() {
-        return R.layout.fragment_recyclerview;
+        return R.layout.fragment_project;
     }
 
     @Override
@@ -139,8 +143,6 @@ public class ProjectFragment extends BaseFragment<ProjectContract.IView, Project
             if (mIbtnCollect != null) {
                 UiHelper.setSelected(mIbtnCollect);
             }
-        } else {
-            //            mRefreshLayout.autoRefresh();
         }
     }
 
@@ -202,7 +204,7 @@ public class ProjectFragment extends BaseFragment<ProjectContract.IView, Project
     @Override
     public void onItemClick(int pos) {
         ProjectItem projectItem = mProjectItems.get(pos);
-        Intent intent = WebViewActivity.newIntent(mActivity, projectItem.getId(), projectItem.getTitle(), projectItem.getLink(), projectItem.isCollect());
+        Intent intent = WebViewActivity.newIntent(mActivity, pos, projectItem.getId(), projectItem.getTitle(), projectItem.getLink(), projectItem.isCollect());
         startActivityForResultAnim(intent, REQUEST_CODE);
     }
 
@@ -231,8 +233,12 @@ public class ProjectFragment extends BaseFragment<ProjectContract.IView, Project
         super.onActivityResult(requestCode, resultCode, data);
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
-                mRefreshLayout.autoRefresh();
+                if (data != null) {
+                    mProjectItems.get(data.getIntExtra(WebViewActivity.KEY_RESULT_POSITION, 0)).setCollect(data.getBooleanExtra(WebViewActivity.KEY_RESULT_COLLECTED, false));
+                    mProjectRvAdapter.notifyDataSetChanged();
+                }
             }
         }
     }
+
 }

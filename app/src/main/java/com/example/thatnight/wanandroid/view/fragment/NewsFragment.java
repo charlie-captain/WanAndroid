@@ -19,6 +19,7 @@ import com.example.thatnight.wanandroid.base.BaseFuncView;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
+import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.BaseFuncContract;
 import com.example.thatnight.wanandroid.mvp.presenter.BaseFuncPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
@@ -121,7 +122,7 @@ public class NewsFragment extends BaseFragment<BaseFuncContract.IView, BaseFuncP
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = WebViewActivity.newIntent(mActivity, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
+        Intent intent = WebViewActivity.newIntent(mActivity, pos, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
         startActivityForResultAnim(intent, 1);
     }
 
@@ -186,6 +187,9 @@ public class NewsFragment extends BaseFragment<BaseFuncContract.IView, BaseFuncP
             if (mIbtnCollect != null) {
                 UiHelper.setSelected(mIbtnCollect);
             }
+        } else {
+            mArticles.get(mSelectPosition).setCollect(mIbtnCollect.isSelected());
+            mAdapter.notifyDataSetChanged();
         }
     }
 
@@ -198,11 +202,9 @@ public class NewsFragment extends BaseFragment<BaseFuncContract.IView, BaseFuncP
 
     @Override
     public <T> void loadmoreData(List<T> datas) {
-
-
         mRefreshLayout.finishLoadmore();
         mArticles.addAll((Collection<? extends Article>) datas);
-        mAdapter.appendData(datas);
+        mAdapter.updateData(mArticles);
     }
 
 
@@ -210,10 +212,14 @@ public class NewsFragment extends BaseFragment<BaseFuncContract.IView, BaseFuncP
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
-                mPresenter.getArticle(true, 0);
+                if (data != null) {
+                    mArticles.get(data.getIntExtra(WebViewActivity.KEY_RESULT_POSITION, 0)).setCollect(data.getBooleanExtra(WebViewActivity.KEY_RESULT_COLLECTED, false));
+                    mAdapter.notifyDataSetChanged();
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
+
     }
 
 

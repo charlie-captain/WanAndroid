@@ -25,6 +25,8 @@ import android.widget.ProgressBar;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseActivity;
+import com.example.thatnight.wanandroid.constant.Constant;
+import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.WebContract;
 import com.example.thatnight.wanandroid.mvp.model.WebModel;
 import com.example.thatnight.wanandroid.mvp.presenter.WebPresenter;
@@ -39,6 +41,8 @@ import com.tencent.smtt.sdk.WebSettings;
 import com.tencent.smtt.sdk.WebView;
 import com.tencent.smtt.sdk.WebViewClient;
 
+import org.greenrobot.eventbus.EventBus;
+
 import java.util.ArrayList;
 import java.util.regex.Pattern;
 
@@ -50,7 +54,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
 
     private CustomWebView mWebView;
     private String mTextTitle, mLink;
-    private int mId, mOriginId;
+    private int mId, mOriginId, mPosition;
     private boolean isCollect;
     private FloatingActionButton mActionButton;
     //    private NestedScrollView mNestedScrollView;
@@ -60,6 +64,9 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
     private boolean isNight = false;
     private boolean isFirst = false;
     public static final int NO_ORIGINID = 0;
+    public static final String KEY_RESULT_COLLECTED = "isSelected";
+    public static final String KEY_RESULT_POSITION= "position";
+
 
     @Override
     public int getLayoutId() {
@@ -71,6 +78,7 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         mBGASwipeBackHelper.setIsOnlyTrackingLeftEdge(true);
         Intent extraIntent = getIntent();
         if (extraIntent != null) {
+            mPosition = extraIntent.getIntExtra("position", 0);
             mId = extraIntent.getIntExtra("id", 0);
             mOriginId = extraIntent.getIntExtra("originId", 0);
             mTextTitle = extraIntent.getStringExtra("title");
@@ -104,10 +112,10 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         mActionButton = $(R.id.fabtn_news);
         mWebView = new CustomWebView(getApplicationContext());
         //点击标题置顶
-//        if (!isFirst) {
-//            Snackbar.make(mWebLayout, "单击标题 , 页面将滚动到顶部哦!", Snackbar.LENGTH_LONG).show();
-//            SharePreferenceUtil.getInstance().putBoolean("webview_update", true);
-//        }
+        //        if (!isFirst) {
+        //            Snackbar.make(mWebLayout, "单击标题 , 页面将滚动到顶部哦!", Snackbar.LENGTH_LONG).show();
+        //            SharePreferenceUtil.getInstance().putBoolean("webview_update", true);
+        //        }
 
         mWebLayout.addView(mWebView);
         if ("night".equals(SkinCompatManager.getInstance().getCurSkinName())) {
@@ -189,7 +197,6 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
         if (mWebView.canGoBack()) {
             mWebView.goBack();
         } else {
-            setResult(RESULT_OK);
             super.onBackPressed();
         }
     }
@@ -231,8 +238,9 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
      * @param isCollect
      * @return
      */
-    public static Intent newIntent(Context context, int id, int originId, String title, String url, boolean isCollect) {
+    public static Intent newIntent(Context context, int position, int id, int originId, String title, String url, boolean isCollect) {
         Intent intent = new Intent();
+        intent.putExtra("position", position);
         intent.putExtra("title", title);
         intent.putExtra("id", id);
         intent.putExtra("originId", originId);
@@ -252,8 +260,8 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
      * @param isCollect
      * @return
      */
-    public static Intent newIntent(Context context, int id, String title, String url, boolean isCollect) {
-        return newIntent(context, id, NO_ORIGINID, title, url, isCollect);
+    public static Intent newIntent(Context context, int position, int id, String title, String url, boolean isCollect) {
+        return newIntent(context, position, id, NO_ORIGINID, title, url, isCollect);
     }
 
     @Override
@@ -319,6 +327,10 @@ public class WebViewActivity extends BaseActivity<WebContract.IWebView, WebPrese
             UiHelper.setSelected(mActionButton);
         }
         showToast(s);
+        Intent intent = new Intent();
+        intent.putExtra(KEY_RESULT_COLLECTED, mActionButton.isSelected());
+        intent.putExtra(KEY_RESULT_POSITION, mPosition);
+        setResult(RESULT_OK,intent);
     }
 
     @Override

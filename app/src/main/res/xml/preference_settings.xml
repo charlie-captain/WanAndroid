@@ -7,12 +7,19 @@
 
         <com.example.thatnight.wanandroid.view.customview.IconPreference
             android:key="@string/pref_user_icon"
-            android:summary="更换头像"
-            android:title="头像" />
+            android:title="更换头像" />
+
+        <Preference
+            android:key="@string/pref_user_nickname"
+            android:summary="昵称"
+            android:textColor="@color/textColorPrimary"
+            android:textColorHint="@color/textColorSecondary"
+            android:title="thatnight"/>
+
 
         <Preference
             android:key="@string/pref_user_name"
-            android:summary="用户名"
+            android:summary="账号"
             android:textColor="@color/textColorPrimary"
             android:textColorHint="@color/textColorSecondary"
             android:title="thatnight"/>

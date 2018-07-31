@@ -93,8 +93,9 @@ public class ExpandPopView extends LinearLayout implements PopupWindow.OnDismiss
         mPopViewTextColor = a.getColor(R.styleable.ExpandPopView_tab_pop_text_color, Color.BLACK);
         mPopViewTextColorSelected = a.getColor(R.styleable.ExpandPopView_tab_pop_text_color_selected, 0);
         a.recycle();
-        mDisplayWidth = ((Activity) mContext).getWindowManager().getDefaultDisplay().getWidth();
-        mDisplayHeight = ((Activity) mContext).getWindowManager().getDefaultDisplay().getHeight();
+
+        mDisplayWidth = mContext.getResources().getDisplayMetrics().widthPixels;
+        mDisplayHeight = mContext.getResources().getDisplayMetrics().heightPixels;
         setOrientation(HORIZONTAL);
     }
 

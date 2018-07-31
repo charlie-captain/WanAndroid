@@ -20,6 +20,7 @@
     <string name="pref_auto_login">auto_login</string>
     <string name="pref_notification">notification</string>
     <string name="pref_user_name">user_name</string>
+    <string name="pref_user_nickname">user_nickname</string>
     <string name="pref_user_password">user_password</string>
     <string name="pref_help">help</string>
     <string name="pref_theme">theme</string>
@@ -31,6 +32,6 @@
     <string name="pref_update">update</string>
     <string name="pref_user_icon">user_icon</string>
 
-    <string name="str_update">优化文章浏览体验\n优化细节体验\n重构代码逻辑\n修复已知问题</string>
+    <string name="str_update">修复数据刷新重要问题\n感谢大家的支持</string>
     <string name="pref_user">user</string>
 </resources>

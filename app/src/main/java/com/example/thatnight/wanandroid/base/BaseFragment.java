@@ -19,10 +19,12 @@ import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
+import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.example.thatnight.wanandroid.view.activity.MainActivity;
 
 import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
 
 /**
  * Created by thatnight on 2017.10.27.
@@ -189,5 +191,8 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
         mActivity.overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
     }
 
+    @Subscribe
+    public void onEvent(Msg msg){
 
+    }
 }

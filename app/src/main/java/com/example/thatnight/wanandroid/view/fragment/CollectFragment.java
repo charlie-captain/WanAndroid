@@ -19,6 +19,7 @@ import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
+import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.CollectContract;
 import com.example.thatnight.wanandroid.mvp.presenter.CollectPresenter;
 import com.example.thatnight.wanandroid.utils.AccountUtil;
@@ -125,7 +126,7 @@ public class CollectFragment extends BaseFragment<CollectContract.IView, Collect
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = WebViewActivity.newIntent(mActivity, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), true);
+        Intent intent = WebViewActivity.newIntent(mActivity, pos, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), true);
         startActivityForResultAnim(intent, REQUEST_CODE);
     }
 
@@ -194,14 +195,13 @@ public class CollectFragment extends BaseFragment<CollectContract.IView, Collect
                 UiHelper.setSelected(mIbtnCollect);
             }
         } else {
-            mRefreshLayout.autoRefresh();
+//            mRefreshLayout.autoRefresh();
         }
     }
 
     @Override
     public <T> void refreshData(List<T> datas) {
-        mArticles.clear();
-        mArticles.addAll((Collection<? extends Article>) datas);
+        mArticles = (List<Article>) datas;
         mAdapter.updateData(mArticles);
     }
 
@@ -209,14 +209,19 @@ public class CollectFragment extends BaseFragment<CollectContract.IView, Collect
     public <T> void loadmoreData(List<T> datas) {
         mRefreshLayout.finishLoadmore();
         mArticles.addAll((Collection<? extends Article>) datas);
-        mAdapter.appendData(datas);
+        mAdapter.updateData(mArticles);
     }
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
-                mPresenter.getCollectArticle(true, 0);
+                if (data != null) {
+                    int pos = data.getIntExtra(WebViewActivity.KEY_RESULT_POSITION, 0);
+                    mArticles.get(pos).setCollect(data.getBooleanExtra(WebViewActivity.KEY_RESULT_COLLECTED, false));
+                    mArticles.remove(pos);
+                    mAdapter.updateData(mArticles);
+                }
             }
         }
         super.onActivityResult(requestCode, resultCode, data);
