@@ -182,7 +182,7 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends B
 
     @Override
     public void showToast(String s) {
-        ToastUtil.showToast(this, s);
+        ToastUtil.showToast(s);
     }
 
 

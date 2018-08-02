@@ -27,9 +27,9 @@ public class DonateUtil {
         boolean hasInstalledAlipay = AlipayDonate.hasInstalledAlipayClient(context);
         if (hasInstalledAlipay) {
             AlipayDonate.startAlipayClient(context, "FKX02930VD4HBWHJWZW87B");
-            ToastUtil.showToast(context,"感谢你的支持");
+            ToastUtil.showToast("感谢你的支持");
         }else{
-            ToastUtil.showToast(context,"找不到应用，该怎么办");
+            ToastUtil.showToast("找不到应用，该怎么办");
         }
     }
 
@@ -45,9 +45,9 @@ public class DonateUtil {
             String qrPath = Environment.getExternalStorageDirectory().getAbsolutePath() + File.separator + "WanAndroid" + File.pathSeparator + "wechat.png";
             WeiXinDonate.saveDonateQrImage2SDCard(qrPath, BitmapFactory.decodeStream(is));
             WeiXinDonate.donateViaWeiXin(context, qrPath);
-            ToastUtil.showToast(context,"感谢你的支持");
+            ToastUtil.showToast("感谢你的支持");
         }else{
-            ToastUtil.showToast(context,"找不到应用，该怎么办");
+            ToastUtil.showToast("找不到应用，该怎么办");
         }
     }
 }

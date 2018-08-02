@@ -24,6 +24,8 @@
     <string name="pref_user_password">user_password</string>
     <string name="pref_help">help</string>
     <string name="pref_theme">theme</string>
+    <string name="pref_auto_day_light">auto_day_light</string>
+    <string name="summary_auto_day_light">summary_auto_day_light</string>
 
     <string name="pref_default_value">安卓蓝</string>
     <string name="bugly_appkey">9bc290a7b0</string>
@@ -32,6 +34,6 @@
     <string name="pref_update">update</string>
     <string name="pref_user_icon">user_icon</string>
 
-    <string name="str_update">修复数据刷新重要问题\n感谢大家的支持</string>
+    <string name="str_update">新增 自动夜间模式\n优化 项目界面</string>
     <string name="pref_user">user</string>
 </resources>

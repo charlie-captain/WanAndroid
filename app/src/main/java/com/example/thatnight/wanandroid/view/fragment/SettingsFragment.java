@@ -1,11 +1,15 @@
 package com.example.thatnight.wanandroid.view.fragment;
 
 
+import android.app.Application;
+import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v14.preference.SwitchPreference;
+import android.support.v4.app.NavUtils;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
@@ -16,17 +20,21 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.base.App;
 import com.example.thatnight.wanandroid.base.TinkerApp;
 import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.entity.BmobAccount;
 import com.example.thatnight.wanandroid.utils.AccountUtil;
+import com.example.thatnight.wanandroid.utils.DayLightUtil;
 import com.example.thatnight.wanandroid.utils.GlideEngine;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
@@ -44,6 +52,7 @@ import com.tencent.bugly.beta.Beta;
 import org.greenrobot.eventbus.EventBus;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -51,6 +60,7 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
+import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
 import cn.bmob.v3.okhttp3.Call;
@@ -68,7 +78,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     private SwitchPreference mSpDayLight;
     private SwitchPreference mSpAutoLogin;
+    private SwitchPreference mSpAutoDayLight;
     private Preference mEtpUserName;
+    private Preference mEtpUserNickName;
     private Preference mEtpUserPwd;
     private PreferenceScreen mPsHelp, mPsUpdate;
     private ListPreference mTheme;
@@ -93,8 +105,10 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private void init() {
         mSpDayLight = (SwitchPreference) findPreference(getString(R.string.pref_day_light));
         mSpAutoLogin = (SwitchPreference) findPreference(getString(R.string.pref_auto_login));
+        mSpAutoDayLight = (SwitchPreference) findPreference(getString(R.string.pref_auto_day_light));
 
         mEtpUserName = findPreference(getString(R.string.pref_user_name));
+        mEtpUserNickName = findPreference(getString(R.string.pref_user_nickname));
         mEtpUserPwd = findPreference(getString(R.string.pref_user_password));
         mPsHelp = (PreferenceScreen) findPreference(getString(R.string.pref_help));
         mPsUpdate = (PreferenceScreen) findPreference(getString(R.string.pref_update));
@@ -108,9 +122,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         mTheme.setOnPreferenceChangeListener(this);
         mSpDayLight.setOnPreferenceClickListener(this);
         mSpAutoLogin.setOnPreferenceClickListener(this);
+        mSpAutoDayLight.setOnPreferenceClickListener(this);
         mEtpUserName.setOnPreferenceClickListener(this);
         mEtpUserPwd.setOnPreferenceClickListener(this);
         mIconPreference.setOnPreferenceClickListener(this);
+        mEtpUserNickName.setOnPreferenceClickListener(this);
     }
 
     private void initData() {
@@ -123,6 +139,17 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
         mPsUpdate.setSummary("版本号 " + BuildConfig.VERSION_NAME);
 
+        //自动夜间模式
+        boolean isAutoDayLight = SharePreferenceUtil.getInstance().getBoolean(getString(R.string.pref_auto_day_light), false);
+        if (isAutoDayLight) {
+            mSpAutoDayLight.setChecked(true);
+            mSpAutoDayLight.setSummaryOn(SharePreferenceUtil.getInstance().optString(getString(R.string.summary_auto_day_light)));
+            mSpDayLight.setChecked(true);
+        } else {
+            mSpAutoDayLight.setChecked(false);
+        }
+
+        //皮肤选择
         String skin = (String) SharePreferenceUtil.getInstance().optString("skin_cn");
         if (!TextUtils.isEmpty(skin)) {
             mTheme.setSummary(skin);
@@ -141,11 +168,13 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 length += "*";
             }
             mEtpUserPwd.setTitle(length);
+            if (AccountUtil.getBmobAccount() != null) {
+                mEtpUserNickName.setTitle(AccountUtil.getBmobAccount().getNickName());
+            }
         } else {
-            mEtpUserName.setTitle("Visitor");
-
-            //删掉密码
-            ((PreferenceCategory) (findPreference(getString(R.string.pref_user)))).removePreference(findPreference(getString(R.string.pref_user_password)));
+            //            mEtpUserName.setTitle("Visitor");
+            ((PreferenceCategory) (findPreference(getString(R.string.pref_user)))).removeAll();
+            ((PreferenceCategory) (findPreference(getString(R.string.pref_user)))).setTitle("无用户信息");
         }
 
         if (LoginContextUtil.getInstance().isLogin() && AccountUtil.getBmobAccount() != null && AccountUtil.getBmobAccount().getIcon() != null) {
@@ -165,59 +194,23 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             }
         }
 
-        if (mEtpUserName == preference) {
-            ToastUtil.showToast(getActivity(), "用户名不支持更改!");
+        if (mEtpUserNickName == preference) {
+            showNickNameDialog();
         }
+
+        //用户名
+        if (mEtpUserName == preference) {
+            ToastUtil.showToast("用户名不支持更改!");
+        }
+        //修改密码
         if (mEtpUserPwd == preference) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-            builder.setTitle("修改密码");
-            View view = View.inflate(getActivity(), R.layout.dialog_change_pwd, null);
-            builder.setView(view);
-            final EditText pwd = view.findViewById(R.id.et_password_cur);
-            final EditText newPwd = view.findViewById(R.id.et_password);
-            builder.setCancelable(false);
-            builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    if (TextUtils.isEmpty(pwd.getText().toString().trim()) || TextUtils.isEmpty(newPwd.getText().toString().trim())) {
-                        ToastUtil.showToast(getActivity(), "输入不能为空");
-                    } else {
-                        if (pwd.getText().toString().trim().equals(newPwd.getText().toString().trim())) {
-                            ToastUtil.showToast(getActivity(), "不能使用旧密码");
-                        } else {
-                            Map<String, String> map = new HashMap<>();
-                            map.put("curPassword", pwd.getText().toString().trim());
-                            map.put("password", newPwd.getText().toString().trim());
-                            map.put("repassword", newPwd.getText().toString().trim());
-
-                            OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_CHANGE_PWD, map, true, new OkHttpResultCallback() {
-                                @Override
-                                public void onError(Call call, Exception e) {
-                                    ToastUtil.showToast(getActivity(), e.getMessage());
-                                }
-
-                                @Override
-                                public void onResponse(byte[] bytes) {
-                                    String response = new String(bytes);
-                                    if (Constant.URL_LOGIN.equals(response)) {
-                                        startActivity(new Intent(getActivity(), LoginActivity.class));
-                                        getActivity().finish();
-                                    } else {
-                                        ToastUtil.showToast(getActivity(), "服务器开小差了");
-                                    }
-                                }
-                            });
-                        }
-                    }
-                }
-            }).setNegativeButton("取消", null).show();
+            showChangePwdDialog();
         }
         //夜间模式
         if (mSpDayLight == preference) {
             if (mSpDayLight.isChecked()) {
                 SkinCompatManager.getInstance().loadSkin("night", SkinCompatManager.SKIN_LOADER_STRATEGY_BUILD_IN);
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES);
-
             } else {
                 String skinName = (String) SharePreferenceUtil.getInstance().optString("skin");
                 if (!TextUtils.isEmpty(skinName)) {
@@ -234,6 +227,30 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
                 SharePreferenceUtil.getInstance().putBoolean(getString(R.string.sp_auto_login), true);
             } else {
                 SharePreferenceUtil.getInstance().putBoolean(getString(R.string.sp_auto_login), false);
+            }
+        }
+
+        //自动夜间模式
+        if (mSpAutoDayLight == preference) {
+            if (mSpAutoDayLight.isChecked()) {
+                if (!TextUtils.isEmpty(SharePreferenceUtil.getInstance().optString(getString(R.string.summary_auto_day_light)))) {
+                    //如果已存在则直接打开
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity()).setMessage("是否更改时间段?").setPositiveButton("是", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            showTimePickerDialog();
+                        }
+                    }).setNegativeButton("否", null);
+                    builder.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                        @Override
+                        public void onCancel(DialogInterface dialog) {
+                            mSpAutoDayLight.setSummaryOn(SharePreferenceUtil.getInstance().optString(getString(R.string.summary_auto_day_light)));
+                        }
+                    }).show();
+                    setAutoDayLight(true);
+                }
+            } else {
+                setAutoDayLight(false);
             }
         }
 
@@ -256,6 +273,154 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         }
         return false;
 
+    }
+
+    /**
+     * 用户昵称修改
+     */
+    private void showNickNameDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("修改昵称");
+        View view = View.inflate(getActivity(), R.layout.dialog_write_comment, null);
+        builder.setView(view);
+        final EditText nickName = view.findViewById(R.id.et_comment_write);
+        nickName.setHint("请输入昵称...");
+        builder.setCancelable(false);
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (TextUtils.isEmpty(nickName.getText().toString().trim())) {
+                    ToastUtil.showToast("输入不能为空");
+                } else {
+                    if (AccountUtil.getBmobAccount() != null) {
+                        Account localAccount = AccountUtil.getAccount();
+                        BmobUser.loginByAccount(localAccount.getUsername(), localAccount.getPassword(), new LogInListener<BmobAccount>() {
+                            @Override
+                            public void done(BmobAccount account, BmobException e) {
+                                if (e == null) {
+                                    account.setNickName(nickName.getText().toString().trim());
+                                    account.update(new UpdateListener() {
+                                        @Override
+                                        public void done(BmobException e) {
+                                            if (e == null) {
+                                                mEtpUserNickName.setTitle(nickName.getText().toString().trim());
+                                            } else {
+                                                ToastUtil.showToast("修改失败, " + e.toString());
+                                            }
+                                        }
+                                    });
+                                } else {
+                                    ToastUtil.showToast("修改失败, " + e.toString());
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        }).setNegativeButton("取消", null).show();
+    }
+
+    /**
+     * 修改密码弹窗
+     */
+    private void showChangePwdDialog() {
+        AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+        builder.setTitle("修改密码");
+        View view = View.inflate(getActivity(), R.layout.dialog_change_pwd, null);
+        builder.setView(view);
+        final EditText pwd = view.findViewById(R.id.et_password_cur);
+        final EditText newPwd = view.findViewById(R.id.et_password);
+        builder.setCancelable(false);
+        builder.setPositiveButton("确认", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialog, int which) {
+                if (TextUtils.isEmpty(pwd.getText().toString().trim()) || TextUtils.isEmpty(newPwd.getText().toString().trim())) {
+                    ToastUtil.showToast("输入不能为空");
+                } else {
+                    if (pwd.getText().toString().trim().equals(newPwd.getText().toString().trim())) {
+                        ToastUtil.showToast("不能使用旧密码");
+                    } else {
+                        Map<String, String> map = new HashMap<>();
+                        map.put("curPassword", pwd.getText().toString().trim());
+                        map.put("password", newPwd.getText().toString().trim());
+                        map.put("repassword", newPwd.getText().toString().trim());
+
+                        OkHttpUtil.getInstance().postAsync(Constant.URL_BASE + Constant.URL_CHANGE_PWD, map, true, new OkHttpResultCallback() {
+                            @Override
+                            public void onError(Call call, Exception e) {
+                                ToastUtil.showToast(e.getMessage());
+                            }
+
+                            @Override
+                            public void onResponse(byte[] bytes) {
+                                String response = new String(bytes);
+                                if (Constant.URL_LOGIN.equals(response)) {
+                                    startActivity(new Intent(getActivity(), LoginActivity.class));
+                                    getActivity().finish();
+                                } else {
+                                    ToastUtil.showToast("服务器开小差了");
+                                }
+                            }
+                        });
+                    }
+                }
+            }
+        }).setNegativeButton("取消", null).show();
+    }
+
+    /**
+     * 显示时间选择器
+     */
+    private void showTimePickerDialog() {
+        int hour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
+        int minute = Calendar.getInstance().get(Calendar.MINUTE);
+        TimePickerDialog timePickerDialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+            @Override
+            public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                final int hourOne = hourOfDay;
+                final int minuteOne = minute;
+                TimePickerDialog dialog = new TimePickerDialog(getActivity(), new TimePickerDialog.OnTimeSetListener() {
+                    @Override
+                    public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+                        mSpAutoDayLight.setSummaryOn(hourOne + ":" + minuteOne + " ~ " + hourOfDay + ":" + minute);
+                        SharePreferenceUtil.getInstance().putString(getString(R.string.summary_auto_day_light), hourOne + ":" + minuteOne + " ~ " + hourOfDay + ":" + minute);
+                        setAutoDayLight(true);
+                        //马上进行设置
+                        DayLightUtil.autoDayLight();
+                    }
+                }, hourOne, minuteOne + 1, true);
+                dialog.setTitle("结束时间");
+                dialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+                    @Override
+                    public void onCancel(DialogInterface dialog) {
+                        setAutoDayLight(false);
+                    }
+                });
+                dialog.show();
+            }
+
+        }, hour, minute, true);
+        timePickerDialog.setOnCancelListener(new DialogInterface.OnCancelListener() {
+            @Override
+            public void onCancel(DialogInterface dialog) {
+                setAutoDayLight(false);
+            }
+        });
+        timePickerDialog.setTitle("开始时间");
+        timePickerDialog.show();
+    }
+
+    /**
+     * 设置自动登陆
+     *
+     * @param isChecked
+     */
+    private void setAutoDayLight(boolean isChecked) {
+        mSpAutoDayLight.setChecked(isChecked);
+        if(isChecked){
+            mSpDayLight.setChecked(isChecked);
+        }
+        SharePreferenceUtil.getInstance().putBoolean(getString(R.string.pref_auto_day_light), isChecked);
     }
 
     @Override

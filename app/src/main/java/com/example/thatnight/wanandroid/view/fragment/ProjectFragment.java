@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.GridLayoutManager;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
@@ -82,13 +83,13 @@ public class ProjectFragment extends BaseFragment<ProjectContract.IView, Project
         mRv = $(R.id.rv_main);
         mRefreshLayout = mRootView.findViewById(R.id.srl_main);
         mProjectRvAdapter = new ProjectRvAdapter();
-        mRv.setLayoutManager(new GridLayoutManager(mActivity, 2));
+        mRv.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
             public void getItemOffsets(Rect outRect, View view, RecyclerView parent, RecyclerView.State state) {
                 super.getItemOffsets(outRect, view, parent, state);
-                outRect.set(10, 20, 10, 10);
+                outRect.set(20, 20, 20, 10);
             }
         });
         mRv.setAdapter(mProjectRvAdapter);

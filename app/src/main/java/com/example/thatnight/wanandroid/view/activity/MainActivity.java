@@ -37,6 +37,7 @@ import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.CommentContainerFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
 import com.example.thatnight.wanandroid.view.fragment.ProjectFragment;
+import com.example.thatnight.wanandroid.view.fragment.ProjectVpFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsContainerFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
 
@@ -60,7 +61,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CollectFragment mCollectFragment;
     private SettingsContainerFragment mSettingsFragment;
     private CommentContainerFragment mCommentFragment;
-    private ProjectFragment mProjectFragment;
+    private ProjectVpFragment mProjectFragment;
 
     private Fragment mLastFragment;
     private Account mAccount;
@@ -106,7 +107,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             mCollectFragment = new CollectFragment();
         }
         if (mProjectFragment == null) {
-            mProjectFragment = new ProjectFragment();
+            mProjectFragment = new ProjectVpFragment();
         }
     }
 
@@ -232,7 +233,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 break;
             case R.id.nv_menu_project:
                 if (mProjectFragment == null) {
-                    mProjectFragment = new ProjectFragment();
+                    mProjectFragment = new ProjectVpFragment();
                 }
                 showFragment(mProjectFragment);
                 break;

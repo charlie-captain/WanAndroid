@@ -167,7 +167,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
 
     @Override
     public void showToast(String s) {
-        ToastUtil.showToast(mActivity, s);
+        ToastUtil.showToast( s);
     }
 
     public void showSnackBar(String s) {

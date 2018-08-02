@@ -15,49 +15,15 @@ import com.example.thatnight.wanandroid.base.TinkerApp;
 
 public class ToastUtil {
     private static Toast sToast;
-    private static final Handler S_HANDLER = new Handler(Looper.getMainLooper());
 
-    public static void showToast(final Context context, final String text) {
-        S_HANDLER.post(new Runnable() {
-            @SuppressLint("ShowToast")
-            @Override
-            public void run() {
-                if (sToast != null) {
-                    sToast.cancel();
-                }
-                if (sToast != null) {
-                    sToast.setText(text);
-                } else {
-                    sToast = Toast.makeText(context, text, Toast.LENGTH_SHORT);
-                }
-                sToast.setDuration(Toast.LENGTH_SHORT);
-                sToast.show();
-            }
-        });
-    }
-
-    public static void showToast( final String text) {
-        S_HANDLER.post(new Runnable() {
-            @SuppressLint("ShowToast")
-            @Override
-            public void run() {
-                if (sToast != null) {
-                    sToast.cancel();
-                }
-                if (sToast != null) {
-                    sToast.setText(text);
-                } else {
-                    sToast = Toast.makeText(TinkerApp.getApplication(), text, Toast.LENGTH_SHORT);
-                }
-                sToast.setDuration(Toast.LENGTH_SHORT);
-                sToast.show();
-            }
-        });
-    }
-
-
-    public static void showToast(Context context, int resId) {
-        showToast(context, context.getResources().getString(resId));
+    public static void showToast(final String text) {
+        if (sToast != null) {
+            sToast.setText(text);
+            sToast.setDuration(Toast.LENGTH_SHORT);
+        } else {
+            sToast = Toast.makeText(TinkerApp.getApplication(), text, Toast.LENGTH_SHORT);
+        }
+        sToast.show();
     }
 
 }
