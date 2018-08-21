@@ -75,7 +75,7 @@ public class ProjectVpFragment extends BaseFragment<ProjectContract.IView, Proje
         mSkinExpandPopView = $(R.id.epv_classify);
         mProgressBar = $(R.id.progressbar);
         mViewPager = $(R.id.vp_project);
-        mViewPager.setPageMargin(2);
+        mViewPager.setPageMargin(10);
         mViewPager.setPageTransformer(true, new ZoomOutPageTranformer());
         mAdapter = new ProjectVpAdapter(mProjectItems);
         mViewPager.setAdapter(mAdapter);

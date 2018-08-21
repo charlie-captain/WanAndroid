@@ -3,15 +3,13 @@ package com.example.thatnight.wanandroid.view.activity;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Build;
-import android.support.annotation.NonNull;
-import android.support.v4.view.ViewPager;
 import android.os.Bundle;
-import android.text.TextUtils;
+import android.support.v4.view.ViewPager;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.LinearLayout;
@@ -22,29 +20,29 @@ import com.example.thatnight.wanandroid.adapter.PhotoPagerAdapter;
 import com.example.thatnight.wanandroid.base.BaseActivity;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BasePresenter;
-import com.example.thatnight.wanandroid.utils.ImageUtil;
-import com.huantansheng.easyphotos.utils.String.StringUtils;
+import com.example.thatnight.wanandroid.utils.FileUtil;
+import com.yanzhenjie.permission.Action;
 import com.yanzhenjie.permission.AndPermission;
 import com.yanzhenjie.permission.Permission;
-import com.yanzhenjie.permission.PermissionListener;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.ImageOnLongClickListener, View.OnClickListener {
+public class PhotoActivity extends BaseActivity implements PhotoPagerAdapter.ImageOnLongClickListener, View.OnClickListener {
     ViewPager mVpDetailsPhoto;
     TextView mTvDetailsPhotoCount;
     private PhotoPagerAdapter mPagerAdapter;
-    private List<T> mPhotoList;
+    public static final String INTENT_URL = "img_url";
     private String mImgUrl;
-    private Uri mImgUri;
     private int mIndex = 0;
     private int mSize = 0;
     private View mImageView;
     private static final String PHOTO_LIST = "photo_list";
     private static final String PHOTO_INDEX = "photo_index";
+    private List<String> mPhotoList;
+    private int mSelectedPosition = -1;
 
-    private Dialog mLongClickDialog;
+    private Dialog mPicDialog;
 
     public static <T> Intent newIntent(Context context, int index, ArrayList<T> list) {
         Intent intent = new Intent(context, PhotoActivity.class);
@@ -56,17 +54,9 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
     }
 
 
-    public static Intent newIntent(Context context, String imgUrl) {
+    public static <T> Intent newIntent(Context context, String imgUrl) {
         Intent intent = new Intent(context, PhotoActivity.class);
-        intent.putExtra("img_url", imgUrl);
-        return intent;
-    }
-
-    public static Intent newIntent(Context context, Uri uri) {
-        Intent intent = new Intent(context, PhotoActivity.class);
-        Bundle bundle = new Bundle();
-        bundle.putParcelable("img_uri", uri);
-        intent.putExtras(bundle);
+        intent.putExtra(INTENT_URL, imgUrl);
         return intent;
     }
 
@@ -78,19 +68,13 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
             int option = View.SYSTEM_UI_FLAG_LAYOUT_HIDE_NAVIGATION | View.SYSTEM_UI_FLAG_LAYOUT_FULLSCREEN | View.SYSTEM_UI_FLAG_LAYOUT_STABLE;
             decorView.setSystemUiVisibility(option);
         }
-        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mIndex = getIntent().getIntExtra(PHOTO_INDEX, 0);
 
-        mPhotoList = (List<T>) getIntent().getExtras().getSerializable(PHOTO_LIST);
+        mPhotoList = (List<String>) getIntent().getExtras().getSerializable(PHOTO_LIST);
         if (mPhotoList == null) {
-            mPhotoList = (List<T>) new ArrayList<String>();
-            mImgUrl = getIntent().getStringExtra("img_url");
-            mImgUri = getIntent().getParcelableExtra("img_uri");
-            if (!TextUtils.isEmpty(mImgUrl)) {
-                mPhotoList.add((T) mImgUrl);
-            } else if (mImgUri != null) {
-                mPhotoList.add((T) mImgUri);
-            }
+            mPhotoList = new ArrayList<String>();
+            mImgUrl = getIntent().getStringExtra(INTENT_URL);
+            mPhotoList.add(mImgUrl);
         }
         mSize = mPhotoList.size();
         mPagerAdapter = new PhotoPagerAdapter(this, mPhotoList, this);
@@ -121,6 +105,8 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
 
     @Override
     protected void initView() {
+        //        StatusBarUtil.setTransparentForImageViewInFragment(this, mImageView);
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
         mVpDetailsPhoto = findViewById(R.id.vp_photo);
         mTvDetailsPhotoCount = findViewById(R.id.tv_photo);
         mVpDetailsPhoto.setAdapter(mPagerAdapter);
@@ -158,89 +144,56 @@ public class PhotoActivity<T> extends BaseActivity implements PhotoPagerAdapter.
     @Override
     public void longClick(View view, int position) {
         mImageView = view;
-        if (mLongClickDialog == null) {
-            mLongClickDialog = new Dialog(this, R.style.DialogShareTheme);
-            LinearLayout root = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.dialog_photo_longclick, null);
-            //初始化视图
-            root.findViewById(R.id.btn_dialog_save).setOnClickListener(this);
-            root.findViewById(R.id.btn_dialog_share).setOnClickListener(this);
-            root.findViewById(R.id.btn_dialog_cancel).setOnClickListener(this);
-            mLongClickDialog.setContentView(root);
-            Window dialogWindow = mLongClickDialog.getWindow();
-            dialogWindow.setGravity(Gravity.BOTTOM);
-            //        dialogWindow.setWindowAnimations(R.style.dialogstyle); // 添加动画
-            WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
-            lp.x = 0; // 新位置X坐标
-            lp.y = 0; // 新位置Y坐标
-            lp.width = (int) getResources().getDisplayMetrics().widthPixels; // 宽度
-            root.measure(0, 0);
-            lp.height = root.getMeasuredHeight();
+        mSelectedPosition = position;
+        mPicDialog = new Dialog(this, R.style.DialogShareTheme);
+        LinearLayout root = (LinearLayout) LayoutInflater.from(this).inflate(R.layout.dialog_photo_longclick, null);
+        //初始化视图
+        root.findViewById(R.id.btn_dialog_save).setOnClickListener(this);
+        root.findViewById(R.id.btn_dialog_share).setOnClickListener(this);
+        root.findViewById(R.id.btn_dialog_cancel).setOnClickListener(this);
+        mPicDialog.setContentView(root);
 
-            lp.alpha = 9f; // 透明度
-            dialogWindow.setAttributes(lp);
-        }
+        //            WindowManager.LayoutParams lp = dialogWindow.getAttributes(); // 获取对话框当前的参数值
+        ////            lp.width = (int) getResources().getDisplayMetrics().widthPixels; // 宽度
+        ////            lp.height = root.getMeasuredHeight();
+        ////            dialogWindow.setAttributes(lp);
 
-        if (mLongClickDialog.isShowing()) {
-            mLongClickDialog.dismiss();
-        }
-        mLongClickDialog.show();
+        ViewGroup.LayoutParams params = root.getLayoutParams();
+        params.width = getResources().getDisplayMetrics().widthPixels;
+        root.setLayoutParams(params);
+        Window dialogWindow = mPicDialog.getWindow();
+        dialogWindow.setGravity(Gravity.BOTTOM);
+        mPicDialog.show();
     }
 
     @Override
-    public void onClick(View v) {
+    public void onClick(final View v) {
         if (R.id.btn_dialog_cancel != v.getId()) {
-            AndPermission.with(this).requestCode(100).permission(Permission.STORAGE).callback(mPermissionListener).start();
+            AndPermission.with(this).permission(Permission.Group.STORAGE).rationale(null).onGranted(new Action() {
+                @Override
+                public void onAction(List<String> permissions) {
+                    switch (v.getId()) {
+                        case R.id.btn_dialog_share:
+                            //由文件得到uri
+                            FileUtil.sharePic(PhotoActivity.this, mPhotoList.get(mSelectedPosition));
+                            break;
+                        case R.id.btn_dialog_save:
+                            //保存图片后发送广播通知更新数据库
+                            FileUtil.savePic(PhotoActivity.this, mPhotoList.get(mSelectedPosition));
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }).start();
         }
-        switch (v.getId()) {
-            case R.id.btn_dialog_share:
-                //由文件得到uri
-                if (ImageUtil.sharePhoto(mImageView) != null) {
-                    Uri imageUri = Uri.fromFile(ImageUtil.sharePhoto(mImageView));
-                    Intent shareIntent = new Intent();
-                    shareIntent.setAction(Intent.ACTION_SEND);
-                    shareIntent.putExtra(Intent.EXTRA_STREAM, imageUri);
-                    shareIntent.setType("image/*");
-                    startActivity(Intent.createChooser(shareIntent, "分享图片"));
-                }
-                break;
-            case R.id.btn_dialog_save:
-                //保存图片后发送广播通知更新数据库
-                if (ImageUtil.saveFile(mImageView) != null) {
-                    Uri uri = Uri.fromFile(ImageUtil.saveFile(mImageView));
-                    sendBroadcast(new Intent(Intent.ACTION_MEDIA_SCANNER_SCAN_FILE, uri));
-                    showToast("图片保存成功");
-                }
-                break;
-            case R.id.btn_dialog_cancel:
-                if (mLongClickDialog.isShowing()) {
-                    mLongClickDialog.dismiss();
-                }
-                break;
-            default:
-                break;
-        }
-        if (mLongClickDialog.isShowing()) {
-            mLongClickDialog.dismiss();
+        if (mPicDialog != null) {
+            mPicDialog.dismiss();
         }
     }
-
-    private PermissionListener mPermissionListener = new PermissionListener() {
-        @Override
-        public void onSucceed(int requestCode, @NonNull List<String> grantPermissions) {
-
-        }
-
-        @Override
-        public void onFailed(int requestCode, @NonNull List<String> deniedPermissions) {
-
-        }
-    };
 
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        if (mLongClickDialog != null) {
-            mLongClickDialog.dismiss();
-        }
     }
 }
