@@ -138,7 +138,7 @@ public class CommentFragment extends BaseFragment<CommentContract.IView, Comment
     public void onItemLongClick(final int pos) {
         //admin
         if (AccountUtil.getAccount() != null && "thatnight".equals(AccountUtil.getAccount().getUsername())) {
-            new android.app.AlertDialog.Builder(getActivity()).setMessage("删除" + mComments.get(pos)).setPositiveButton("是", new DialogInterface.OnClickListener() {
+            new android.app.AlertDialog.Builder(getActivity()).setMessage("删除" + mComments.get(pos).getContent()).setPositiveButton("是", new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     mComments.get(pos).delete(new UpdateListener() {

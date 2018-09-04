@@ -12,7 +12,6 @@ import android.support.v7.widget.helper.ItemTouchHelper;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.text.TextWatcher;
-import android.util.Log;
 import android.view.KeyEvent;
 import android.view.View;
 import android.view.inputmethod.EditorInfo;
@@ -307,13 +306,13 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = WebViewActivity.newIntent(this, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
+        Intent intent = ArticleWebViewActivity.newIntent(this, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
         startActivityForResultAnim(intent, 1);
     }
 
     @Override
     public void onItemLongClick(int pos) {
-
+        UiHelper.showCopyArticleDialog(this, mArticles, pos);
     }
 
     @Override

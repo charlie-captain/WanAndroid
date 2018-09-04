@@ -41,6 +41,7 @@ import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
+import com.example.thatnight.wanandroid.utils.ViewHepler;
 import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 import com.example.thatnight.wanandroid.view.activity.PhotoActivity;
 import com.example.thatnight.wanandroid.view.customview.IconPreference;
@@ -79,6 +80,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private SwitchPreference mSpDayLight;
     private SwitchPreference mSpAutoLogin;
     private SwitchPreference mSpAutoDayLight;
+    private SwitchPreference mSpBanner;
+    private SwitchPreference mSpComment;
     private Preference mEtpUserName;
     private Preference mEtpUserNickName;
     private Preference mEtpUserPwd;
@@ -106,6 +109,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         mSpDayLight = (SwitchPreference) findPreference(getString(R.string.pref_day_light));
         mSpAutoLogin = (SwitchPreference) findPreference(getString(R.string.pref_auto_login));
         mSpAutoDayLight = (SwitchPreference) findPreference(getString(R.string.pref_auto_day_light));
+        mSpComment = (SwitchPreference) findPreference(getString(R.string.pref_comment));
+        mSpBanner = (SwitchPreference) findPreference(getString(R.string.pref_banner));
 
         mEtpUserName = findPreference(getString(R.string.pref_user_name));
         mEtpUserNickName = findPreference(getString(R.string.pref_user_nickname));
@@ -127,6 +132,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         mEtpUserPwd.setOnPreferenceClickListener(this);
         mIconPreference.setOnPreferenceClickListener(this);
         mEtpUserNickName.setOnPreferenceClickListener(this);
+        mSpBanner.setOnPreferenceClickListener(this);
     }
 
     private void initData() {
@@ -180,6 +186,11 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
         if (LoginContextUtil.getInstance().isLogin() && AccountUtil.getBmobAccount() != null && AccountUtil.getBmobAccount().getIcon() != null) {
             mIconPreference.setIconUrl(AccountUtil.getBmobAccount().getIcon().getUrl());
         }
+
+        //Banner
+        mSpBanner.setChecked(SharePreferenceUtil.getInstance().optBoolean(getString(R.string.pref_banner)));
+
+
     }
 
 
@@ -254,6 +265,16 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             }
         }
 
+        //Banner
+        if (mSpBanner == preference) {
+            ViewHepler.saveBannerConfig(mSpBanner.isChecked());
+        }
+
+        //评论
+        if (mSpComment == preference) {
+            ViewHepler.saveCommentConfig(mSpComment.isChecked());
+        }
+
         //检查更新
         if (mPsUpdate == preference) {
             Beta.checkUpgrade();
@@ -271,6 +292,8 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
             getParentFragment().getChildFragmentManager().beginTransaction().hide(this).show(mAboutFragment).addToBackStack(null).commit();
             ((SettingsContainerFragment) getParentFragment()).setTitle("关于");
         }
+
+
         return false;
 
     }
@@ -417,7 +440,7 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
      */
     private void setAutoDayLight(boolean isChecked) {
         mSpAutoDayLight.setChecked(isChecked);
-        if(isChecked){
+        if (isChecked) {
             mSpDayLight.setChecked(isChecked);
         }
         SharePreferenceUtil.getInstance().putBoolean(getString(R.string.pref_auto_day_light), isChecked);

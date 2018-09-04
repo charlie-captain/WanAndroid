@@ -68,6 +68,14 @@
             android:title="自动登录"/>
 
 
+
+        <SwitchPreference
+            android:key="banner"
+            android:summary="顶部轮播图"
+            android:title="首页轮播图"
+        />
+
+
     </PreferenceCategory>
 
 

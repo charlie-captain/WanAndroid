@@ -1,7 +1,6 @@
 package com.example.thatnight.wanandroid.view.fragment;
 
 import android.app.Activity;
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -19,14 +18,12 @@ import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
-import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.CollectContract;
 import com.example.thatnight.wanandroid.mvp.presenter.CollectPresenter;
-import com.example.thatnight.wanandroid.utils.AccountUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.UiHelper;
+import com.example.thatnight.wanandroid.view.activity.ArticleWebViewActivity;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
-import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -126,13 +123,13 @@ public class CollectFragment extends BaseFragment<CollectContract.IView, Collect
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = WebViewActivity.newIntent(mActivity, pos, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), true);
+        Intent intent = ArticleWebViewActivity.newIntent(mActivity, pos, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), true);
         startActivityForResultAnim(intent, REQUEST_CODE);
     }
 
     @Override
     public void onItemLongClick(int pos) {
-
+        UiHelper.showCopyArticleDialog(mActivity, mArticles, pos);
     }
 
 
@@ -217,8 +214,8 @@ public class CollectFragment extends BaseFragment<CollectContract.IView, Collect
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == REQUEST_CODE) {
                 if (data != null) {
-                    int pos = data.getIntExtra(WebViewActivity.KEY_RESULT_POSITION, 0);
-                    mArticles.get(pos).setCollect(data.getBooleanExtra(WebViewActivity.KEY_RESULT_COLLECTED, false));
+                    int pos = data.getIntExtra(ArticleWebViewActivity.KEY_RESULT_POSITION, 0);
+                    mArticles.get(pos).setCollect(data.getBooleanExtra(ArticleWebViewActivity.KEY_RESULT_COLLECTED, false));
                     mArticles.remove(pos);
                     mAdapter.updateData(mArticles);
                 }

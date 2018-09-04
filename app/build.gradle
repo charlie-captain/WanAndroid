@@ -16,8 +16,8 @@ android {
         applicationId "com.example.thatnight.wanandroid"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 22
-        versionName "1.7.5"
+        versionCode 23
+        versionName "1.7.6"
         testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
         multiDexEnabled true

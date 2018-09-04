@@ -1,6 +1,8 @@
 package com.example.thatnight.wanandroid.view.fragment;
 
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
@@ -13,19 +15,18 @@ import android.view.View;
 import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
-import com.example.thatnight.wanandroid.base.BaseContract;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseFuncView;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
-import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.BaseFuncContract;
 import com.example.thatnight.wanandroid.mvp.presenter.BaseFuncPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
+import com.example.thatnight.wanandroid.utils.TextHelper;
 import com.example.thatnight.wanandroid.utils.UiHelper;
+import com.example.thatnight.wanandroid.view.activity.ArticleWebViewActivity;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
-import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -122,13 +123,13 @@ public class NewsFragment extends BaseFragment<BaseFuncContract.IView, BaseFuncP
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = WebViewActivity.newIntent(mActivity, pos, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
+        Intent intent = ArticleWebViewActivity.newIntent(mActivity, pos, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
         startActivityForResultAnim(intent, 1);
     }
 
     @Override
-    public void onItemLongClick(int pos) {
-
+    public void onItemLongClick(final int pos) {
+        UiHelper.showCopyArticleDialog(mActivity, mArticles, pos);
     }
 
 
@@ -213,7 +214,7 @@ public class NewsFragment extends BaseFragment<BaseFuncContract.IView, BaseFuncP
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
                 if (data != null) {
-                    mArticles.get(data.getIntExtra(WebViewActivity.KEY_RESULT_POSITION, 0)).setCollect(data.getBooleanExtra(WebViewActivity.KEY_RESULT_COLLECTED, false));
+                    mArticles.get(data.getIntExtra(ArticleWebViewActivity.KEY_RESULT_POSITION, 0)).setCollect(data.getBooleanExtra(ArticleWebViewActivity.KEY_RESULT_COLLECTED, false));
                     mAdapter.notifyDataSetChanged();
                 }
             }

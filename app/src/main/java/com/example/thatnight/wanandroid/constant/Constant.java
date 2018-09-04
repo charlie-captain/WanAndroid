@@ -22,6 +22,7 @@ public class Constant {
     public static final String URL_TREE = "/tree/json";
 
     public static final String URL_HOT_SEARCH = "/hotkey/json";
+    public static final String URL_BANNER = "/banner/json";
 
     /*
         post

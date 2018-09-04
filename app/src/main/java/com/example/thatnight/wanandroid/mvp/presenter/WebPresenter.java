@@ -4,13 +4,13 @@ import com.example.thatnight.wanandroid.base.BasePresenter;
 import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.WebContract;
 import com.example.thatnight.wanandroid.mvp.model.WebModel;
-import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
+import com.example.thatnight.wanandroid.base.BaseWebViewActivity;
 
 /**
  * Created by thatnight on 2017.11.1.
  */
 
-public class WebPresenter extends BasePresenter<WebViewActivity> implements WebContract.IWebPresenter {
+public class WebPresenter extends BasePresenter<BaseWebViewActivity> implements WebContract.IWebPresenter {
 
     protected WebModel mWebModel;
 

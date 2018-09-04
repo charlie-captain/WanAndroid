@@ -15,18 +15,15 @@ import com.example.expandpopview.view.ExpandPopView;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
-import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
-import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.ClassifyContract;
-import com.example.thatnight.wanandroid.mvp.model.ClassifyModel;
 import com.example.thatnight.wanandroid.mvp.presenter.ClassifyPresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.UiHelper;
+import com.example.thatnight.wanandroid.view.activity.ArticleWebViewActivity;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
-import com.example.thatnight.wanandroid.view.activity.WebViewActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnLoadmoreListener;
@@ -127,12 +124,13 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = WebViewActivity.newIntent(mActivity, pos, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
+        Intent intent = ArticleWebViewActivity.newIntent(mActivity, pos, article.getId(), article.getOriginId(), article.getTitle(), article.getLink(), article.isCollect());
         startActivityForResultAnim(intent, 1);
     }
 
     @Override
     public void onItemLongClick(int pos) {
+        UiHelper.showCopyArticleDialog(mActivity, mArticles, pos);
 
     }
 
@@ -250,7 +248,7 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
         if (resultCode == Activity.RESULT_OK) {
             if (requestCode == 1) {
                 if (data != null) {
-                    mArticles.get(data.getIntExtra(WebViewActivity.KEY_RESULT_POSITION, 0)).setCollect(data.getBooleanExtra(WebViewActivity.KEY_RESULT_COLLECTED, false));
+                    mArticles.get(data.getIntExtra(ArticleWebViewActivity.KEY_RESULT_POSITION, 0)).setCollect(data.getBooleanExtra(ArticleWebViewActivity.KEY_RESULT_COLLECTED, false));
                     mAdapter.notifyDataSetChanged();
                 }
             }

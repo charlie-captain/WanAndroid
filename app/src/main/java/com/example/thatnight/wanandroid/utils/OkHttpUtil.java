@@ -6,6 +6,8 @@ import android.os.Handler;
 import android.os.Looper;
 
 import com.example.thatnight.wanandroid.constant.Constant;
+import com.example.thatnight.wanandroid.entity.Msg;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
@@ -75,6 +77,41 @@ public class OkHttpUtil {
     public void getAsync(String url, OkHttpResultCallback okHttpResultCallback) {
         Request request = new Request.Builder().url(url).build();
         deliveryResult(okHttpResultCallback, request);
+    }
+
+    /**
+     * 异步的Get请求
+     */
+    public void getAsync(String url, final OkHttpStringResultCallback okHttpResultCallback) {
+        Request request = new Request.Builder().url(url).build();
+        deliveryResult(new OkHttpResultCallback() {
+            @Override
+            public void onError(Call call, Exception e) {
+
+            }
+
+            @Override
+            public void onResponse(byte[] bytes) {
+                String response = new String(bytes);
+                Msg msg = GsonUtil.gsonToBean(response, Msg.class);
+                if (msg != null) {
+                    if (msg.getErrorCode() == Constant.CODE_SUCCESS) {
+                        if (msg.getData() != null) {
+                            String data = GsonUtil.gsonToJson(msg.getData());
+                            okHttpResultCallback.onResponse(data);
+                        }
+                    } else {
+                        if (msg.getErrorMsg() != null) {
+                            ToastUtil.showToast(msg.getErrorMsg().toString());
+                        } else {
+                            ToastUtil.showToast("服务器数据出错!");
+                        }
+                    }
+                } else {
+                    ToastUtil.showToast("服务器出现问题啦!");
+                }
+            }
+        }, request);
     }
 
     /**
@@ -172,8 +209,7 @@ public class OkHttpUtil {
             }
         }
         MultipartBody multipartBody = multipartBodyBuilder.setType(MultipartBody.FORM).build();
-        return new Request.Builder().url(url)
-                .post(multipartBody).build();
+        return new Request.Builder().url(url).post(multipartBody).build();
     }
 
 

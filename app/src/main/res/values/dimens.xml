@@ -11,4 +11,5 @@
     <dimen name="status_bar_height">24dp</dimen>
     <dimen name="tablayout_indicator_height">2dp</dimen>
 
+    <dimen name="main_vp_height">180dp</dimen>
 </resources>

@@ -19,14 +19,14 @@ import java.util.List;
  * Created by ThatNight on 2017.5.8.
  */
 
-public class PhotoPagerAdapter<T> extends PagerAdapter {
-    private List<T> mList;
+public class PhotoPagerAdapter extends PagerAdapter {
+    private List<String> mList;
     private LayoutInflater mInflater;
     private Context mContext;
 
     private ImageOnLongClickListener mOnLongClickListener;
 
-    public PhotoPagerAdapter(Context context, List<T> list, ImageOnLongClickListener onLongClickListener) {
+    public PhotoPagerAdapter(Context context, List<String> list, ImageOnLongClickListener onLongClickListener) {
         mList = list;
         mInflater = LayoutInflater.from(context);
         mContext = context;
@@ -37,6 +37,8 @@ public class PhotoPagerAdapter<T> extends PagerAdapter {
     public int getCount() {
         return mList.size();
     }
+
+
 
     @Override
     public boolean isViewFromObject(View view, Object object) {
