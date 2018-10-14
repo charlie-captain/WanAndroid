@@ -3,6 +3,7 @@ package com.example.thatnight.wanandroid.utils;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import com.example.thatnight.wanandroid.base.App;
 import com.example.thatnight.wanandroid.base.TinkerApp;
 
 /**
@@ -21,7 +22,7 @@ public class SharePreferenceUtil {
     }
 
     public SharePreferenceUtil() {
-        sSp = TinkerApp.getApplication().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
+        sSp = App.getApplication().getSharedPreferences(FILE_NAME, Context.MODE_PRIVATE);
         sEditor = sSp.edit();
     }
 

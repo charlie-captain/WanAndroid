@@ -8,6 +8,7 @@ import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v4.app.Fragment;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -38,12 +39,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
     protected boolean mIsPrepare;
     protected boolean mIsVisible;
     protected Toolbar mToolbar;
-    protected TextView mTitle;
-    protected ImageButton mIbtnDraw;
-    protected DrawerLayout mDrawerLayout;
-    protected OnDrawBtnClickCallback mDrawBtnClickCallback;
     protected P mPresenter;
-
 
     @Nullable
     @Override
@@ -58,19 +54,16 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
             initView();
             initListener();
             mIsPrepare = true;
-            onLazyLoad();
+            isLoadData();
         }
         return mRootView;
     }
 
-    protected  void initToolBar(){
-        mToolbar = mRootView.findViewById(R.id.tb);
-        if(mToolbar !=null){
-            mToolbar.setTitle("");
-        }
-    }
+    protected abstract void isLoadData();
 
-    private void initPresenter() {
+    protected abstract void initToolBar();
+
+    protected void initPresenter() {
         if (mPresenter != null) {
             mPresenter.attachView(this);
         }
@@ -78,22 +71,6 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
 
     protected abstract P getPresenter();
 
-    @Override
-    public void onHiddenChanged(boolean hidden) {
-        super.onHiddenChanged(hidden);
-        if(hidden){
-            mIsVisible=false;
-        }else{
-            mIsVisible=true;
-            onVisibleToUser();
-        }
-    }
-
-    private void onVisibleToUser() {
-        if (mIsVisible && mIsPrepare) {
-            onLazyLoad();
-        }
-    }
 
     protected <T extends View> T $(int resId) {
         if (mRootView == null) {
@@ -106,42 +83,8 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
     public void onAttach(Context context) {
         super.onAttach(context);
         mActivity = getActivity();
-        if (getActivity() instanceof MainActivity) {
-            mDrawBtnClickCallback = (OnDrawBtnClickCallback) getActivity();
-        }
     }
 
-    /**
-     * 显示抽屉
-     * @param isShow
-     */
-    protected void setDraw(boolean isShow) {
-        if (isShow) {
-            mIbtnDraw = mRootView.findViewById(R.id.tb_draw);
-            if (mIbtnDraw != null) {
-                mIbtnDraw.setVisibility(View.VISIBLE);
-                mIbtnDraw.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mDrawBtnClickCallback != null) {
-                            mDrawBtnClickCallback.onDrawBtnClick();
-                        }
-                    }
-                });
-            }
-        }
-    }
-
-    public void setDrawBtnClickCallback(OnDrawBtnClickCallback callback) {
-        mDrawBtnClickCallback = callback;
-    }
-
-    public void setTitle(String title) {
-        mTitle = mRootView.findViewById(R.id.tb_title);
-        if (mTitle != null) {
-            mTitle.setText(title);
-        }
-    }
 
     protected abstract int getLayoutId();
 
@@ -167,7 +110,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
 
     @Override
     public void showToast(String s) {
-        ToastUtil.showToast( s);
+        ToastUtil.showToast(s);
     }
 
     public void showSnackBar(String s) {
@@ -192,7 +135,7 @@ public abstract class BaseFragment<V extends BaseContract.IBaseView,
     }
 
     @Subscribe
-    public void onEvent(Msg msg){
+    public void onEvent(Msg msg) {
 
     }
 }

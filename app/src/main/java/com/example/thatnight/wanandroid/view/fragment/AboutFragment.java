@@ -6,12 +6,12 @@ import android.widget.TextView;
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseFragment;
-import com.example.thatnight.wanandroid.base.BaseModel;
+import com.example.thatnight.wanandroid.base.BaseMenuFragment;
+import com.example.thatnight.wanandroid.base.BasePagerFragment;
 import com.example.thatnight.wanandroid.base.BasePresenter;
 import com.example.thatnight.wanandroid.entity.BmobAccount;
 
 import java.util.Calendar;
-import java.util.List;
 
 import cn.bmob.v3.BmobQuery;
 import cn.bmob.v3.exception.BmobException;
@@ -20,7 +20,7 @@ import cn.bmob.v3.listener.CountListener;
 /**
  * 关于
  */
-public class AboutFragment extends BaseFragment {
+public class AboutFragment extends BaseMenuFragment {
 
     private TextView mTvVersion, mTvRight, mTvAbout, mTvCount;
 

@@ -16,6 +16,11 @@
             android:title="项目" />
 
         <item
+            android:id="@+id/nv_menu_more"
+            android:icon="@drawable/ic_more"
+            android:title="导航" />
+
+        <item
             android:id="@+id/nv_menu_user"
             android:icon="@drawable/ic_user"
             android:title="我的"

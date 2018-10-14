@@ -24,13 +24,4 @@
         android:textColor="@color/white"
         />
 
-    <ImageButton
-        android:id="@+id/tb_draw"
-        android:layout_width="@dimen/width_height_button"
-        android:layout_height="@dimen/width_height_button"
-        android:layout_gravity="left"
-        android:background="?attr/selectableItemBackgroundBorderless"
-        android:src="@drawable/ic_menu_white"
-        android:visibility="gone"
-        />
 </android.support.v7.widget.Toolbar>

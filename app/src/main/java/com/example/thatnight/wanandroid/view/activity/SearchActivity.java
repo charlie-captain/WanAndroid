@@ -201,6 +201,7 @@ public class SearchActivity extends BaseActivity<SearchContract.IView, SearchPre
             @Override
             public boolean onTagClick(View view, int position, FlowLayout parent) {
                 mPage = 0;
+                UiHelper.inputSoftWare(false,mSearchView);
                 mSearchView.setText(mHotKeys.get(position).getName());
                 mSearchView.setSelection(mHotKeys.get(position).getName().length());
                 mTagFlowLayout.setVisibility(View.GONE);

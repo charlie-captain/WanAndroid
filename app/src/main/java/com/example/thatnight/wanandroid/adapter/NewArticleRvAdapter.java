@@ -124,38 +124,43 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
 
             mComment.setText(String.valueOf(mCommentArray.get(getLayoutPosition())));
 
-            if (article.getOriginId() <= 0) {      //最新文章
-                if (article.isCollect()) {
+            if (article.isOther()) {
+                //如果是导航文章，不显示收藏
+                mIbLike.setVisibility(View.GONE);
+            } else {
+                if (article.getOriginId() <= 0) {      //最新文章
+                    if (article.isCollect()) {
+                        mIbLike.setSelected(true);
+                        mSelectArray.put(getLayoutPosition(), true);
+                    } else {
+                        mIbLike.setSelected(false);
+                        mSelectArray.put(getLayoutPosition(), false);
+                    }
+                    mIbLike.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (v.isSelected()) {
+                                mSelectArray.put(getLayoutPosition(), false);
+                            } else {
+                                mSelectArray.put(getLayoutPosition(), true);
+                            }
+                            if (mOnIbtnClickListener != null) {
+                                mOnIbtnClickListener.onIbtnClick(v, getLayoutPosition());
+                            }
+                        }
+                    });
+                } else {                        //收藏文章
+                    mIbLike.setTag(getLayoutPosition());
                     mIbLike.setSelected(true);
-                    mSelectArray.put(getLayoutPosition(), true);
-                } else {
-                    mIbLike.setSelected(false);
-                    mSelectArray.put(getLayoutPosition(), false);
+                    mIbLike.setOnClickListener(new View.OnClickListener() {
+                        @Override
+                        public void onClick(View v) {
+                            if (mOnIbtnClickListener != null) {
+                                mOnIbtnClickListener.onIbtnClick(v, getLayoutPosition());
+                            }
+                        }
+                    });
                 }
-                mIbLike.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (v.isSelected()) {
-                            mSelectArray.put(getLayoutPosition(), false);
-                        } else {
-                            mSelectArray.put(getLayoutPosition(), true);
-                        }
-                        if (mOnIbtnClickListener != null) {
-                            mOnIbtnClickListener.onIbtnClick(v, getLayoutPosition());
-                        }
-                    }
-                });
-            } else {                        //收藏文章
-                mIbLike.setTag(getLayoutPosition());
-                mIbLike.setSelected(true);
-                mIbLike.setOnClickListener(new View.OnClickListener() {
-                    @Override
-                    public void onClick(View v) {
-                        if (mOnIbtnClickListener != null) {
-                            mOnIbtnClickListener.onIbtnClick(v, getLayoutPosition());
-                        }
-                    }
-                });
             }
         }
 

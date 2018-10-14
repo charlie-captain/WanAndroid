@@ -17,12 +17,12 @@ import org.greenrobot.eventbus.EventBus;
 public class ViewHepler {
 
     public static final void saveCommentConfig(boolean isOpen) {
-        SharePreferenceUtil.getInstance().putBoolean(TinkerApp.getApplication().getString(R.string.pref_comment), isOpen);
+        SharePreferenceUtil.getInstance().putBoolean(App.getApplication().getString(R.string.pref_comment), isOpen);
         EventBus.getDefault().post(isOpen ? EventBusConfig.OPEN_COMMENT : EventBusConfig.CLOSE_COMMENT);
     }
 
     public static final void saveBannerConfig(boolean isOpen) {
-        SharePreferenceUtil.getInstance().putBoolean(TinkerApp.getApplication().getString(R.string.pref_banner), isOpen);
+        SharePreferenceUtil.getInstance().putBoolean(App.getApplication().getString(R.string.pref_banner), isOpen);
         EventBus.getDefault().post(isOpen ? EventBusConfig.OPEN_BANNER : EventBusConfig.CLOSE_BANNER);
     }
 }

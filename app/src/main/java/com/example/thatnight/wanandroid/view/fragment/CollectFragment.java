@@ -15,6 +15,7 @@ import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
+import com.example.thatnight.wanandroid.base.BaseMenuFragment;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
@@ -42,7 +43,7 @@ import java.util.List;
  * Created by thatnight on 2017.10.27.
  */
 
-public class CollectFragment extends BaseFragment<CollectContract.IView, CollectPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, View.OnClickListener, CollectContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
+public class CollectFragment extends BaseMenuFragment<CollectContract.IView, CollectPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, View.OnClickListener, CollectContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
 

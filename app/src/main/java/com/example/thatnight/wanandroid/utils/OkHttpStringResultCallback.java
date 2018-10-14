@@ -1,9 +1,7 @@
 package com.example.thatnight.wanandroid.utils;
 
 
-import com.example.thatnight.wanandroid.entity.Msg;
-
-import cn.bmob.v3.okhttp3.Call;
+import android.telecom.Call;
 
 public interface OkHttpStringResultCallback {
 

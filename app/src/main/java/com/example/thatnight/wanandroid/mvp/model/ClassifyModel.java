@@ -21,7 +21,8 @@ import com.tencent.bugly.crashreport.CrashReport;
 import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.okhttp3.Call;
+import okhttp3.Call;
+
 
 /**
  * Created by thatnight on 2017.11.1.

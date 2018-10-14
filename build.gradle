@@ -6,10 +6,8 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:3.3.0-alpha03'
+        classpath 'com.android.tools.build:gradle:3.1.4'
         classpath 'com.novoda:bintray-release:0.8.1'
-
-        classpath('com.tencent.tinker:tinker-patch-gradle-plugin:1.7.5')
 
         // tinkersupport插件
         classpath "com.tencent.bugly:tinker-support:1.1.2"

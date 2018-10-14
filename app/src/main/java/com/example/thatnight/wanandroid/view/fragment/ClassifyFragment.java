@@ -14,7 +14,7 @@ import com.example.expandpopview.entity.KeyValue;
 import com.example.expandpopview.view.ExpandPopView;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
-import com.example.thatnight.wanandroid.base.BaseFragment;
+import com.example.thatnight.wanandroid.base.BasePagerFragment;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
@@ -43,7 +43,7 @@ import java.util.List;
  * @author thatnight
  * @date 2017.10.27
  */
-public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, ClassifyPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, ClassifyContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
+public class ClassifyFragment extends BasePagerFragment<ClassifyContract.IView, ClassifyPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, ClassifyContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
     private RecyclerView mRv;
@@ -95,7 +95,6 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
     @Override
     protected void onLazyLoad() {
         mPresenter.getParentChildren();
-
     }
 
     @Override
@@ -227,11 +226,11 @@ public class ClassifyFragment extends BaseFragment<ClassifyContract.IView, Class
                 @Override
                 public void returnChildKeyValue(int pos, com.example.expandpopview.entity.KeyValue keyValue) {
                     mNormalKeyValue = keyValue;
-                    mPresenter.getArticle(true, mPage, keyValue.getValue());
+                    mRefreshLayout.autoRefresh();
                 }
             });
             mNormalKeyValue = parentChildrenList.get(0).get(0);
-            mPresenter.getArticle(true, 0, parentChildrenList.get(0).get(0).getValue());
+            mRefreshLayout.autoRefresh();
             isLoad = true;
         }
     }

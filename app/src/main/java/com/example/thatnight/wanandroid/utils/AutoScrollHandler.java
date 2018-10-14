@@ -22,7 +22,6 @@ public class AutoScrollHandler extends Handler implements View.OnTouchListener {
     private static final int MSG_SCROLL = 1;
     private static final int MSG_SCROLL_INVISIBLE = 2;
     private long mDelayTime = 3000;
-    private boolean isPlay = false;
 
     public AutoScrollHandler(Looper looper, ViewPager viewPager) {
         super(looper);
@@ -32,18 +31,12 @@ public class AutoScrollHandler extends Handler implements View.OnTouchListener {
     }
 
     public void startScroll() {
-        if (isPlay) {
-            return;
-        }
         removeMessages(MSG_SCROLL);
         sendEmptyMessageDelayed(MSG_SCROLL, mDelayTime);
     }
 
     public void stopScroll() {
-        if (isPlay) {
-            removeMessages(MSG_SCROLL);
-            isPlay = false;
-        }
+        removeMessages(MSG_SCROLL);
     }
 
 
@@ -63,7 +56,6 @@ public class AutoScrollHandler extends Handler implements View.OnTouchListener {
                         banner.setCurrentItem(0, true);
                     }
                     sendEmptyMessageDelayed(MSG_SCROLL, mDelayTime);
-                    isPlay = true;
                 }
                 break;
             case MSG_SCROLL_INVISIBLE:

@@ -17,6 +17,7 @@ import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BaseFuncView;
+import com.example.thatnight.wanandroid.base.BasePagerFragment;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Article;
@@ -45,7 +46,7 @@ import java.util.List;
  * Created by thatnight on 2017.10.27.
  */
 
-public class NewsFragment extends BaseFragment<BaseFuncContract.IView, BaseFuncPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, View.OnClickListener, BaseFuncContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
+public class NewsFragment extends BasePagerFragment<BaseFuncContract.IView, BaseFuncPresenter> implements OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, View.OnClickListener, BaseFuncContract.IView, NewArticleRvAdapter.OnArticleItemClickListener {
 
     private List<Article> mArticles;
 
@@ -60,6 +61,8 @@ public class NewsFragment extends BaseFragment<BaseFuncContract.IView, BaseFuncP
      * 评论窗口
      */
     private CommentBottomDialogFragment mBottomDialogFragment;
+
+
 
     @Override
     protected void initData(Bundle arguments) {

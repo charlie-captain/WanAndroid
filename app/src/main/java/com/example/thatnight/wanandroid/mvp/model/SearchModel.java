@@ -19,8 +19,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import cn.bmob.v3.okhttp3.Call;
-import rx.functions.Functions;
+import okhttp3.Call;
 
 
 /**

@@ -6,6 +6,7 @@ import android.os.Handler;
 import android.os.Looper;
 import android.widget.Toast;
 
+import com.example.thatnight.wanandroid.base.App;
 import com.example.thatnight.wanandroid.base.TinkerApp;
 
 
@@ -21,7 +22,7 @@ public class ToastUtil {
             sToast.setText(text);
             sToast.setDuration(Toast.LENGTH_SHORT);
         } else {
-            sToast = Toast.makeText(TinkerApp.getApplication(), text, Toast.LENGTH_SHORT);
+            sToast = Toast.makeText(App.getApplication(), text, Toast.LENGTH_SHORT);
         }
         sToast.show();
     }

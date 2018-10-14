@@ -5,6 +5,7 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.support.design.widget.Snackbar;
 
+import com.example.thatnight.wanandroid.base.App;
 import com.example.thatnight.wanandroid.base.TinkerApp;
 
 /**
@@ -14,7 +15,7 @@ import com.example.thatnight.wanandroid.base.TinkerApp;
 public class TextHelper {
 
     public static void copyToBoard(String text) {
-        ClipboardManager clipboardManager = (ClipboardManager) TinkerApp.getApplication().getSystemService(Context.CLIPBOARD_SERVICE);
+        ClipboardManager clipboardManager = (ClipboardManager) App.getApplication().getSystemService(Context.CLIPBOARD_SERVICE);
         if (clipboardManager != null) {
             clipboardManager.setPrimaryClip(ClipData.newPlainText("copy_text", text));
             ToastUtil.showToast("已复制到剪贴板");

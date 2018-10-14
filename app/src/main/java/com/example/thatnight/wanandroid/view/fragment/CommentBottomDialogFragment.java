@@ -28,6 +28,7 @@ import android.widget.Toast;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.ArticleCommentAdapter;
+import com.example.thatnight.wanandroid.base.App;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.base.TinkerApp;
 import com.example.thatnight.wanandroid.callback.LogoutState;
@@ -166,7 +167,7 @@ public class CommentBottomDialogFragment extends DialogFragment implements BaseR
                         mRecyclerView.setVisibility(View.VISIBLE);
                     }
                 } else {
-                    Toast.makeText(TinkerApp.getApplication(), "获取数据失败,稍后重试!", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(App.getApplication(), "获取数据失败,稍后重试!", Toast.LENGTH_SHORT).show();
                     mRecyclerView.setVisibility(View.GONE);
                 }
             }

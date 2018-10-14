@@ -4,6 +4,7 @@ import android.support.v7.app.AppCompatDelegate;
 import android.text.TextUtils;
 
 import com.example.thatnight.wanandroid.R;
+import com.example.thatnight.wanandroid.base.App;
 import com.example.thatnight.wanandroid.base.TinkerApp;
 
 import java.util.Calendar;
@@ -17,10 +18,10 @@ import skin.support.SkinCompatManager;
 public class DayLightUtil {
 
     public static void autoDayLight() {
-        boolean isAutoDayLight = SharePreferenceUtil.getInstance().getBoolean(TinkerApp.getApplication().getString(R.string.pref_auto_day_light), false);
+        boolean isAutoDayLight = SharePreferenceUtil.getInstance().getBoolean(App.getApplication().getString(R.string.pref_auto_day_light), false);
         boolean isDayLight = false;
         if (isAutoDayLight) {
-            String time = SharePreferenceUtil.getInstance().optString(TinkerApp.getApplication().getString(R.string.summary_auto_day_light));
+            String time = SharePreferenceUtil.getInstance().optString(App.getApplication().getString(R.string.summary_auto_day_light));
             String[] times = time.split("~");
             int nowHour = Calendar.getInstance().get(Calendar.HOUR_OF_DAY);
             int nowMinute = Calendar.getInstance().get(Calendar.MINUTE);

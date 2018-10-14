@@ -13,7 +13,8 @@ import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 
-import cn.bmob.v3.okhttp3.Call;
+import okhttp3.Call;
+
 
 /**
  * date: 2018/7/16

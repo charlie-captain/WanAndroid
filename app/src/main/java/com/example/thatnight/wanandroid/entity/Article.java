@@ -24,7 +24,7 @@ public class Article implements Parcelable {
      * visible : 0
      * niceDate : 2小时前
      * courseId : 13
-     * onCollect : false
+     * collect : false
      */
 
     private int originId;
@@ -33,17 +33,34 @@ public class Article implements Parcelable {
     private String title;
     private int chapterId;
     private String chapterName;
-    private Object envelopePic;
+    private String envelopePic;
     private String link;
     private String author;
     private Object origin;
     private long publishTime;
     private int zan;
-    private Object desc;
     private int visible;
     private String niceDate;
     private int courseId;
     private int userId;
+    private String authorImg;
+    private boolean isOther;
+
+    public boolean isOther() {
+        return isOther;
+    }
+
+    public void setOther(boolean other) {
+        isOther = other;
+    }
+
+    public String getAuthorImg() {
+        return authorImg;
+    }
+
+    public void setAuthorImg(String authorImg) {
+        this.authorImg = authorImg;
+    }
 
     public int getOriginId() {
         return originId;
@@ -89,9 +106,6 @@ public class Article implements Parcelable {
         return envelopePic;
     }
 
-    public void setEnvelopePic(Object envelopePic) {
-        this.envelopePic = envelopePic;
-    }
 
     public String getLink() {
         return link;
@@ -133,12 +147,8 @@ public class Article implements Parcelable {
         this.zan = zan;
     }
 
-    public Object getDesc() {
-        return desc;
-    }
-
-    public void setDesc(Object desc) {
-        this.desc = desc;
+    public void setEnvelopePic(String envelopePic) {
+        this.envelopePic = envelopePic;
     }
 
     public int getVisible() {
@@ -182,6 +192,9 @@ public class Article implements Parcelable {
     }
 
 
+    public Article() {
+    }
+
     @Override
     public int describeContents() {
         return 0;
@@ -195,6 +208,7 @@ public class Article implements Parcelable {
         dest.writeString(this.title);
         dest.writeInt(this.chapterId);
         dest.writeString(this.chapterName);
+        dest.writeString(this.envelopePic);
         dest.writeString(this.link);
         dest.writeString(this.author);
         dest.writeLong(this.publishTime);
@@ -203,9 +217,8 @@ public class Article implements Parcelable {
         dest.writeString(this.niceDate);
         dest.writeInt(this.courseId);
         dest.writeInt(this.userId);
-    }
-
-    public Article() {
+        dest.writeString(this.authorImg);
+        dest.writeByte(this.isOther ? (byte) 1 : (byte) 0);
     }
 
     protected Article(Parcel in) {
@@ -215,6 +228,7 @@ public class Article implements Parcelable {
         this.title = in.readString();
         this.chapterId = in.readInt();
         this.chapterName = in.readString();
+        this.envelopePic = in.readString();
         this.link = in.readString();
         this.author = in.readString();
         this.publishTime = in.readLong();
@@ -223,6 +237,8 @@ public class Article implements Parcelable {
         this.niceDate = in.readString();
         this.courseId = in.readInt();
         this.userId = in.readInt();
+        this.authorImg = in.readString();
+        this.isOther = in.readByte() != 0;
     }
 
     public static final Creator<Article> CREATOR = new Creator<Article>() {

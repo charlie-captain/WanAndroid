@@ -16,6 +16,7 @@ import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.ProjectRvAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
+import com.example.thatnight.wanandroid.base.BaseMenuFragment;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.entity.ProjectItem;
 import com.example.thatnight.wanandroid.mvp.contract.ProjectContract;
@@ -35,7 +36,7 @@ import java.util.List;
 /**
  * 项目界面
  */
-public class ProjectFragment extends BaseFragment<ProjectContract.IView, ProjectPresenter> implements ProjectContract.IView, OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, ProjectRvAdapter.OnArticleItemClickListener {
+public class ProjectFragment extends BaseMenuFragment<ProjectContract.IView, ProjectPresenter> implements ProjectContract.IView, OnRefreshListener, OnLoadmoreListener, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, ProjectRvAdapter.OnArticleItemClickListener {
 
     private List<KeyValue> mProjectsParent;
 

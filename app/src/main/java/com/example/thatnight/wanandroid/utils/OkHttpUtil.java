@@ -7,7 +7,6 @@ import android.os.Looper;
 
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Msg;
-import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
@@ -16,16 +15,16 @@ import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
 
-import cn.bmob.v3.okhttp3.Call;
-import cn.bmob.v3.okhttp3.Callback;
-import cn.bmob.v3.okhttp3.FormBody;
-import cn.bmob.v3.okhttp3.Headers;
-import cn.bmob.v3.okhttp3.MediaType;
-import cn.bmob.v3.okhttp3.MultipartBody;
-import cn.bmob.v3.okhttp3.OkHttpClient;
-import cn.bmob.v3.okhttp3.Request;
-import cn.bmob.v3.okhttp3.RequestBody;
-import cn.bmob.v3.okhttp3.Response;
+import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.FormBody;
+import okhttp3.Headers;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
+import okhttp3.Response;
 
 
 /**
@@ -86,7 +85,7 @@ public class OkHttpUtil {
         Request request = new Request.Builder().url(url).build();
         deliveryResult(new OkHttpResultCallback() {
             @Override
-            public void onError(Call call, Exception e) {
+            public void onError(okhttp3.Call call, Exception e) {
 
             }
 
@@ -151,10 +150,11 @@ public class OkHttpUtil {
             @Override
             public void onFailure(Call call, IOException e) {
                 okHttpResultCallback.onError(call, e);
+
             }
 
             @Override
-            public void onResponse(Call call, Response response) throws IOException {
+            public void onResponse(okhttp3.Call call, Response response) throws IOException {
                 switch (response.code()) {
                     case 302:
                         okHttpResultCallback.onResponse(Constant.URL_LOGIN.getBytes());
@@ -167,6 +167,7 @@ public class OkHttpUtil {
                 }
                 okHttpResultCallback.onResponse(Constant.ERROR.getBytes());
             }
+
         });
     }
 
@@ -178,7 +179,6 @@ public class OkHttpUtil {
      * @return
      */
     private Request buildGetRequest(String url, Map<String, String> headers) {
-
         Headers.Builder headersBuilder = new Headers.Builder();
         if (headers != null) {
             Set<Map.Entry<String, String>> paramsEntries = headers.entrySet();

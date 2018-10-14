@@ -34,7 +34,7 @@ import com.tencent.smtt.sdk.WebViewClient;
 
 import java.util.ArrayList;
 
-import cn.bmob.v3.okhttp3.Call;
+import okhttp3.Call;
 import skin.support.SkinCompatManager;
 
 

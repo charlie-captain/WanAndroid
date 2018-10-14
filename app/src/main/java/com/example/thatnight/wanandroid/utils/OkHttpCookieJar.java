@@ -7,9 +7,10 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import cn.bmob.v3.okhttp3.Cookie;
-import cn.bmob.v3.okhttp3.CookieJar;
-import cn.bmob.v3.okhttp3.HttpUrl;
+import okhttp3.Cookie;
+import okhttp3.CookieJar;
+import okhttp3.HttpUrl;
+
 
 public class OkHttpCookieJar implements CookieJar {
 

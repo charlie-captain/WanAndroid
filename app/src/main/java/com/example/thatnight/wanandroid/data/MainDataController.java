@@ -1,21 +1,16 @@
 package com.example.thatnight.wanandroid.data;
 
 import android.content.Context;
+import android.telecom.Call;
 
-import com.example.thatnight.wanandroid.adapter.BannerAdapter;
-import com.example.thatnight.wanandroid.adapter.PhotoPagerAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.BannerEntity;
-import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
-import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpStringResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import cn.bmob.v3.okhttp3.Call;
 
 /**
  * date: 2018/9/3

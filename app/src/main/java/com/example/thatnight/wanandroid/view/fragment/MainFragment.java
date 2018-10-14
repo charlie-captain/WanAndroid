@@ -20,6 +20,7 @@ import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.BannerAdapter;
 import com.example.thatnight.wanandroid.adapter.FragmentAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
+import com.example.thatnight.wanandroid.base.BaseMenuFragment;
 import com.example.thatnight.wanandroid.base.BasePresenter;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.constant.EventBusConfig;
@@ -41,13 +42,12 @@ import java.util.List;
  * 主界面
  * Created by thatnight on 2017.10.27.
  */
-public class MainFragment extends BaseFragment implements BannerAdapter.OnBannerClickListener, MainDataController.MainDataListener {
+public class MainFragment extends BaseMenuFragment implements BannerAdapter.OnBannerClickListener, MainDataController.MainDataListener {
 
     private ViewPager mVpager;
     private ViewPager mTopViewPager;
     private AppBarLayout mAppBarLayout;
     private TabLayout mTabLayout;
-    private Toolbar mToolbar;
     private List<BaseFragment> mFragments;
 
     private MainDataController mMainDataController;
@@ -82,9 +82,6 @@ public class MainFragment extends BaseFragment implements BannerAdapter.OnBanner
     @Override
     protected void initView() {
         mToolbar = mRootView.findViewById(R.id.tb);
-        mToolbar.setTitle("");
-        ((AppCompatActivity) mActivity).setSupportActionBar(mToolbar);
-        setHasOptionsMenu(true);
         setDraw(true);
         setTitle("首页");
         mTabLayout = mRootView.findViewById(R.id.tl_main);
@@ -145,6 +142,10 @@ public class MainFragment extends BaseFragment implements BannerAdapter.OnBanner
         }
     }
 
+    /**
+     * 初始化Banner
+     * @return
+     */
     private boolean initBanner() {
         if (!SharePreferenceUtil.getInstance().optBoolean("first_banner")) {
             SharePreferenceUtil.getInstance().putBoolean("first_banner", true);
@@ -169,20 +170,7 @@ public class MainFragment extends BaseFragment implements BannerAdapter.OnBanner
 
     }
 
-    @Override
-    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        super.onCreateOptionsMenu(menu, inflater);
-        menu.clear();
-        inflater.inflate(R.menu.menu_toolbar_main, menu);
-        MenuItem searchItem = menu.findItem(R.id.tb_search);
-        searchItem.setOnMenuItemClickListener(new MenuItem.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                startActivityAnim(SearchActivity.class);
-                return false;
-            }
-        });
-    }
+
 
     @Subscribe
     public void swithToClassify(KeyValue key) {

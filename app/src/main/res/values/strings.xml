@@ -36,6 +36,7 @@
     <string name="pref_update">update</string>
     <string name="pref_user_icon">user_icon</string>
 
-    <string name="str_update">1.7.6:\n新增 首页轮播图,可关闭\n新增 长按文章可复制链接 \n\n1.7.5:\n新增 自动夜间模式\n优化 项目界面</string>
+    <string name="str_dialog_update">新增 导航\n优化体验</string>
+    <string name="str_update">1.7.7:\n新增导航\n优化体验 \n\n 1.7.6:\n新增 首页轮播图,可关闭\n新增 长按文章可复制链接 \n\n1.7.5:\n新增 自动夜间模式\n优化 项目界面</string>
     <string name="pref_user">user</string>
 </resources>

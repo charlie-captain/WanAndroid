@@ -23,7 +23,6 @@ import com.bumptech.glide.request.RequestOptions;
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.callback.LogoutState;
-import com.example.thatnight.wanandroid.callback.OnDrawBtnClickCallback;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.entity.BmobAccount;
@@ -36,7 +35,7 @@ import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.CommentContainerFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
-import com.example.thatnight.wanandroid.view.fragment.ProjectFragment;
+import com.example.thatnight.wanandroid.view.fragment.MoreFragment;
 import com.example.thatnight.wanandroid.view.fragment.ProjectVpFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsContainerFragment;
 import com.example.thatnight.wanandroid.view.fragment.SettingsFragment;
@@ -50,7 +49,7 @@ import cn.bmob.v3.listener.FetchUserInfoListener;
 import cn.bmob.v3.listener.LogInListener;
 import cn.bmob.v3.listener.SaveListener;
 
-public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, OnDrawBtnClickCallback {
+public class MainActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
 
     private DrawerLayout mDrawerLayout;
     private NavigationView mNavigationView;
@@ -61,6 +60,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     private CollectFragment mCollectFragment;
     private SettingsContainerFragment mSettingsFragment;
     private CommentContainerFragment mCommentFragment;
+    private MoreFragment mMoreFragment;
     private ProjectVpFragment mProjectFragment;
 
     private Fragment mLastFragment;
@@ -116,14 +116,15 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         boolean isFirst = (boolean) SharePreferenceUtil.getInstance().getBoolean(BuildConfig.VERSION_NAME, true);
         if (isFirst) {
             SharePreferenceUtil.getInstance().putBoolean(BuildConfig.VERSION_NAME, false);
-            new AlertDialog.Builder(this).setTitle("更新内容").setMessage(getString(R.string.str_update)).setNegativeButton("知道了", null).show();
+            new AlertDialog.Builder(this).setTitle("更新内容").setMessage(getString(R.string.str_dialog_update)).setNegativeButton("知道了", null).show();
         }
 
     }
 
     private void initData() {
         mAccount = getIntent().getParcelableExtra(INTENT_ACCOUNT);
-
+        MenuItem logoutItem = mNavigationView.getMenu().getItem(mNavigationView.getMenu().size() - 1);
+        logoutItem.setTitle("注销");
         //如果通过传值登录
         if (mAccount != null) {
             AccountUtil.saveAccount(mAccount);
@@ -174,6 +175,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             boolean isVisitor = SharePreferenceUtil.getInstance().getBoolean("visitor", false);
             if (isVisitor) {
                 mName.setText("Visitor");
+                LoginContextUtil.getInstance().setUserState(new LogoutState());
+                logoutItem.setTitle("登录");
             } else {    //否则设置已登陆
                 Account account = AccountUtil.getAccount();
                 if (account != null) {
@@ -237,6 +240,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
                 showFragment(mProjectFragment);
                 break;
+            case R.id.nv_menu_more:
+                if (mMoreFragment == null) {
+                    mMoreFragment = new MoreFragment();
+                }
+                showFragment(mMoreFragment);
+                break;
             case R.id.nv_menu_user:
                 Snackbar.make(mDrawerLayout, "未完待续...", Snackbar.LENGTH_SHORT).show();
                 break;
@@ -256,18 +265,23 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 showDonateDialog();
                 break;
             case R.id.nv_menu_exit:
-                new AlertDialog.Builder(this).
-                        setTitle("提示").
-                        setMessage("是否注销?").
-                        setPositiveButton("是", new DialogInterface.OnClickListener() {
-                            @Override
-                            public void onClick(DialogInterface dialog, int which) {
-                                LoginContextUtil.getInstance().setUserState(new LogoutState());
-                                OkHttpCookieJar.resetCookies();
-                                startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
-                                finish();
-                            }
-                        }).setNegativeButton("否", null).show();
+                if (LoginContextUtil.getInstance().isLogin()) {
+                    new AlertDialog.Builder(this).
+                            setTitle("提示").
+                            setMessage("是否注销?").
+                            setPositiveButton("是", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialog, int which) {
+                                    LoginContextUtil.getInstance().setUserState(new LogoutState());
+                                    OkHttpCookieJar.resetCookies();
+                                    startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
+                                    finish();
+                                }
+                            }).setNegativeButton("否", null).show();
+                } else {
+                    OkHttpCookieJar.resetCookies();
+                    startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
+                }
                 break;
             default:
                 break;
@@ -315,11 +329,6 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         } else {
             ExitUtil.exitCheck(this, mNavigationView);
         }
-    }
-
-    @Override
-    public void onDrawBtnClick() {
-        mDrawerLayout.openDrawer(GravityCompat.START);
     }
 
     @Override
@@ -390,5 +399,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 }
             }
         }).setNegativeButton("取消", null).show();
+    }
+
+    public DrawerLayout getDrawerLayout() {
+        return mDrawerLayout;
     }
 }

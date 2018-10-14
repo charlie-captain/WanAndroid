@@ -15,7 +15,7 @@ import com.example.thatnight.wanandroid.view.activity.MainActivity;
  * date: 2018/6/22
  * author: thatnight
  */
-public abstract class BaseContainerFragment extends BaseFragment {
+public abstract class BaseContainerFragment extends BaseMenuFragment {
 
     protected Fragment mSupportFragment;
 

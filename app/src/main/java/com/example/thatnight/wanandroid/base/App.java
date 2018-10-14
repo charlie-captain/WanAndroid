@@ -2,18 +2,17 @@ package com.example.thatnight.wanandroid.base;
 
 import android.app.Application;
 import android.content.Context;
-import android.content.Intent;
 import android.support.multidex.MultiDex;
+import android.support.multidex.MultiDexApplication;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
-import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
 import com.tencent.bugly.beta.Beta;
+import com.tencent.bugly.beta.tinker.TinkerManager;
 import com.tencent.smtt.sdk.QbSdk;
-import com.tencent.tinker.loader.app.DefaultApplicationLike;
 
 import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
 import cn.bmob.v3.Bmob;
@@ -25,31 +24,29 @@ import skin.support.design.app.SkinMaterialViewInflater;
 /**
  * Created by thatnight on 2017.10.25.
  */
+public class App extends MultiDexApplication {
 
-public class App extends DefaultApplicationLike {
 
-    public App(Application application, int tinkerFlags, boolean tinkerLoadVerifyFlag, long applicationStartElapsedTime, long applicationStartMillisTime, Intent tinkerResultIntent) {
-        super(application, tinkerFlags, tinkerLoadVerifyFlag, applicationStartElapsedTime, applicationStartMillisTime, tinkerResultIntent);
-    }
+    private static App sTinkerApp;
 
     @Override
     public void onCreate() {
         super.onCreate();
-
+        TinkerManager.installTinker(this);
         //右滑返回
-        BGASwipeBackHelper.init(getApplication(), null);
+        BGASwipeBackHelper.init(this, null);
 
         //检测内存泄漏
-        if (LeakCanary.isInAnalyzerProcess(getApplication())) {
+        if (LeakCanary.isInAnalyzerProcess(this)) {
             return;
         }
-        LeakCanary.install(getApplication());
+        LeakCanary.install(this);
 
         //换肤框架
-        SkinCompatManager.withoutActivity(getApplication()).addInflater(new SkinMaterialViewInflater()).addInflater(new SkinConstraintViewInflater()).loadSkin();
+        SkinCompatManager.withoutActivity(this).addInflater(new SkinMaterialViewInflater()).addInflater(new SkinConstraintViewInflater()).loadSkin();
 
         //x5
-        QbSdk.initX5Environment(getApplication(), new QbSdk.PreInitCallback() {
+        QbSdk.initX5Environment(this, new QbSdk.PreInitCallback() {
             @Override
             public void onCoreInitFinished() {
 
@@ -62,23 +59,34 @@ public class App extends DefaultApplicationLike {
         });
 
         //Bugly
-        Bugly.init(getApplication(), getApplication().getString(R.string.bugly_appkey), false);
+        Bugly.init(this, this.getString(R.string.bugly_appkey), false);
 
-        OkHttpUtil.init(getApplication());
+        OkHttpUtil.init(this);
         //云后台
-        Bmob.initialize(getApplication(), getApplication().getString(R.string.bmob_appkey));
+        Bmob.initialize(this, this.getString(R.string.bmob_appkey));
         //cookie
         OkHttpCookieJar.initCookies();
+
+
     }
+
+//    @Override
+//    public void onBaseContextAttached(Context base) {
+//        super.onBaseContextAttached(base);
+//        Beta.installTinker(this);
+//    }
+
 
     @Override
-    public void onBaseContextAttached(Context base) {
-        super.onBaseContextAttached(base);
-        MultiDex.install(base);
-        Beta.installTinker(this);
+    protected void attachBaseContext(Context base) {
+        super.attachBaseContext(base);
+        sTinkerApp = this;
     }
 
-
-
-
+    public static Application getApplication() {
+        if (sTinkerApp == null) {
+            throw new NullPointerException("appcontext not create or destroy");
+        }
+        return sTinkerApp;
+    }
 }

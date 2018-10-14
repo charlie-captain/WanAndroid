@@ -1,16 +1,11 @@
 package com.example.thatnight.wanandroid.view.fragment;
 
 
-import android.app.Application;
-import android.app.DatePickerDialog;
 import android.app.TimePickerDialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.os.Bundle;
-import android.support.annotation.Nullable;
 import android.support.v14.preference.SwitchPreference;
-import android.support.v4.app.NavUtils;
-import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatDelegate;
 import android.support.v7.preference.ListPreference;
@@ -20,16 +15,12 @@ import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TimePicker;
-import android.widget.Toast;
 
 import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.App;
-import com.example.thatnight.wanandroid.base.TinkerApp;
-import com.example.thatnight.wanandroid.callback.LoginState;
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Account;
 import com.example.thatnight.wanandroid.entity.BmobAccount;
@@ -43,11 +34,9 @@ import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
 import com.example.thatnight.wanandroid.utils.ViewHepler;
 import com.example.thatnight.wanandroid.view.activity.LoginActivity;
-import com.example.thatnight.wanandroid.view.activity.PhotoActivity;
 import com.example.thatnight.wanandroid.view.customview.IconPreference;
 import com.huantansheng.easyphotos.EasyPhotos;
 import com.takisoft.fix.support.v7.preference.PreferenceCategory;
-import com.takisoft.fix.support.v7.preference.PreferenceFragmentCompat;
 import com.tencent.bugly.beta.Beta;
 
 import org.greenrobot.eventbus.EventBus;
@@ -61,21 +50,19 @@ import cn.bmob.v3.BmobUser;
 import cn.bmob.v3.datatype.BmobFile;
 import cn.bmob.v3.exception.BmobException;
 import cn.bmob.v3.listener.LogInListener;
-import cn.bmob.v3.listener.SaveListener;
 import cn.bmob.v3.listener.UpdateListener;
 import cn.bmob.v3.listener.UploadFileListener;
-import cn.bmob.v3.okhttp3.Call;
+import okhttp3.Call;
 import skin.support.SkinCompatManager;
 import top.zibin.luban.Luban;
 import top.zibin.luban.OnCompressListener;
-
 
 import static android.app.Activity.RESULT_OK;
 
 /**
  * 设置界面
  */
-public class SettingsFragment extends PreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
+public class SettingsFragment extends android.support.v7.preference.PreferenceFragmentCompat implements Preference.OnPreferenceClickListener, Preference.OnPreferenceChangeListener {
 
     private SwitchPreference mSpDayLight;
     private SwitchPreference mSpAutoLogin;
@@ -89,21 +76,26 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
     private ListPreference mTheme;
     private AboutFragment mAboutFragment;
     private IconPreference mIconPreference;
+    public static final int CODE_REQUEST = 5;
+
+    @Override
+    public void onCreatePreferences(Bundle savedInstanceState, String rootKey) {
+        setPreferencesFromResource(R.xml.preference_settings, rootKey);
+        init();
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = super.onCreateView(inflater, container, savedInstanceState);
-        getListView().setBackgroundColor(ContextCompat.getColor(inflater.getContext(), R.color.background));
         return view;
     }
 
-    @Override
-    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
-        setPreferencesFromResource(R.xml.preference_settings, rootKey);
-
-        init();
-
-    }
+//    @Override
+//    public void onCreatePreferencesFix(@Nullable Bundle savedInstanceState, String rootKey) {
+//        setPreferencesFromResource(R.xml.preference_settings, rootKey);
+//        init();
+//    }
 
     private void init() {
         mSpDayLight = (SwitchPreference) findPreference(getString(R.string.pref_day_light));
@@ -492,9 +484,9 @@ public class SettingsFragment extends PreferenceFragmentCompat implements Prefer
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (resultCode == RESULT_OK && requestCode == 5) {
+        if (resultCode == RESULT_OK && requestCode == CODE_REQUEST) {
             final String filePath = data.getStringArrayListExtra(EasyPhotos.RESULT_PATHS).get(0);
-            Luban.with(TinkerApp.getApplication()).
+            Luban.with(App.getApplication()).
                     load(filePath).
                     ignoreBy(100).
                     setCompressListener(new OnCompressListener() {

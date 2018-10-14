@@ -14,6 +14,7 @@ import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.ProjectVpAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
+import com.example.thatnight.wanandroid.base.BaseMenuFragment;
 import com.example.thatnight.wanandroid.entity.ProjectItem;
 import com.example.thatnight.wanandroid.mvp.contract.ProjectContract;
 import com.example.thatnight.wanandroid.mvp.presenter.ProjectPresenter;
@@ -31,7 +32,7 @@ import java.util.List;
 /**
  * 项目界面
  */
-public class ProjectVpFragment extends BaseFragment<ProjectContract.IView, ProjectPresenter> implements ProjectContract.IView,  ViewPager.OnPageChangeListener, ProjectVpAdapter.OnItemClickListener {
+public class ProjectVpFragment extends BaseMenuFragment<ProjectContract.IView, ProjectPresenter> implements ProjectContract.IView,  ViewPager.OnPageChangeListener, ProjectVpAdapter.OnItemClickListener {
 
     private List<KeyValue> mProjectsParent;
 
