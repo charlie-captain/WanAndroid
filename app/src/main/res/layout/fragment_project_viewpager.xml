@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout android:id="@+id/linearLayout"
+              xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:background="@color/background"
+              android:clipChildren="false"
+              android:orientation="vertical"
+>
+
+
+    <include layout="@layout/include_toolbar"/>
+
+    <com.example.thatnight.wanandroid.view.customview.SkinExpandPopView
+        android:id="@+id/epv_classify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible"
+        app:tab_togglebtn_bg_color="@color/toggleBtnColor"
+        app:tab_togglebtn_text_color="@color/white">
+    </com.example.thatnight.wanandroid.view.customview.SkinExpandPopView>
+
+
+
+    <android.support.v4.view.ViewPager android:id="@+id/vp_project"
+                                       android:layout_width="match_parent"
+                                       android:layout_height="0dp"
+                                       android:layout_weight="1"
+                                       android:layout_marginLeft="40dp"
+                                       android:layout_marginRight="40dp"
+                                       android:layout_marginTop="10dp"
+                                       android:animateLayoutChanges="true"
+                                       android:clipChildren="false"
+    >
+
+    </android.support.v4.view.ViewPager>
+
+    <skin.support.widget.SkinCompatProgressBar android:layout_width="30dp" android:layout_height="30dp" android:layout_gravity="center_horizontal"
+                                               android:layout_marginTop="8dp"
+                                               android:id="@+id/progressbar"
+                                               android:visibility="visible"/>
+
+</LinearLayout>

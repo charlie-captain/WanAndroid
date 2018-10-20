@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#3F51B5</color>
+    <color name="colorPrimaryDark">#3F51B5</color>
+    <!--<color name="colorPrimaryDark">#303F9F</color>-->
+    <color name="colorAccent">#FF4081</color>
+    <color name="status_bar_color">#3F51B5</color>
+    <color name="toggleBtnColor">#FF4081</color>
+    <color name="white">#ffffff</color>
+    <color name="gray">#808080</color>
+    <color name="gray_f">#b4b4b4</color>
+    <color name="background">#e7e7e7</color>
+    <color name="nvItemColor">#161616</color>
+    <color name="colorIbtnLike">#7b7b7b</color>
+    <color name="itemBackgroundColor">#ffffff</color>
+    <color name="drawlayoutColor">#deffffff</color>
+    <color name="tablayout_text_color">#efefef</color>
+    <color name="background_settings">#ffffff</color>
+    <color name="tablayout_text_selected_color">#FF4081</color>
+    <color name="tablayout_indicator_color">#FF4081</color>
+    <color name="textColorPrimary">#161616</color>
+    <color name="textColorSecondary">#7b7b7b</color>
+    <color name="textColor_type">#3F51B5</color>
+    <color name="webviewBackgroundColor">#00000000</color>
+
+    <!--night-->
+    <color name="colorPrimary_night">#ff2e2e2e</color>
+    <color name="colorPrimaryDark_night">#ff2e2e2e</color>
+    <color name="colorAccent_night">#dfffffff</color>
+    <color name="status_bar_color_night">#ff2e2e2e</color>
+    <color name="white_night">#ffffff</color>
+    <color name="gray_night">#808080</color>
+    <color name="toggleBtnColor_night">#6b6b6b</color>
+    <color name="textColorPrimary_night">#ffffff</color>
+    <color name="textColorSecondary_night">#c2c2c2</color>
+    <color name="background_night">#1a1a1a</color>
+    <color name="background_settings_night">#ff2e2e2e</color>
+    <color name="nvItemColor_night">#ff2e2e2e</color>
+    <color name="colorIbtnLike_night">#bebebe</color>
+    <color name="itemBackgroundColor_night">#ff2e2e2e</color>
+    <color name="tablayout_text_color_night">#666666</color>
+    <color name="tablayout_text_selected_color_night">#dcdcdc</color>
+    <color name="tablayout_indicator_color_night">#dcdcdc</color>
+    <color name="drawlayoutColor_night">#dd565656</color>
+    <color name="webviewBackgroundColor_night">#32000000</color>
+    <color name="textColor_type_night">#dfffffff</color>
+
+    <!--green-->
+    <color name="colorPrimary_green">#4caf50</color>
+    <color name="colorPrimaryDark_green">#4caf50</color>
+    <color name="colorAccent_green">#ffef3e</color>
+    <color name="status_bar_color_green">#4caf50</color>
+    <color name="toggleBtnColor_green">#ffef3e</color>
+    <color name="tablayout_text_color_green">#efefef</color>
+    <color name="tablayout_text_selected_color_green">#ecd801</color>
+    <color name="tablayout_indicator_color_green">#ecd801</color>
+    <color name="textColor_type_green">#4caf50</color>
+
+
+    <!--blue-->
+    <color name="colorPrimary_blue">#0f87ea</color>
+    <color name="colorPrimaryDark_blue">#0f87ea</color>
+    <color name="colorAccent_blue">#FF4081</color>
+    <color name="status_bar_color_blue">#2196f3</color>
+    <color name="toggleBtnColor_blue">#2196f3</color>
+    <color name="tablayout_text_color_blue">#c1c1c1</color>
+    <color name="tablayout_text_selected_color_blue">#ffffff</color>
+    <color name="tablayout_indicator_color_blue">#ffffff</color>
+    <color name="textColor_type_blue">#0f87ea</color>
+
+    <!--white-->
+    <color name="colorPrimary_white">#f4f4f4</color>
+    <color name="colorPrimaryDark_white">#f4f4f4</color>
+    <color name="colorAccent_white">#448aff</color>
+    <color name="status_bar_color_white">#2196f3</color>
+    <color name="toggleBtnColor_white">#2196f3</color>
+    <color name="tablayout_text_selected_color_white">@color/colorAccent</color>
+    <color name="textColor_type_white">#f4f4f4</color>
+
+
+</resources>

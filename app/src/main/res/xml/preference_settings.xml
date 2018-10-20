@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android"
+                  xmlns:app="http://schemas.android.com/apk/res-auto"
+                  xmlns:tools="http://schemas.android.com/tools">
+
+    <PreferenceCategory android:key="@string/pref_user" android:title="账号设置">
+
+        <com.example.thatnight.wanandroid.view.customview.IconPreference
+            android:key="@string/pref_user_icon"
+            android:title="更换头像"/>
+
+        <Preference
+            android:key="@string/pref_user_nickname"
+            android:summary="昵称"
+            android:textColor="@color/textColorPrimary"
+            android:textColorHint="@color/textColorSecondary"
+            android:title="thatnight"/>
+
+
+        <Preference
+            android:key="@string/pref_user_name"
+            android:summary="账号"
+            android:textColor="@color/textColorPrimary"
+            android:textColorHint="@color/textColorSecondary"
+            android:title="thatnight"/>
+
+        <Preference
+            android:inputType="textPassword"
+            android:key="@string/pref_user_password"
+            android:password="true"
+            android:singleLine="true"
+            android:summary="修改密码"
+            android:textColor="@color/textColorPrimary"
+            android:textColorHint="@color/textColorSecondary"
+            android:title="******"/>
+
+    </PreferenceCategory>
+
+    <PreferenceCategory android:title="基本设置">
+
+        <ListPreference
+            android:defaultValue="@string/pref_default_value"
+            android:dialogTitle="选择颜色"
+            android:entries="@array/list_color_name"
+            android:entryValues="@array/list_color_value"
+            android:key="theme"
+            android:summary="@string/pref_default_value"
+            android:title="主题肤色"/>
+
+        <SwitchPreference
+            android:key="day_light"
+            android:summaryOff="已关闭"
+            android:summaryOn="已开启"
+            android:title="夜间模式"/>
+
+        <SwitchPreference
+            android:key="auto_day_light"
+            android:summaryOff="已关闭"
+            android:summaryOn="时间段"
+            android:title="自动夜间模式"
+        />
+
+        <SwitchPreference
+            android:key="auto_login"
+            android:summary="默认开启"
+            android:summaryOff="已关闭"
+            android:summaryOn="已开启"
+            android:title="自动登录"/>
+
+
+
+        <SwitchPreference
+            android:key="banner"
+            android:summary="顶部轮播图"
+            android:title="首页轮播图"
+        />
+
+
+    </PreferenceCategory>
+
+
+    <PreferenceCategory android:title="更多">
+        <PreferenceScreen
+            android:key="update"
+            android:summary="版本号"
+            android:title="检查更新"/>
+        <PreferenceScreen
+            android:key="help"
+            android:summary="关于WanAndroid"
+            android:title="关于"/>
+    </PreferenceCategory>
+
+
+</PreferenceScreen>

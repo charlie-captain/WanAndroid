@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/ll_news"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background"
+    android:orientation="vertical">
+
+    <include
+        layout="@layout/include_toolbar"
+        android:visibility="gone" />
+
+    <com.example.thatnight.wanandroid.view.customview.SkinExpandPopView
+        android:id="@+id/epv_classify"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:tab_togglebtn_bg_color="@color/toggleBtnColor"
+        app:tab_togglebtn_text_color="@color/white">
+    </com.example.thatnight.wanandroid.view.customview.SkinExpandPopView>
+
+    <com.example.thatnight.wanandroid.view.customview.SkinRefreshLayout
+        android:id="@+id/srl_main"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:srlAccentColor="@color/colorAccent"
+        app:srlEnablePreviewInEditMode="false"
+        app:srlPrimaryColor="@color/colorPrimary">
+
+        <com.scwang.smartrefresh.header.CircleHeader
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"></com.scwang.smartrefresh.header.CircleHeader>
+
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rv_main"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </com.example.thatnight.wanandroid.view.customview.SkinRefreshLayout>
+</LinearLayout>

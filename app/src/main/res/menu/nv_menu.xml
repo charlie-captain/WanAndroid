@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <group android:checkableBehavior="single">
+        <item
+            android:id="@+id/nv_menu_main"
+            android:icon="@drawable/ic_home"
+            android:title="首页" />
+        <item
+            android:id="@+id/nv_menu_collect"
+            android:icon="@drawable/ic_like_normal"
+            android:title="收藏" />
+
+        <item
+            android:id="@+id/nv_menu_project"
+            android:icon="@drawable/ic_project"
+            android:title="项目" />
+        <item
+            android:id="@+id/nv_menu_wechat"
+            android:icon="@drawable/ic_menu_wechat"
+            android:title="公众" />
+        <item
+            android:id="@+id/nv_menu_more"
+            android:icon="@drawable/ic_more"
+            android:title="导航" />
+
+        <item
+            android:id="@+id/nv_menu_user"
+            android:icon="@drawable/ic_user"
+            android:title="我的"
+            android:visible="false" />
+    </group>
+
+
+    <group
+        android:id="@+id/nv_menu_group_more"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/nv_menu_comment"
+            android:icon="@drawable/ic_comment"
+            android:title="反馈" />
+        <item
+            android:id="@+id/nv_menu_settings"
+            android:icon="@drawable/ic_settings"
+            android:title="设置" />
+
+
+        <item
+            android:id="@+id/nv_menu_donate"
+            android:checkable="false"
+            android:icon="@drawable/ic_donate"
+            android:title="捐献" />
+
+        <item
+            android:id="@+id/nv_menu_exit"
+            android:checkable="false"
+            android:icon="@drawable/ic_exit"
+            android:title="注销" />
+    </group>
+
+</menu>

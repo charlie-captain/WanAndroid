@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_web_view"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".base.BaseWebViewActivity">
+
+    <android.support.design.widget.AppBarLayout
+        android:id="@+id/apb_web"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/colorPrimary"
+        app:layout_scrollFlags="scroll|enterAlways|snap">
+
+        <include layout="@layout/include_toolbar" />
+
+    </android.support.design.widget.AppBarLayout>
+
+
+    <!--<com.example.thatnight.wanandroid.view.customview.WebViewScrollView-->
+    <!--android:id="@+id/nsv_webview"-->
+    <!--android:layout_width="match_parent"-->
+    <!--android:layout_height="match_parent"-->
+    <!--app:layout_behavior="@string/appbar_scrolling_view_behavior">-->
+
+    <!--        android:background="@color/webviewBackgroundColor"
+-->
+
+    <FrameLayout
+        android:id="@+id/fl_web"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/apb_web"></FrameLayout>
+
+    <!--</com.example.thatnight.wanandroid.view.customview.WebViewScrollView>-->
+
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fabtn_news"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="24dp"
+        android:backgroundTint="@color/white"
+        android:src="@drawable/selector_like"
+        app:borderWidth="0dp"
+        app:layout_behavior="com.example.thatnight.wanandroid.view.customview.FloatingBehavior" />
+
+</RelativeLayout>
