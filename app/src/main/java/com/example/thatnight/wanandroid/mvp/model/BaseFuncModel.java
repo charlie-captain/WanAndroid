@@ -10,6 +10,7 @@ import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.BaseFuncContract;
 import com.example.thatnight.wanandroid.utils.DataHelper;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
+import com.example.thatnight.wanandroid.utils.LogUtil;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 
@@ -28,7 +29,7 @@ public class BaseFuncModel extends BaseModel implements BaseFuncContract.IModel 
     }
 
     @Override
-    public void getArticle(final boolean isRefresh, String url, final MvpBooleanCallback callback) {
+    public void getArticle(final boolean isRefresh, final String url, final MvpBooleanCallback callback) {
         OkHttpUtil.getInstance().getAsync(url, new OkHttpResultCallback() {
             @Override
             public void onError(Call call, Exception e) {
@@ -41,7 +42,7 @@ public class BaseFuncModel extends BaseModel implements BaseFuncContract.IModel 
             @Override
             public void onResponse(byte[] bytes) {
                 String response = new String(bytes);
-                if (TextUtils.isEmpty(response)) {
+                if (TextUtils.isEmpty(response) || response.startsWith("<html>")) {
                     callback.onResult(isRefresh, DataHelper.obtainErrorMsg(Constant.STRING_ERROR));
                     return;
                 }
@@ -55,7 +56,7 @@ public class BaseFuncModel extends BaseModel implements BaseFuncContract.IModel 
                     ArticleData data = GsonUtil.gsonToBean(json, ArticleData.class);
                     resultMsg.setErrorCode(Constant.CODE_SUCCESS);
                     resultMsg.setData(data.getDatas());
-                        callback.onResult(isRefresh, resultMsg);
+                    callback.onResult(isRefresh, resultMsg);
                 } else {
                     resultMsg.setErrorCode(Constant.CODE_ERROR);
                     resultMsg.setErrorMsg("网络开小差了," + msg.getErrorMsg());

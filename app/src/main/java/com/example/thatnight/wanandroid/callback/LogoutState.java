@@ -8,6 +8,7 @@ import android.content.Intent;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.constant.Constant;
+import com.example.thatnight.wanandroid.utils.ViewHepler;
 import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 
 /**
@@ -17,23 +18,7 @@ import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 public class LogoutState implements UserState {
     @Override
     public boolean collect(final Context context) {
-        new AlertDialog.Builder(context)
-                .setTitle("提示")
-                .setMessage("请先登录")
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        ((Activity) context).startActivityForResult(new Intent(context, LoginActivity.class), Constant.REQUEST_LOGIN);
-                        ((Activity) context).overridePendingTransition(R.anim.anim_left_in, R.anim.anim_left_out);
-                    }
-                })
-                .setNegativeButton("取消", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-
-                    }
-                }).show();
-
+        ViewHepler.showLoginDialog(context);
         return false;
     }
 }

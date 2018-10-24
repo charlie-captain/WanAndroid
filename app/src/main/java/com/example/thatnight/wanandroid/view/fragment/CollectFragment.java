@@ -88,12 +88,7 @@ public class CollectFragment extends BaseMenuFragment<CollectContract.IView, Col
 
     @Override
     protected void onLazyLoad() {
-        if (mArticles != null && mArticles.size() > 0) {
-            return;
-        }
-        if (LoginContextUtil.getInstance().getUserState().collect(mActivity)) {
-            mRefreshLayout.autoRefresh();
-        }
+        mRefreshLayout.autoRefresh();
     }
 
 
@@ -167,7 +162,6 @@ public class CollectFragment extends BaseMenuFragment<CollectContract.IView, Col
     @Override
     public void isLoading(boolean isLoading) {
         if (isLoading) {
-            mRefreshLayout.autoRefresh();
         } else {
             mRefreshLayout.finishRefresh();
         }
@@ -193,7 +187,6 @@ public class CollectFragment extends BaseMenuFragment<CollectContract.IView, Col
                 UiHelper.setSelected(mIbtnCollect);
             }
         } else {
-//            mRefreshLayout.autoRefresh();
         }
     }
 

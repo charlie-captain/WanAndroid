@@ -6,6 +6,8 @@ import com.example.thatnight.wanandroid.entity.Msg;
 import com.example.thatnight.wanandroid.mvp.contract.CollectContract;
 import com.example.thatnight.wanandroid.mvp.model.CollectModel;
 
+import org.greenrobot.eventbus.EventBus;
+
 /**
  * Created by thatnight on 2017.11.1.
  */
@@ -38,4 +40,20 @@ public class CollectPresenter extends BaseFuncPresenter<CollectContract.IView> i
         });
     }
 
+    @Override
+    protected void isCollectSuccess(boolean isCollect, Msg msg) {
+        if (0 == msg.getErrorCode()) {
+            if (isCollect) {
+                view.onCollect(true, "收藏成功");
+            } else {
+                view.onCollect(true, "取消收藏成功");
+            }
+        } else {
+            if (isCollect) {
+                view.onCollect(false, "收藏失败");
+            } else {
+                view.onCollect(false, "取消收藏失败");
+            }
+        }
+    }
 }

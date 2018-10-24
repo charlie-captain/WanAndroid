@@ -169,7 +169,7 @@ public class NewsFragment extends BasePagerFragment<BaseFuncContract.IView, Base
     @Override
     public void isLoading(boolean isLoading) {
         if (isLoading) {
-            mRefreshLayout.autoRefresh();
+
         } else {
             mRefreshLayout.finishRefresh();
         }
@@ -198,6 +198,7 @@ public class NewsFragment extends BasePagerFragment<BaseFuncContract.IView, Base
 
     @Override
     public <T> void refreshData(List<T> datas) {
+        mRefreshLayout.finishRefresh();
         mArticles.clear();
         mArticles.addAll((Collection<? extends Article>) datas);
         mAdapter.updateData(mArticles);

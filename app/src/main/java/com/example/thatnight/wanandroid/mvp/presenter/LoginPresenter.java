@@ -9,7 +9,6 @@ import com.example.thatnight.wanandroid.mvp.model.LoginModel;
 import com.example.thatnight.wanandroid.utils.AccountUtil;
 import com.example.thatnight.wanandroid.utils.GsonUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
-import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.view.activity.LoginActivity;
 
@@ -52,7 +51,6 @@ public class LoginPresenter extends BasePresenter<LoginActivity> implements Logi
                 //进行数据保存操作
                 AccountUtil.saveAccount(account);
                 SharePreferenceUtil.getInstance().putBoolean("visitor", false);
-                OkHttpCookieJar.saveCookies();
                 LoginContextUtil.getInstance().setUserState(new LoginState());
                 view.isSuccess(true, account, null);
             }

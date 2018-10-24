@@ -2,17 +2,12 @@ package com.example.thatnight.wanandroid.base;
 
 import android.app.Application;
 import android.content.Context;
-import android.support.multidex.MultiDex;
 import android.support.multidex.MultiDexApplication;
-import android.support.v7.app.AppCompatViewInflater;
 
 import com.example.thatnight.wanandroid.R;
-import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
 import com.squareup.leakcanary.LeakCanary;
 import com.tencent.bugly.Bugly;
-import com.tencent.bugly.beta.Beta;
-import com.tencent.bugly.beta.tinker.TinkerManager;
 import com.tencent.smtt.sdk.QbSdk;
 
 import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
@@ -71,8 +66,6 @@ public class App extends MultiDexApplication {
         OkHttpUtil.init(this);
         //云后台
         Bmob.initialize(this, this.getString(R.string.bmob_appkey));
-        //cookie
-        OkHttpCookieJar.initCookies();
 
 
     }

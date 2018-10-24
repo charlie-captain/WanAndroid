@@ -77,7 +77,7 @@ public class ProjectFragment extends BaseMenuFragment<ProjectContract.IView, Pro
         mRv = $(R.id.rv_main);
         mRefreshLayout = mRootView.findViewById(R.id.srl_main);
         mProjectRvAdapter = new ProjectRvAdapter();
-        mRv.setLayoutManager(new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL,false));
+        mRv.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayoutManager.VERTICAL, false));
         mRv.setItemAnimator(new DefaultItemAnimator());
         mRv.addItemDecoration(new RecyclerView.ItemDecoration() {
             @Override
@@ -106,10 +106,6 @@ public class ProjectFragment extends BaseMenuFragment<ProjectContract.IView, Pro
 
     @Override
     protected void onLazyLoad() {
-        if (mProjectItems != null && mProjectsParent != null) {
-            return;
-        }
-
         mPresenter.getProjectParent();
     }
 
@@ -199,7 +195,7 @@ public class ProjectFragment extends BaseMenuFragment<ProjectContract.IView, Pro
     @Override
     public void onItemClick(int pos) {
         ProjectItem projectItem = mProjectItems.get(pos);
-        Intent intent = ArticleWebViewActivity.newIntent(mActivity, pos, projectItem.getId(), projectItem.getTitle(), projectItem.getLink(), projectItem.isCollect());
+        Intent intent = ArticleWebViewActivity.newIntent(mActivity, projectItem, pos);
         startActivityForResultAnim(intent, REQUEST_CODE);
     }
 

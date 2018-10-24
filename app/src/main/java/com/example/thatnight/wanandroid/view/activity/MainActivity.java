@@ -12,6 +12,7 @@ import android.support.v4.view.GravityCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.app.AppCompatDelegate;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
@@ -30,8 +31,8 @@ import com.example.thatnight.wanandroid.utils.AccountUtil;
 import com.example.thatnight.wanandroid.utils.DonateUtil;
 import com.example.thatnight.wanandroid.utils.ExitUtil;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
-import com.example.thatnight.wanandroid.utils.OkHttpCookieJar;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
+import com.example.thatnight.wanandroid.utils.ViewHepler;
 import com.example.thatnight.wanandroid.view.fragment.CollectFragment;
 import com.example.thatnight.wanandroid.view.fragment.CommentContainerFragment;
 import com.example.thatnight.wanandroid.view.fragment.MainFragment;
@@ -74,6 +75,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         EventBus.getDefault().register(this);
+        AppCompatDelegate.setCompatVectorFromResourcesEnabled(true);
         mDrawerLayout = (DrawerLayout) findViewById(R.id.dv_main);
         mNavigationView = (NavigationView) findViewById(R.id.nv_main);
         mName = mNavigationView.getHeaderView(0).findViewById(R.id.tv_nv_header_name);
@@ -105,12 +107,12 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         if (mMainFragment == null) {
             mMainFragment = new MainFragment();
         }
-        if (mCollectFragment == null) {
-            mCollectFragment = new CollectFragment();
-        }
-        if (mProjectFragment == null) {
-            mProjectFragment = new ProjectVpFragment();
-        }
+//        if (mCollectFragment == null) {
+//            mCollectFragment = new CollectFragment();
+//        }
+//        if (mProjectFragment == null) {
+//            mProjectFragment = new ProjectVpFragment();
+//        }
     }
 
     //显示更新特性
@@ -234,7 +236,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                 if (mCollectFragment == null) {
                     mCollectFragment = new CollectFragment();
                 }
-                showFragment(mCollectFragment);
+                if (LoginContextUtil.getInstance().isLogin()) {
+                    showFragment(mCollectFragment);
+                } else {
+                    ViewHepler.showLoginDialog(this);
+                }
                 break;
             case R.id.nv_menu_project:
                 if (mProjectFragment == null) {
@@ -281,20 +287,17 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                                 @Override
                                 public void onClick(DialogInterface dialog, int which) {
                                     LoginContextUtil.getInstance().setUserState(new LogoutState());
-                                    OkHttpCookieJar.resetCookies();
                                     startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
                                     finish();
                                 }
                             }).setNegativeButton("否", null).show();
                 } else {
-                    OkHttpCookieJar.resetCookies();
                     startActivityAnim(new Intent(MainActivity.this, LoginActivity.class));
                 }
                 break;
             default:
                 break;
         }
-
     }
 
     /**

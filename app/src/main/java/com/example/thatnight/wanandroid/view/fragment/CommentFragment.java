@@ -18,6 +18,7 @@ import com.example.thatnight.wanandroid.BuildConfig;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.CommentAdapter;
 import com.example.thatnight.wanandroid.base.BaseFragment;
+import com.example.thatnight.wanandroid.base.BaseMenuFragment;
 import com.example.thatnight.wanandroid.base.BaseModel;
 import com.example.thatnight.wanandroid.base.BasePagerFragment;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
@@ -45,7 +46,7 @@ import cn.bmob.v3.listener.UpdateListener;
 /**
  * 评论页面
  */
-public class CommentFragment extends BasePagerFragment<CommentContract.IView, CommentPresenter> implements CommentContract.IView, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, OnLoadmoreListener, OnRefreshListener, View.OnClickListener {
+public class CommentFragment extends BaseMenuFragment<CommentContract.IView, CommentPresenter> implements CommentContract.IView, BaseRecyclerViewAdapter.OnClickRecyclerViewListener, OnLoadmoreListener, OnRefreshListener, View.OnClickListener {
 
 
     private FloatingActionButton mAddButton;
@@ -86,7 +87,6 @@ public class CommentFragment extends BasePagerFragment<CommentContract.IView, Co
     @Override
     protected void onLazyLoad() {
         mRefreshLayout.autoRefresh();
-
     }
 
     @Override

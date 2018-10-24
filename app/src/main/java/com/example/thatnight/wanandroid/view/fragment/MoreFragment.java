@@ -6,6 +6,8 @@ import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -70,6 +72,7 @@ public class MoreFragment extends BaseMenuFragment {
         mTabLayout = mRootView.findViewById(R.id.tl_main);
         mAppBarLayout = mRootView.findViewById(R.id.apl_main);
         mVpager = mRootView.findViewById(R.id.vp_main);
+        mVpager.setOffscreenPageLimit(3);
         mVpager.setAdapter(mAdapter);
         mTabLayout.setupWithViewPager(mVpager);
         mTabLayout.addOnTabSelectedListener(new TabLayout.OnTabSelectedListener() {
@@ -84,14 +87,21 @@ public class MoreFragment extends BaseMenuFragment {
 
             @Override
             public void onTabReselected(TabLayout.Tab tab) {
-                if (tab.getPosition() == 0) {
-                    EventBus.getDefault().post(Constant.MORE_TOP_NEWS);
-                } else {
-                    EventBus.getDefault().post(Constant.MORE_REFRESH_NEWS);
+                int pos = tab.getPosition();
+                RecyclerView recyclerView = ((MoreItemFragment) mFragments.get(pos)).getRv();
+                if (recyclerView == null) {
+                    return;
                 }
+                LinearLayoutManager linearLayoutManager = (LinearLayoutManager) recyclerView.getLayoutManager();
+                int i = linearLayoutManager.findFirstVisibleItemPosition();
+                if (i == 0) {
+                    EventBus.getDefault().post(Constant.MORE_REFRESH_NEWS);
+                } else {
+                    EventBus.getDefault().post(Constant.MORE_TOP_NEWS);
+                }
+
             }
         });
-//        mTabLayout.setTabsFromPagerAdapter(mAdapter);
     }
 
     @Override

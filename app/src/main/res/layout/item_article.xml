@@ -57,6 +57,7 @@
             android:maxLines="1"
             android:ellipsize="end"
             android:maxEms="6"
+            android:layout_toLeftOf="@+id/item_tv_time"
             android:layout_toRightOf="@+id/item_tv_author"
             android:text="分类"
             android:textColor="@color/textColor_type"
@@ -94,9 +95,9 @@
             android:layout_marginTop="8dp"
             android:layout_marginLeft="8dp"
             android:layout_marginRight="8dp"
-            android:layout_toLeftOf="@+id/item_tv_comment" android:background="?attr/selectableItemBackgroundBorderless"
+            android:layout_alignParentRight="true"
+            android:background="?attr/selectableItemBackgroundBorderless"
             android:scaleType="centerCrop"
-
             android:src="@drawable/ic_comment"/>
 
         <TextView
@@ -107,6 +108,7 @@
             android:layout_alignParentRight="true"
             android:layout_marginRight="8dp"
             android:maxLength="3"
+            android:visibility="gone"
             android:textColor="@color/textColorSecondary"
             android:text="0"
         />

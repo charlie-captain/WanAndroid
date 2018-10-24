@@ -21,7 +21,6 @@ public class WebPresenter extends BasePresenter<BaseWebViewActivity> implements 
     @Override
     public void get(boolean isCollect, String id) {
         if (view != null) {
-            view.isLoading(true);
             mWebModel.getUrl(isCollect, id, this);
         }
     }
@@ -29,7 +28,6 @@ public class WebPresenter extends BasePresenter<BaseWebViewActivity> implements 
     @Override
     public void get(String id, String originId) {
         if (view != null) {
-            view.isLoading(true);
             mWebModel.getUrl(id, originId, this);
         }
     }

@@ -76,7 +76,6 @@ public class ClassifyFragment extends BasePagerFragment<ClassifyContract.IView, 
     @Override
     protected void initData(Bundle arguments) {
         EventBus.getDefault().register(this);
-        mNormalKeyValue = new KeyValue();
         mArticles = new ArrayList<>();
         mParentChildList = new ArrayList<>();
         mParentList = new ArrayList<>();
@@ -109,12 +108,18 @@ public class ClassifyFragment extends BasePagerFragment<ClassifyContract.IView, 
 
     @Override
     public void onRefresh(RefreshLayout refreshlayout) {
+        if (mNormalKeyValue == null) {
+            return;
+        }
         mPage = 0;
         mPresenter.getArticle(true, mPage, mNormalKeyValue.getValue());
     }
 
     @Override
     public void onLoadmore(RefreshLayout refreshlayout) {
+        if (mNormalKeyValue == null) {
+            return;
+        }
         mPage += 1;
         mPresenter.getArticle(false, mPage, mNormalKeyValue.getValue());
     }
@@ -162,7 +167,6 @@ public class ClassifyFragment extends BasePagerFragment<ClassifyContract.IView, 
     @Override
     public void isLoading(boolean isLoading) {
         if (isLoading) {
-            mRefreshLayout.autoRefresh();
         } else {
             mRefreshLayout.finishRefresh();
         }
@@ -258,9 +262,6 @@ public class ClassifyFragment extends BasePagerFragment<ClassifyContract.IView, 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(String requestCode) {
         switch (requestCode) {
-            case Constant.REFRESH_NEWS:
-                mRefreshLayout.autoRefresh();
-                break;
             case Constant.TOP_CLASSIFY:
                 mRv.smoothScrollToPosition(0);
                 break;

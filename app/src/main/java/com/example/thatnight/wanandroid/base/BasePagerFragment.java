@@ -15,6 +15,7 @@ public abstract class BasePagerFragment<V extends BaseContract.IBaseView,
     @Override
     public void setUserVisibleHint(boolean isVisibleToUser) {
         super.setUserVisibleHint(isVisibleToUser);
+        mIsVisible = isVisibleToUser;
         isCanLoadData();
     }
 
@@ -22,10 +23,7 @@ public abstract class BasePagerFragment<V extends BaseContract.IBaseView,
      * 是否可以加载数据
      */
     private void isCanLoadData() {
-        if (!mIsPrepare || mIsLoad) {
-            return;
-        }
-        if (getUserVisibleHint()) {
+        if (mIsVisible && mIsPrepare && !mIsLoad) {
             onLazyLoad();
             mIsLoad = true;
         }

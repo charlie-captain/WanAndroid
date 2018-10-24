@@ -7,6 +7,8 @@ import android.os.Looper;
 
 import com.example.thatnight.wanandroid.constant.Constant;
 import com.example.thatnight.wanandroid.entity.Msg;
+import com.example.thatnight.wanandroid.http.AddCookieInterceptor;
+import com.example.thatnight.wanandroid.http.SaveCookieInterceptor;
 
 import java.io.File;
 import java.io.IOException;
@@ -45,10 +47,13 @@ public class OkHttpUtil {
 
     private OkHttpUtil() {
         mOkHttpClientBuilder = new OkHttpClient.Builder();
-        mOkHttpClientBuilder.cookieJar(new OkHttpCookieJar(mContext)).readTimeout(READ_TIMEOUT, TimeUnit.SECONDS).writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS).connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS);
+        mOkHttpClientBuilder
+                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .addInterceptor(new AddCookieInterceptor());
         mOkHttpClient = mOkHttpClientBuilder.build();
         mHandler = new Handler(Looper.getMainLooper());
-
     }
 
     public static void init(Context applicationContext) {
@@ -217,14 +222,6 @@ public class OkHttpUtil {
      * 构建post请求参数, 无文件传输
      */
     private Request buildPostRequest(String url, Map<String, String> params) {
-
-        MultipartBody.Builder multipartBodyBuilder = new MultipartBody.Builder();
-        if (params != null) {
-            Set<Map.Entry<String, String>> paramsEntries = params.entrySet();
-            for (Map.Entry<String, String> entry : paramsEntries) {
-                multipartBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
-            }
-        }
         FormBody.Builder formBodyBuilder = new FormBody.Builder();
         if (params != null) {
             Set<Map.Entry<String, String>> paramsEntries = params.entrySet();
@@ -301,5 +298,14 @@ public class OkHttpUtil {
      */
     public void cancelAllRequest() {
         mOkHttpClient.dispatcher().cancelAll();
+    }
+
+    public static OkHttpClient getLoginClient() {
+        return new OkHttpClient.Builder()
+                .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+                .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+                .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                .addInterceptor(new SaveCookieInterceptor())
+                .build();
     }
 }

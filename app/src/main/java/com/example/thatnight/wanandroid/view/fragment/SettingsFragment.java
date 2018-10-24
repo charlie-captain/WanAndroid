@@ -251,6 +251,8 @@ public class SettingsFragment extends android.support.v7.preference.PreferenceFr
                         }
                     }).show();
                     setAutoDayLight(true);
+                } else {
+                    showTimePickerDialog();
                 }
             } else {
                 setAutoDayLight(false);

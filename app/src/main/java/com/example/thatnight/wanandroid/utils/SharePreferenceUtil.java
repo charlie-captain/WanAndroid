@@ -121,8 +121,12 @@ public class SharePreferenceUtil {
         clear(FILE_NAME);
     }
 
-    private void clear(String fileName) {
+    public void clear(String fileName) {
         sEditor.clear();
         sEditor.apply();
+    }
+
+    public boolean contains(String key) {
+        return sSp.contains(key);
     }
 }

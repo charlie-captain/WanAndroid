@@ -109,20 +109,21 @@ public class NewArticleRvAdapter extends BaseRecyclerViewAdapter {
                 }
             });
 
+// TODO: 2018.10.20 评论查询功能暂时不开放
+//            BmobQuery<ArticleComment> query = new BmobQuery<>();
+//            query.addWhereEqualTo("articleId", article.getId());
+//            query.count(ArticleComment.class, new CountListener() {
+//                @Override
+//                public void done(Integer integer, BmobException e) {
+//                    if (e == null) {
+//                        mCommentArray.put(getLayoutPosition(), integer);
+//                        mComment.setText(String.valueOf(integer));
+//                    }
+//                }
+//            });
+//            mComment.setText(String.valueOf(mCommentArray.get(getLayoutPosition())));
+            mComment.setVisibility(View.GONE);
 
-            BmobQuery<ArticleComment> query = new BmobQuery<>();
-            query.addWhereEqualTo("articleId", article.getId());
-            query.count(ArticleComment.class, new CountListener() {
-                @Override
-                public void done(Integer integer, BmobException e) {
-                    if (e == null) {
-                        mCommentArray.put(getLayoutPosition(), integer);
-                        mComment.setText(String.valueOf(integer));
-                    }
-                }
-            });
-
-            mComment.setText(String.valueOf(mCommentArray.get(getLayoutPosition())));
 
             if (article.isOther()) {
                 //如果是导航文章，不显示收藏

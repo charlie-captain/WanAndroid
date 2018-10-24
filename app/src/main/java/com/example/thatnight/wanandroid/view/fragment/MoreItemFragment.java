@@ -4,19 +4,15 @@ import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.view.LayoutInflater;
 import android.view.View;
-import android.view.ViewGroup;
 
 import com.example.expandpopview.entity.KeyValue;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.adapter.NewArticleRvAdapter;
-import com.example.thatnight.wanandroid.base.BaseFragment;
 import com.example.thatnight.wanandroid.base.BasePagerFragment;
 import com.example.thatnight.wanandroid.base.BaseRecyclerViewAdapter;
 import com.example.thatnight.wanandroid.constant.Constant;
@@ -65,12 +61,6 @@ public class MoreItemFragment extends BasePagerFragment<MoreContract.IView, More
     private int mMonth;
     private int mDay;
     private Calendar mCalendar;
-
-    /**
-     * 评论窗口
-     */
-    private CommentBottomDialogFragment mBottomDialogFragment;
-
 
     public static MoreItemFragment newInstance(int mode) {
         MoreItemFragment moreItemFragment = new MoreItemFragment();
@@ -163,9 +153,6 @@ public class MoreItemFragment extends BasePagerFragment<MoreContract.IView, More
 
     @Override
     protected void onLazyLoad() {
-        if (mArticles != null && mArticles.size() > 0) {
-            return;
-        }
         mRefreshLayout.autoRefresh();
     }
 
@@ -259,7 +246,6 @@ public class MoreItemFragment extends BasePagerFragment<MoreContract.IView, More
     @Override
     public void isLoading(boolean isLoading) {
         if (isLoading) {
-            mRefreshLayout.autoRefresh();
         } else {
             mRefreshLayout.finishRefresh();
         }
@@ -336,4 +322,7 @@ public class MoreItemFragment extends BasePagerFragment<MoreContract.IView, More
         EventBus.getDefault().unregister(this);
     }
 
+    public RecyclerView getRv() {
+        return mRv;
+    }
 }
