@@ -22,7 +22,7 @@ import com.example.thatnight.wanandroid.mvp.presenter.MorePresenter;
 import com.example.thatnight.wanandroid.utils.LoginContextUtil;
 import com.example.thatnight.wanandroid.utils.UiHelper;
 import com.example.thatnight.wanandroid.view.activity.ArticleWebViewActivity;
-import com.example.thatnight.wanandroid.view.activity.NormalWebViewActivity;
+import com.example.thatnight.wanandroid.view.activity.NormalArticleWebViewActivity;
 import com.example.thatnight.wanandroid.view.activity.SearchActivity;
 import com.example.thatnight.wanandroid.view.customview.SpaceItemDecoration;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -202,7 +202,7 @@ public class MoreItemFragment extends BasePagerFragment<MoreContract.IView, More
     @Override
     public void onItemClick(int pos) {
         Article article = mArticles.get(pos);
-        Intent intent = NormalWebViewActivity.newIntent(mActivity, pos, article.getTitle(), article.getLink());
+        Intent intent = NormalArticleWebViewActivity.newIntent(mActivity, pos, article.getTitle(), article.getLink());
         startActivityForResultAnim(intent, 1);
     }
 

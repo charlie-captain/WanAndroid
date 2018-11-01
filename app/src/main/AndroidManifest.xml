@@ -61,9 +61,10 @@
             android:name=".view.activity.PhotoActivity"
             android:launchMode="singleTop"
             android:theme="@style/TransParentTheme"/>
-        <activity android:name=".view.activity.SearchActivity"/>
-        <activity android:name=".view.activity.NormalWebViewActivity"/>
-        <activity android:name=".view.activity.ArticleWebViewActivity"/>
+        <activity android:name=".view.activity.SearchActivity" android:theme="@style/TransParentTheme"/>
+        <activity android:name=".view.activity.NormalArticleWebViewActivity" android:theme="@style/TransParentTheme"/>
+        <activity android:name=".view.activity.ArticleWebViewActivity" android:theme="@style/TransParentTheme"/>
+        <activity android:name=".view.activity.NormalWebViewActivity" android:theme="@style/TransParentTheme"/>
     </application>
 
 </manifest>

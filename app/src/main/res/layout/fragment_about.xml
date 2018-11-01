@@ -37,9 +37,11 @@
               android:layout_marginTop="8dp"
     />
 
-    <ScrollView android:layout_width="wrap_content"
+    <ScrollView android:layout_width="match_parent"
                 android:layout_below="@id/tv_counts"
                 android:layout_marginTop="48dp"
+                android:layout_marginLeft="50dp"
+                android:layout_marginRight="50dp"
                 android:layout_centerInParent="true"
                 android:layout_above="@+id/tv_about_right"
                 android:layout_marginBottom="8dp"
@@ -60,11 +62,21 @@
         android:id="@+id/tv_about_right"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/tv_rights"
+        android:layout_above="@+id/tv_github"
         android:layout_centerHorizontal="true"
         android:text="\@2017- "
         android:textColor="@color/textColorSecondary"/>
 
+
+    <TextView
+        android:id="@+id/tv_github"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_above="@+id/tv_rights"
+        android:gravity="center"
+        android:text="https://github.com/thatnight"
+        android:textColor="@color/colorPrimary"/>
 
     <TextView
         android:id="@+id/tv_rights"
@@ -72,8 +84,8 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
-        android:layout_marginBottom="48dp"
         android:gravity="center"
-        android:text="https://github.com/thatnight\nAll rights reserved."
+        android:layout_marginBottom="48dp"
+        android:text="All rights reserved."
         android:textColor="@color/textColorSecondary"/>
 </RelativeLayout>

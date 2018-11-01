@@ -8,6 +8,8 @@ import android.view.View;
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.base.BaseWebViewActivity;
 import com.example.thatnight.wanandroid.utils.UiHelper;
+import com.tencent.smtt.sdk.WebView;
+import com.tencent.smtt.sdk.WebViewClient;
 
 import java.util.regex.Pattern;
 
@@ -28,7 +30,6 @@ public class NormalWebViewActivity extends BaseWebViewActivity {
         Intent extraIntent = getIntent();
         if (extraIntent != null) {
             mPosition = extraIntent.getIntExtra("position", 0);
-            mTextTitle = extraIntent.getStringExtra("title");
             mLink = extraIntent.getStringExtra("url");
         }
     }
@@ -40,14 +41,6 @@ public class NormalWebViewActivity extends BaseWebViewActivity {
         mActionButton.setVisibility(View.GONE);
         if (!TextUtils.isEmpty(mLink)) {
             mWebView.loadUrl(mLink);
-        }
-        //过滤html的title
-        boolean isHtml = Pattern.matches(".*<em.+?>(.+?)</em>.*", mTextTitle);
-        if (isHtml) {
-            String newTitle = mTextTitle.replaceAll("<em.+?>", "").replaceAll("</em>", "");
-            setTitle(newTitle);
-        } else {
-            setTitle(mTextTitle);
         }
     }
 
@@ -75,10 +68,8 @@ public class NormalWebViewActivity extends BaseWebViewActivity {
      * @param url
      * @return
      */
-    public static Intent newIntent(Context context, int position, String title, String url) {
+    public static Intent newIntent(Context context, String url) {
         Intent intent = new Intent();
-        intent.putExtra("position", position);
-        intent.putExtra("title", title);
         intent.putExtra("url", url);
         intent.setClass(context, NormalWebViewActivity.class);
         return intent;

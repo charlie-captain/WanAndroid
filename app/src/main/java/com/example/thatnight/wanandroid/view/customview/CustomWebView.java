@@ -13,6 +13,7 @@ import android.widget.ProgressBar;
 import android.widget.RelativeLayout;
 
 import com.example.thatnight.wanandroid.R;
+import com.tencent.smtt.sdk.WebChromeClient;
 import com.tencent.smtt.sdk.WebView;
 
 /**
@@ -27,7 +28,6 @@ public class CustomWebView extends WebView {
     protected int mPbHeight;
     protected int mPbDrawable;
 
-    protected Context mContext;
     protected WindowManager mWindowManager;
     private View mView;
 
@@ -47,7 +47,6 @@ public class CustomWebView extends WebView {
         mPbDrawable = a.getResourceId(R.styleable.CustomWebView_drawable_progressbar, -1);
         a.recycle();
 
-        mContext = context;
         mProgressBar = new ProgressBar(context, null, android.R.attr.progressBarStyleHorizontal);
         mProgressBar.setLayoutParams(new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, mPbHeight));
         if (mPbDrawable == -1) {
@@ -80,9 +79,13 @@ public class CustomWebView extends WebView {
         setWebChromeClient(new CustomWebChromeClient());
     }
 
-    public class CustomWebChromeClient extends com.tencent.smtt.sdk.WebChromeClient {
+    public class CustomWebChromeClient extends WebChromeClient {
+
         @Override
         public void onProgressChanged(WebView webView, int i) {
+            if (mProgressBar == null) {
+                return;
+            }
             if (i > 80) {
                 mProgressBar.setVisibility(View.GONE);
             } else {
@@ -106,11 +109,22 @@ public class CustomWebView extends WebView {
 
     @Override
     public void destroy() {
-        super.destroy();
+        clearFormData();
+        clearMatches();
+        clearSslPreferences();
+        clearDisappearingChildren();
+        clearHistory();
+        //@Deprecated
+        //clearView();
+        clearAnimation();
+        removeAllViews();
         if (mWindowManager != null) {
             if (mView != null) {
                 mWindowManager.removeView(mView);
+                mView = null;
             }
+            mWindowManager = null;
         }
+        super.destroy();
     }
 }

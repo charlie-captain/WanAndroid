@@ -120,7 +120,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         boolean isFirst = (boolean) SharePreferenceUtil.getInstance().getBoolean(BuildConfig.VERSION_NAME, true);
         if (isFirst) {
             SharePreferenceUtil.getInstance().putBoolean(BuildConfig.VERSION_NAME, false);
-            new AlertDialog.Builder(this).setTitle("更新内容").setMessage(getString(R.string.str_dialog_update)).setNegativeButton("知道了", null).show();
+            new AlertDialog.Builder(this).setTitle("更新内容").setMessage(getString(R.string.str_dialog_update)).
+                    setPositiveButton("去看看", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialogInterface, int i) {
+                            startActivityAnim(NormalWebViewActivity.newIntent(MainActivity.this, Constant.URL_GITHUB));
+                        }
+                    }).setNegativeButton("知道了", null).show();
         }
 
     }
@@ -174,6 +180,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
                     }
                 });
+                refreshIcon();
             }
         } else {        //判断是否游客
             boolean isVisitor = SharePreferenceUtil.getInstance().getBoolean("visitor", false);

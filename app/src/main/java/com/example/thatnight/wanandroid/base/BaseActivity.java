@@ -11,10 +11,9 @@ import android.widget.TextView;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.utils.ToastUtil;
-import com.gyf.barlibrary.ImmersionBar;
 
 import cn.bingoogolapple.swipebacklayout.BGASwipeBackHelper;
-import skin.support.app.SkinCompatActivity;
+
 
 /**
  * Created by thatnight on 2017.10.26.
@@ -29,7 +28,6 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends B
     protected P mPresenter;
 
     protected BGASwipeBackHelper mBGASwipeBackHelper;
-    protected ImmersionBar mImmersionBar;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -48,6 +46,9 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends B
     protected void initSwipeBackHelper() {
         mBGASwipeBackHelper = new BGASwipeBackHelper(this, this);
         mBGASwipeBackHelper.setIsOnlyTrackingLeftEdge(false);
+        mBGASwipeBackHelper.setShadowResId(R.drawable.bga_sbl_shadow);
+        mBGASwipeBackHelper.setIsWeChatStyle(true);
+
     }
 
     protected abstract Boolean isSetStatusBar();
@@ -60,8 +61,7 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends B
 
     protected void setStatusBar(Boolean isSet) {
         if (isSet) {
-            //            mImmersionBar = ImmersionBar.with(this);
-            //            mImmersionBar.init();
+
         }
     }
 
@@ -146,9 +146,6 @@ public abstract class BaseActivity<V extends BaseContract.IBaseView, P extends B
         super.onDestroy();
         if (mPresenter != null) {
             mPresenter.detachView();
-        }
-        if (mImmersionBar != null) {
-            mImmersionBar.destroy();
         }
         if (mBGASwipeBackHelper != null) {
             mBGASwipeBackHelper = null;

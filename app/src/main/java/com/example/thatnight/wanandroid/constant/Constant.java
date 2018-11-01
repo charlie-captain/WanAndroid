@@ -78,4 +78,5 @@ public class Constant {
 
     public static final String STRING_ERROR = "服务器出现错误!";
 
+    public static final String URL_GITHUB = "https://github.com/thatnight";
 }

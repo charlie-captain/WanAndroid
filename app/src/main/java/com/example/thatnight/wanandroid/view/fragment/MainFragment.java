@@ -7,12 +7,6 @@ import android.os.Looper;
 import android.support.design.widget.AppBarLayout;
 import android.support.design.widget.TabLayout;
 import android.support.v4.view.ViewPager;
-import android.support.v7.app.AppCompatActivity;
-import android.support.v7.widget.Toolbar;
-import android.util.Log;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
 
 import com.example.expandpopview.entity.KeyValue;
@@ -28,8 +22,7 @@ import com.example.thatnight.wanandroid.data.MainDataController;
 import com.example.thatnight.wanandroid.entity.BannerEntity;
 import com.example.thatnight.wanandroid.utils.AutoScrollHandler;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
-import com.example.thatnight.wanandroid.view.activity.NormalWebViewActivity;
-import com.example.thatnight.wanandroid.view.activity.SearchActivity;
+import com.example.thatnight.wanandroid.view.activity.NormalArticleWebViewActivity;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -198,7 +191,7 @@ public class MainFragment extends BaseMenuFragment implements BannerAdapter.OnBa
     public void clickBanner(View view, int position) {
         if (mBannerEntities != null && mBannerEntities.size() >= position + 1) {
             BannerEntity bannerEntity = mBannerEntities.get(position);
-            Intent intent = NormalWebViewActivity.newIntent(mActivity, position, bannerEntity.getTitle(), bannerEntity.getUrl());
+            Intent intent = NormalArticleWebViewActivity.newIntent(mActivity, position, bannerEntity.getTitle(), bannerEntity.getUrl());
             startActivityForResultAnim(intent, 1);
         }
     }

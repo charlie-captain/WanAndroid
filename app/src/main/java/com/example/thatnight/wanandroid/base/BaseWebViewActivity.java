@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
 import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -16,15 +17,12 @@ import android.view.MenuItem;
 import android.view.View;
 import android.webkit.JavascriptInterface;
 import android.widget.FrameLayout;
-import android.widget.ProgressBar;
 
 import com.example.thatnight.wanandroid.R;
 import com.example.thatnight.wanandroid.mvp.contract.WebContract;
-import com.example.thatnight.wanandroid.mvp.model.WebModel;
 import com.example.thatnight.wanandroid.mvp.presenter.WebPresenter;
 import com.example.thatnight.wanandroid.utils.OkHttpResultCallback;
 import com.example.thatnight.wanandroid.utils.OkHttpUtil;
-import com.example.thatnight.wanandroid.utils.ProgressDialogUtil;
 import com.example.thatnight.wanandroid.utils.SharePreferenceUtil;
 import com.example.thatnight.wanandroid.view.activity.PhotoActivity;
 import com.example.thatnight.wanandroid.view.customview.CustomWebView;
@@ -45,7 +43,6 @@ public abstract class BaseWebViewActivity extends BaseActivity<WebContract.IWebV
 
     protected ArrayList<String> mPhotoList;
     protected FrameLayout mWebLayout;
-    protected ProgressBar mPbar;
     protected FloatingActionButton mActionButton;
 
 
@@ -81,12 +78,14 @@ public abstract class BaseWebViewActivity extends BaseActivity<WebContract.IWebV
         mShowBack = true;
         mWebLayout = $(R.id.fl_web);
         mActionButton = $(R.id.fabtn_news);
-        mWebView = new CustomWebView(getApplicationContext());
+        mWebView = new CustomWebView(App.getApplication());
         mWebLayout.addView(mWebView);
         if ("night".equals(SkinCompatManager.getInstance().getCurSkinName())) {
             isNight = true;
             mWebView.setNightMode(this);
         }
+        mTitle.setText("正在加载..." +
+                "");
         setViewData();
     }
 
@@ -116,23 +115,25 @@ public abstract class BaseWebViewActivity extends BaseActivity<WebContract.IWebV
 
         settings.setAllowFileAccess(true);
 
-
         //添加图片监听
         mWebView.addJavascriptInterface(new JavaScriptCallback(), "imagelistner");
+
         mWebView.setWebViewClient(new WebViewClient() {
             @Override
             public void onPageStarted(WebView webView, String s, Bitmap bitmap) {
-                webView.getSettings().setJavaScriptEnabled(true);
                 super.onPageStarted(webView, s, bitmap);
 
             }
 
             @Override
             public void onPageFinished(WebView webView, String s) {
-                webView.getSettings().setJavaScriptEnabled(true);
                 super.onPageFinished(webView, s);
                 getImageUrls();
                 addImageClickListner();
+                String text = webView.getTitle();
+                if (!TextUtils.isEmpty(text)) {
+                    mTitle.setText(text);
+                }
             }
 
             @Override
@@ -184,7 +185,7 @@ public abstract class BaseWebViewActivity extends BaseActivity<WebContract.IWebV
             case R.id.tb_share:
                 Intent intent = new Intent(Intent.ACTION_SEND);
                 intent.setType("text/plain");
-                intent.putExtra(Intent.EXTRA_TEXT, "向你分享" + "\"" + mTextTitle + "\"" + ": \n" + mLink);
+                intent.putExtra(Intent.EXTRA_TEXT, "向你分享" + "\"" + mTitle.getText() + "\"" + ": \n" + mLink);
                 startActivity(Intent.createChooser(intent, "分享"));
                 break;
             case R.id.tb_copy:
@@ -212,23 +213,15 @@ public abstract class BaseWebViewActivity extends BaseActivity<WebContract.IWebV
     }
 
 
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-    }
-
     @Override
     protected void onDestroy() {
         super.onDestroy();
         if (mWebView != null) {
-            mWebView.loadDataWithBaseURL(null, "", "text/html", "utf-8", null);
-            mWebView.clearHistory();
-            mWebLayout.removeAllViews();
             mWebView.destroy();
+            mWebView.setWebViewClient(null);
             mWebView = null;
         }
-        ProgressDialogUtil.dismiss();
+        mWebLayout.removeAllViews();
     }
 
 
@@ -261,11 +254,6 @@ public abstract class BaseWebViewActivity extends BaseActivity<WebContract.IWebV
             startActivity(intent);
             Log.d("src", "openImage: " + img);
         }
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
     }
 
 
