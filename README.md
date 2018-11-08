@@ -1,4 +1,4 @@
-## WanAndroid
+## WanAndroid【已停止维护】
 
 ### 前言
   
@@ -19,7 +19,7 @@
 
 ### 下载地址
 
-- [Wanandroid 1.7](https://www.coolapk.com/apk/169842) -- 酷安市场
+- [Wanandroid 1.8](https://www.coolapk.com/apk/169842) -- 酷安市场
 - [Github-release](https://github.com/thatnight/WanAndroid/releases)
 
  
@@ -49,15 +49,18 @@
 - [x] 搜索热词
 - [x] 用户头像
 - [x] 评论文章(beta)
-- [ ] 首页banner
-- [ ] 常用网站
+- [x] 首页banner
 - [x] 换肤，夜间模式
 - [x] 反馈与帮助
-- [ ] 修复bug与提高流畅性
+- [x] 修复bug与提高流畅性
 
 --- 
 
 ### 更新版本
+- #### 1.8
+  - 代码重构
+  - 优化细节
+  
 - #### 1.7
   - 新增 用户头像
   - 新增 评论(beta)
